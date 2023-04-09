@@ -1,28 +1,27 @@
-package smu.it.try1;
-
-import androidx.appcompat.app.AppCompatActivity;
+package carehalcare.carehalcare;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button loginbtn;
-    Button newuserbtn;
-    Button kakaobtn;
+    Button btn_login, btn_newuser, btn_kakao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        loginbtn = (Button) findViewById(R.id.btn_login);
-        newuserbtn = (Button) findViewById(R.id.btn_newuser);
-        kakaobtn = (Button) findViewById(R.id.btn_kakao);
+        btn_login = (Button) findViewById(R.id.btn_login);
+        btn_newuser = (Button) findViewById(R.id.btn_newuser);
+        btn_kakao = (ImageButton) findViewById(R.id.btn_kakao);
 
-        loginbtn.setOnClickListener(new View.OnClickListener() {
+        btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -30,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        newuserbtn.setOnClickListener(new View.OnClickListener() {
+        btn_newuser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegistActivity.class);
@@ -38,10 +37,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        kakaobtn.setOnClickListener(new View.OnClickListener() {
+        btn_kakao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, KLoginActivity.class);
+                Intent intent = new Intent(LoginActivity.this, KakaologinActivity.class);
                 startActivity(intent);
             }
         });
