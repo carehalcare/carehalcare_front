@@ -1,4 +1,4 @@
-package smu.it.try1;
+package carehalcare.carehalcare;
 
 import android.content.Intent;
 import android.os.Bundle;
