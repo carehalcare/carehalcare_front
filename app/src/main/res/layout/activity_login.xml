@@ -70,7 +70,7 @@
                 android:id="@+id/btn_login"
                 android:layout_width="100dp"
                 android:layout_height="70dp"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/round_border"
                 android:text="로그인" />
         </LinearLayout>
 
@@ -87,7 +87,7 @@
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/round_shape"
+            android:background="@drawable/round_border"
             android:text="회원가입" />
 
         <ImageButton
