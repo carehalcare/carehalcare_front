@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
+
+import carehalcare.carehalcare.R;
 
 public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomViewHolder> {
     private ArrayList<Active_text> mList;

@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import carehalcare.carehalcare.R;
 
 public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHolder>{
     private ArrayList<Walk_text> mList;

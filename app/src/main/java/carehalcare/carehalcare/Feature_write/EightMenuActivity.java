@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import carehalcare.carehalcare.R;
 
 public class EightMenuActivity extends AppCompatActivity implements Button.OnClickListener {
     private FrameLayout container;

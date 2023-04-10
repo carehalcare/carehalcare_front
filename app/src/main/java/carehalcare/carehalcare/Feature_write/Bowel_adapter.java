@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import carehalcare.carehalcare.R;
 
 public class Bowel_adapter extends RecyclerView.Adapter<Bowel_adapter.CustomViewHolder>{
     private ArrayList<Bowel_text> mList;

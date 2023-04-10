@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import carehalcare.carehalcare.R;
 
 public class Meal_form extends AppCompatActivity {
     ImageView imgtest;

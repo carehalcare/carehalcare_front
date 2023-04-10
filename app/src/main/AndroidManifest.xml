@@ -25,12 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Carehalcare"
         tools:targetApi="31">
-        <activity android:name=".Meal_form"
+        <activity android:name=".Feature_write.Meal_form"
             android:exported="true"></activity>
-        <activity android:name=".Walk_form"
+        <activity android:name=".Feature_write.Walk_form"
             android:exported="true"></activity>
         <activity
-            android:name=".EightMenuActivity"
+            android:name=".Feature_write.EightMenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

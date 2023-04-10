@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import carehalcare.carehalcare.R;
 
 public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHolder>{
     private ArrayList<Meal_text> mList;

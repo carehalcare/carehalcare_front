@@ -1,4 +1,4 @@
-package carehalcare.carehalcare;
+package carehalcare.carehalcare.Feature_write;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import carehalcare.carehalcare.R;
 
 public class Clean_adapter extends RecyclerView.Adapter<Clean_adapter.CustomViewHolder>{
     private ArrayList<Clean_text> mList;
