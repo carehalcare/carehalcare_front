@@ -1,42 +1,79 @@
 package carehalcare.carehalcare.Feature_write;
+import com.google.gson.annotations.SerializedName;
 
 public class Medicine_text {
-    String medicine_time;
-    String medicine_state;
-    String medicine_name;
+    @SerializedName("time")
+    String time = "";  //시간(아침,점심,저녁)
+    @SerializedName("mealStatus")
+    String mealStatus =""; //상태(공복,식전,식후)
+    @SerializedName("medicine")
+    String medicine=""; //약 종류
+
+
+    //간병인아이디
+    @SerializedName("userId")
+            String userId = "";
+    //보호자아이디
+    @SerializedName("puserId")
+            String puserId="";
+    @SerializedName("body")
     String et_medicineForm;
+
     String medicineTodayResult;
 
-    public Medicine_text(String medicine_time, String medicine_state, String medicine_name, String et_medicineForm, String medicineTodayResult) {
-        this.medicine_time = medicine_time;
-        this.medicine_state = medicine_state;
-        this.medicine_name = medicine_name;
+    public Medicine_text(String time, String mealStatus, String medicine, String userId, String puserId) {
+        this.time = time;
+        this.mealStatus = mealStatus;
+        this.medicine = medicine;
+        this.userId = userId;
+        this.puserId = puserId;
+    }
+    public void Medicine_text_API(String time, String mealStatus, String medicine, String et_medicineForm, String medicineTodayResult){
+        this.time = time;
+        this.mealStatus = mealStatus;
+        this.medicine = medicine;
         this.et_medicineForm = et_medicineForm;
         this.medicineTodayResult = medicineTodayResult;
+
+    }
+    public String getUserid() {
+        return userId;
     }
 
-    public String getMedicine_time() {
-        return medicine_time;
+    public void setUserid(String userId) {
+        this.userId = userId;
     }
 
-    public void setMedicine_time(String medicine_time) {
-        this.medicine_time = medicine_time;
+    public String getPuserid() {
+        return puserId;
     }
 
-    public String getMedicine_state() {
-        return medicine_state;
+    public void setPuserid(String puserId) {
+        this.puserId = puserId;
     }
 
-    public void setMedicine_state(String medicine_state) {
-        this.medicine_state = medicine_state;
+    public String gettime() {
+        return time;
     }
 
-    public String getMedicine_name() {
-        return medicine_name;
+    public void settime(String medicine_time) {
+        this.time = time;
     }
 
-    public void setMedicine_name(String medicine_name) {
-        this.medicine_name = medicine_name;
+    public String getmealStatus() {
+        return mealStatus;
+    }
+
+    public void setmealStatus(String medicine_state) {
+        this.mealStatus = medicine_state;
+    }
+
+    public String getmedicine() {
+        return medicine;
+    }
+
+    public void setmedicine(String medicine_name) {
+        this.medicine = medicine_name;
     }
 
     public String getEt_medicineForm() {

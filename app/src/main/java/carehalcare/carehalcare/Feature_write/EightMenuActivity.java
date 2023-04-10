@@ -41,15 +41,28 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
+import javax.xml.transform.Result;
+
 import carehalcare.carehalcare.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EightMenuActivity extends AppCompatActivity implements Button.OnClickListener {
     private FrameLayout container;
@@ -100,6 +113,8 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
     private int active_count = -1;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +125,10 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         this.InitializeView();
         checkPermission();
     }
+
+
+
+
 
     public void InitializeView() {
 
@@ -244,6 +263,17 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     public void onMedicine(View view) {
         deleteview();
 
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Medicine_API.URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        Medicine_API medicineApi = retrofit.create(Medicine_API.class);
+
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.medicine_list,container,true);
 
@@ -258,6 +288,38 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLinearLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+        medicineApi.getDatamedicine("userid","puserid").enqueue(new Callback<List<Medicine_text>>() {
+            @Override
+            public void onResponse(Call<List<Medicine_text>> call, Response<List<Medicine_text>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                    List<Medicine_text> datas = response.body();
+//                    Log.e("data.getUserId()", datas.get(0).getUserid() + "");
+//                    Log.e("data.getPuserId()", datas.get(0).getPuserid() + "");
+//                    Log.e("data.gettime()", datas.get(0).getmedicine());
+//                    Log.e("data.getmedicine()", datas.get(0).getmedicine());
+//                    Log.e("data.getmealStatus()", datas.get(0).getmealStatus());
+
+                    if (datas != null) {
+                        for (int i = 0; i < datas.size(); i++) {
+                            Medicine_text dict_0 = new Medicine_text(response.body().get(i).gettime(),
+                                    response.body().get(i).getmealStatus(), response.body().get(i).getmedicine(),
+                                    "medicineForm"
+                                    ,"medicineTodayResult");
+                            medicineArrayList.add(0, dict_0);
+                            medicineAdapter.notifyItemInserted(0);
+                            Log.e("userid : " + i, datas.get(i).getUserid() + "");
+                        }
+                        Log.e("getDatameal end", "======================================");
+                    }
+                }}
+            }
+
+            @Override
+            public void onFailure(Call<List<Medicine_text>> call, Throwable t) {
+
+            }
+        });
 
         Button buttonInsert = (Button)findViewById(R.id.btn_medicine_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
@@ -333,6 +395,37 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                         medicineAdapter.notifyItemInserted(0);
                         //mAdapter.notifyDataSetChanged();
 
+
+                        Medicine_text medicine_text = new Medicine_text(medicine_time,medicine_state,medicine_name,"userid","puserid");
+
+                        medicineApi.postDatamedicine(medicine_text).enqueue(new Callback<List<Medicine_text>>() {
+                            @Override
+                            public void onResponse(@NonNull Call<List<Medicine_text>> call, @NonNull Response<List<Medicine_text>> response) {
+
+                                Log.e("######################################################","뭬야");
+
+                                if (response.isSuccessful()) {
+                                    List<Medicine_text> body = response.body();
+                                    if (body != null) {
+                                        Log.d("data.getUserId()", body.get(0).getUserid() + "");
+                                        Log.d("data.getId()", body.get(0).getPuserid() + "");
+                                        Log.d("data.getTitle()", body.get(0).gettime()+"");
+                                        Log.d("data.getBody()", body.get(0).getmedicine()+"");
+                                        Log.d("data.getBody()", body.get(0).getmealStatus()+"");
+                                        Log.e("postData end", "======================================");
+                                    }
+                                } else {
+                                    //실패
+                                    Log.e("YMC", "stringToJson msg: 실패" + response.code());
+
+                                }
+                            }
+                            @Override
+                            public void onFailure(@NonNull Call<List<Medicine_text>> call, @NonNull Throwable t) {
+
+                            }
+                        });
+
                         dialog.dismiss();
                     }
                 });
@@ -363,12 +456,10 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                 final TextView medicine_detail_name = dialog.findViewById(R.id.tv_medicine_detail_name);
                 final TextView medicine_detail_et  = dialog.findViewById(R.id.tv_medicine_detail_et);
 
-                medicine_detail_timne.setText(detail_medicine_text.getMedicine_time());
-                medicine_detail_state.setText(detail_medicine_text.getMedicine_state());
-                medicine_detail_name.setText(detail_medicine_text.getMedicine_name());
+                medicine_detail_timne.setText(detail_medicine_text.gettime());
+                medicine_detail_state.setText(detail_medicine_text.getmealStatus());
+                medicine_detail_name.setText(detail_medicine_text.getmedicine());
                 medicine_detail_et.setText(detail_medicine_text.getEt_medicineForm());
-
-
 
                 final Button btn_medicinedetail = dialog.findViewById(R.id.btn_medicine_detail);
                 btn_medicinedetail.setOnClickListener(new View.OnClickListener() {
