@@ -262,7 +262,6 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
     public void onMedicine(View view) {
         deleteview();
-
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -288,6 +287,7 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLinearLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+
         medicineApi.getDatamedicine("userid","puserid").enqueue(new Callback<List<Medicine_text>>() {
             @Override
             public void onResponse(Call<List<Medicine_text>> call, Response<List<Medicine_text>> response) {
@@ -305,10 +305,12 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                             Medicine_text dict_0 = new Medicine_text(response.body().get(i).gettime(),
                                     response.body().get(i).getmealStatus(), response.body().get(i).getmedicine(),
                                     "medicineForm"
-                                    ,"medicineTodayResult");
-                            medicineArrayList.add(0, dict_0);
+                                    ,"medicineTodayResult",response.body().get(i).getId());
+                            medicineArrayList.add( dict_0);
                             medicineAdapter.notifyItemInserted(0);
-                            Log.e("userid : " + i, datas.get(i).getUserid() + "");
+                            //Log.e("userid : " + i, datas.get(i).getUserid() + "");
+                            Log.e("현재id : " + i, datas.get(i).getmedicine()+" "+datas.get(i).getId() + ""+"어댑터카운터"+medicineAdapter.getItemCount());
+
                         }
                         Log.e("getDatameal end", "======================================");
                     }
@@ -320,6 +322,7 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
             }
         });
+//        Button buttondelete = (Button) findViewById(R.id.btn_medicine_onlist_delete);
 
         Button buttonInsert = (Button)findViewById(R.id.btn_medicine_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
@@ -342,10 +345,10 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                 final CheckBox cb_after = dialog.findViewById(R.id.cb_after);
 
                 final EditText et_medicine_name = dialog.findViewById(R.id.et_medicine_name);
-                final EditText et_medicineForm = dialog.findViewById(R.id.et_medicineForm);
                 final Button btn_medicine_save = dialog.findViewById(R.id.btn_medicine_save);
                 btn_medicine_save.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+
                         String morning = "";
                         String lunch = "";
                         String dinner = "";
@@ -355,11 +358,9 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
                         String medicine_time;
                         String medicine_state;
-                        String medicineTodayResult;
 
 
                         String medicine_name = et_medicine_name.getText().toString();
-                        String medicineForm = et_medicineForm.getText().toString();
 
                         if (cb_morning.isChecked()){
                             morning = "아침 ";
@@ -378,52 +379,34 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
                         medicine_time = morning + lunch + dinner;
                         medicine_state = empty + before + after;
-
-                        if (medicineForm.length()==0){medicineForm = "-";};
-
                         Date today_date = Calendar.getInstance().getTime();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-                        medicineTodayResult = format.format(today_date)+" 기록확인하기";
 
-                        //cleanTodayResult = changeSheet + changeCloth + ventilation + "특이사항" + cleanForm;
-                        Medicine_text dict = new Medicine_text(medicine_time, medicine_state, medicine_name, medicineForm
-                                ,medicineTodayResult);
+                        Medicine_text dict = new Medicine_text(medicine_time, medicine_state, medicine_name, "userid"
+                                ,"puserid",Long.valueOf(medicineArrayList.get(0).getId()+1));
                         medicineArrayList.add(0, dict); //첫번째 줄에 삽입됨
-                        //mArrayList.add(dict); //마지막 줄에 삽입됨
 
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
                         medicineAdapter.notifyItemInserted(0);
-                        //mAdapter.notifyDataSetChanged();
+                        medicineAdapter.notifyDataSetChanged();
 
-
-                        Medicine_text medicine_text = new Medicine_text(medicine_time,medicine_state,medicine_name,"userid","puserid");
-
-                        medicineApi.postDatamedicine(medicine_text).enqueue(new Callback<List<Medicine_text>>() {
+                        medicineApi.postDatamedicine(dict).enqueue(new Callback<List<Medicine_text>>() {
                             @Override
                             public void onResponse(@NonNull Call<List<Medicine_text>> call, @NonNull Response<List<Medicine_text>> response) {
-
                                 Log.e("######################################################","뭬야");
+                                Log.e("보낼때bodyek ============",response.body()+"");
 
                                 if (response.isSuccessful()) {
                                     List<Medicine_text> body = response.body();
                                     if (body != null) {
-                                        Log.d("data.getUserId()", body.get(0).getUserid() + "");
-                                        Log.d("data.getId()", body.get(0).getPuserid() + "");
-                                        Log.d("data.getTitle()", body.get(0).gettime()+"");
-                                        Log.d("data.getBody()", body.get(0).getmedicine()+"");
-                                        Log.d("data.getBody()", body.get(0).getmealStatus()+"");
-                                        Log.e("postData end", "======================================");
                                     }
                                 } else {
                                     //실패
                                     Log.e("YMC", "stringToJson msg: 실패" + response.code());
-
                                 }
                             }
                             @Override
-                            public void onFailure(@NonNull Call<List<Medicine_text>> call, @NonNull Throwable t) {
-
-                            }
+                            public void onFailure(@NonNull Call<List<Medicine_text>> call, @NonNull Throwable t) {}
                         });
 
                         dialog.dismiss();
@@ -435,8 +418,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         medicineAdapter.setOnItemClickListener (new Medicine_adapter.OnItemClickListener () {
             @Override
             public void onItemClick(View v, int position) {
+
                 //String vq = String.valueOf(position);
                 Medicine_text detail_medicine_text = medicineArrayList.get(position);
+                Log.e("지금 id 번호",detail_medicine_text.getId()+"");
+
                 //Log.v("$$******************************************************************^^^^^^^^^^^^^^^^*********88",vq);
                 //Log.v("$$******************************************************************^^^^^^^^^^^^^^^^*********88",iqq.cleanTodayResult);
 
@@ -451,17 +437,53 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
+                final TextView medicine_detail_date = dialog.findViewById(R.id.tv_medicine_detail_date);
                 final TextView medicine_detail_timne = dialog.findViewById(R.id.tv_medicine_detail_timne);
                 final TextView medicine_detail_state = dialog.findViewById(R.id.tv_medicine_detail_state);
                 final TextView medicine_detail_name = dialog.findViewById(R.id.tv_medicine_detail_name);
-                final TextView medicine_detail_et  = dialog.findViewById(R.id.tv_medicine_detail_et);
 
+                Date today_date = Calendar.getInstance().getTime();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
+                medicine_detail_date.setText(format.format(today_date));
                 medicine_detail_timne.setText(detail_medicine_text.gettime());
                 medicine_detail_state.setText(detail_medicine_text.getmealStatus());
                 medicine_detail_name.setText(detail_medicine_text.getmedicine());
-                medicine_detail_et.setText(detail_medicine_text.getEt_medicineForm());
+
 
                 final Button btn_medicinedetail = dialog.findViewById(R.id.btn_medicine_detail);
+                final Button btn_delete_medicine = dialog.findViewById(R.id.btn_medicine__delete_detail);
+                btn_delete_medicine.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                        builder.setTitle("삭제하기")
+                                .setMessage("삭제하시겠습니까?")
+                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        medicineApi.deleteData(detail_medicine_text.getId()).enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                if (!response.isSuccessful()) {
+                                                    return;
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+
+                                            }
+                                        });
+                                        medicineArrayList.remove(position);
+                                        medicineAdapter.notifyItemRemoved(position);
+                                        medicineAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNeutralButton("취소", null)
+                                .show();
+                                dialog.dismiss();
+                    }
+                });
                 btn_medicinedetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -475,6 +497,27 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
 
     }
+//    private void deletedata(Long posiposi) {
+//        Call<Void> call = medicineApi.deleteData(posiposi);
+//
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if (!response.isSuccessful()) {
+//                    return;
+//                }
+//                String content = "";
+//                content += "code: " + response.code()+"\n";
+//                content += "정상적으로 삭제되었습니다.";
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//            }
+//        });
+//
+//    }
 
     public void onActive(View view) {
         deleteview();

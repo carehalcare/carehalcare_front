@@ -2,6 +2,7 @@ package carehalcare.carehalcare.Feature_write;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -17,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +29,11 @@ import java.util.List;
 import java.util.Locale;
 
 import carehalcare.carehalcare.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.CustomViewHolder>{
     private ArrayList<Medicine_text> mList;
@@ -54,7 +63,6 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
             super(view);
             this.tv_todayMedicine = (TextView) view.findViewById(R.id.tv_todayMedicine);
             this.tv_todayMedicineResult = (TextView) view.findViewById(R.id.tv_todayMedicineResult);
-            this.btn_delete = (Button) view.findViewById(R.id.btn_medicine_onlist_delete);
 
 
             view.setOnCreateContextMenuListener(this);
@@ -63,6 +71,7 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
             view.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick(View view) {
+
                     int position = getAdapterPosition ();
                     if (position!=RecyclerView.NO_POSITION){
                         if (mListener!=null){
@@ -72,28 +81,11 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
                 }
             });
 
-            btn_delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setTitle("삭제하기")
-                                .setMessage("삭제하시겠습니까?")
-                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        mList.remove(position);
-                                        notifyItemRemoved(position);
-                                        notifyDataSetChanged();
-                                    }
-                                })
-                                .setNeutralButton("취소", null)
-                                .show();
-                    }
-                }
-            });
+
         }
+
+
+
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 //            // 3. 컨텍스트 메뉴를 생성하고 메뉴 항목 선택시 호출되는 리스너를 등록해줍니다.

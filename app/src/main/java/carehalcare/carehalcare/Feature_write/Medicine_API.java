@@ -18,7 +18,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Medicine_API {
-    String URL = "http://172.20.20.121:8080/";
+    String URL = "http://192.168.0.18:8080/";
     @Headers("Content-Type: application/json")
     @POST("administrations")
     Call<List<Medicine_text>> postDatamedicine(
@@ -42,6 +42,6 @@ public interface Medicine_API {
             @Path("puserId") String puserId
     );
 
-    @DELETE("/administrations/1")
-    Call<ResponseBody> deleteData();
+    @DELETE("/administrations/{id}")
+    Call<Void> deleteData(@Path("id") Long id);
 }
