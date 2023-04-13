@@ -33,7 +33,8 @@ public class PatientinfoActivity extends AppCompatActivity {
 
     private ImageButton btn_home;
     private TextView tv_info;
-    private ArrayList<PatientInfo> pinfolist;
+
+    Call <PatientInfo> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,42 +44,42 @@ public class PatientinfoActivity extends AppCompatActivity {
         btn_home = (ImageButton) findViewById(R.id.btn_homeinfo);
         tv_info = (TextView) findViewById(R.id.tv_info);
 
-        pinfolist = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.101.2.189:8080/")
+                .baseUrl("http://172.20.5.216:8080/")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
         PInfoApi infoApi = retrofit.create(PInfoApi.class);
 
-        Call<PatientInfo> call = infoApi.getDataInfo("userid1");
+        call = infoApi.getDataInfo("userid1");
         call.enqueue(new Callback<PatientInfo>() {
-             @Override
-             public void onResponse(Call<PatientInfo> call, Response<PatientInfo> response) {
+            @Override
+            public void onResponse(Call<PatientInfo> call, Response<PatientInfo> response) {
+                if (response.isSuccessful()) {
+                    PatientInfo patientInfo = response.body();
+                    String content = "";
+                    content += "이름: " + patientInfo.getPname() + "\n\n";
+                    content += "생년월일: " + patientInfo.getPbirthDate() + "\n\n";
+                    content += "성별: " + patientInfo.getPsex() + "\n\n";
+                    content += "질환: " + patientInfo.getDisease() + "\n\n";
+                    content += "담당병원: " + patientInfo.getHospital() + "\n\n";
+                    content += "투약정보: " + patientInfo.getMedicine() + "\n\n";
+                    content += "성격: " + patientInfo.getRemark() + "\n\n";
 
-                 if (response.isSuccessful()) {
-                     if (response.body() != null) {
-                         PatientInfo patientInfo = new PatientInfo(response.body().getPname(),
-                                 response.body().getPsex(), response.body().getPbirthDate(),
-                                 response.body().getDisease(), response.body().getHospital(),
-                                 response.body().getMedicine(), response.body().getRemark());
-                         pinfolist.add(0, patientInfo);
-                         tv_info.append((CharSequence) pinfolist);
-                                 Log.e("userid : ", response.body().getHospital().toString());
-                             }
+                    tv_info.setText(content);
+                    Log.d("연결 성공", "Status Code : " + response.code());
+                }
+            }
 
-                 }
-                 else { Log.d(TAG, "Status Code : " + response.code());}
-             }
-             @Override
-             public void onFailure(Call<PatientInfo> call, Throwable t) {
-                 tv_info.setText(t.getMessage());
-                 Log.v("ㅂㅂ", "에러야?");
+            @Override
+            public void onFailure(Call<PatientInfo> call, Throwable t) {
+                Log.e("환자정보불러오기", "실패" );
+                t.printStackTrace();
+            }
+        });
 
-             }
-         });
 
         btn_home.setOnClickListener(new View.OnClickListener() {
             @Override
