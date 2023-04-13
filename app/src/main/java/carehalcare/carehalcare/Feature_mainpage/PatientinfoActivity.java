@@ -59,10 +59,23 @@ public class PatientinfoActivity extends AppCompatActivity {
             public void onResponse(Call<PatientInfo> call, Response<PatientInfo> response) {
                 if (response.isSuccessful()) {
                     PatientInfo patientInfo = response.body();
+
                     String content = "";
                     content += "이름: " + patientInfo.getPname() + "\n\n";
                     content += "생년월일: " + patientInfo.getPbirthDate() + "\n\n";
-                    content += "성별: " + patientInfo.getPsex() + "\n\n";
+                    //content += "성별: " + patientInfo.setPsex(gender) + "\n\n";
+
+                    //성별 출력 변환
+                    String gender = patientInfo.getPsex();
+                    //String gender = "";
+                    if(gender.equals("F")){
+                        gender = "여성";
+                    } else if(gender.equals("M")){
+                        gender = "남성";
+                    } else{
+                        gender = "성별 정보 없음";
+                    }
+                    content += "성별: " + gender + "\n\n";
                     content += "질환: " + patientInfo.getDisease() + "\n\n";
                     content += "담당병원: " + patientInfo.getHospital() + "\n\n";
                     content += "투약정보: " + patientInfo.getMedicine() + "\n\n";

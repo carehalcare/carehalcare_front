@@ -17,25 +17,17 @@ public class PatientInfo {
    // @SerializedName("id") int id = 0; //간병인, 보호자 식별
 
     public String getDisease() { return disease; }
-    public void setDisease(String disease) { this.disease = disease;}
 
     public String getHospital() { return hospital;}
-    public void setHospital(String hospital) {this.hospital = hospital;}
 
     public String getMedicine() { return medicine;}
-    public void setMedicine(String medicine) { this.medicine = medicine;}
 
     public String getPbirthDate() {return pbirthDate;}
-    public void setPbirthDate(String pbirthDate) {this.pbirthDate = pbirthDate;}
 
     public String getPname() {return pname;}
-    public void setPname(String pname) {this.pname = pname;}
 
     public String getPsex() {return psex;}
-    public void setPsex(String psex) {this.psex = psex;}
-
     public String getRemark() {return remark;}
-    public void setRemark(String remark) {this.remark = remark;}
 
 
     public PatientInfo() {
