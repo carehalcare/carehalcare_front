@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn_more, btn_setting, btn_siren;
     private TextView tv_notiResult;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,32 +46,30 @@ public class MainActivity extends AppCompatActivity {
         btn_siren = (ImageButton) findViewById(R.id.btn_siren);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.20.5.58:8080/")
+                .baseUrl("http://10.101.2.189:8080/")
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
         NoticeApi noticeApi = retrofit.create(NoticeApi.class);
 
-        Call<List<Notice>> call = noticeApi.getPosts();
+        Call<Notice> call = noticeApi.getNotice("userid1");
 
-        call.enqueue(new Callback<List<Notice>>() {
+        call.enqueue(new Callback<Notice>() {
             @Override
-            public void onResponse(Call<List<Notice>> call, Response<List<Notice>> response) {
+            public void onResponse(Call<Notice> call, Response<Notice> response) {
                 if (response.isSuccessful()) {
-                    List<Notice> notices = response.body();
+                    Notice notices = response.body();
                     String content = "";
-                    for (Notice notice : notices) {
-                        content += "내용: " + notice.getContent() + "\n";
-                        content += "작성날짜: " + notice.getCreatedDate() + "\n\n";
-                        tv_notiResult.append(content);
-                    }
+                    content += "내용: " + notices.getContent() + "\n";
+                    content += "작성날짜: " + notices.getCreatedDate() + "\n\n";
+                    tv_notiResult.append(content);
                 }
                 else {
                     Log.d(TAG, "Status Code : " + response.code());
                 }
             }
             @Override
-            public void onFailure(Call<List<Notice>> call, Throwable t) {
+            public void onFailure(Call<Notice> call, Throwable t) {
                 tv_notiResult.setText(t.getMessage());
             }
         });

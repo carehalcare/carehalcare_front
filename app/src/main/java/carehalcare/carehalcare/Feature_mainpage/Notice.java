@@ -1,13 +1,22 @@
 package carehalcare.carehalcare.Feature_mainpage;
 
-public class Notice {
-    private String content;
-    private String createdDate;
+import com.google.gson.annotations.SerializedName;
 
+public class Notice {
+    @SerializedName("content") String content;
+    @SerializedName("createdDate") String createdDate;
+    //@SerializedName("userId") String userId;
+    public Notice(String content, String createdDate) {
+        this.content = content;
+        this.createdDate = createdDate;
+    }
     public String getContent() {
         return content;
     }
     public String getCreatedDate() {
         return createdDate;
     }
+
+    //public String getUserId() { return userId; }
+
 }

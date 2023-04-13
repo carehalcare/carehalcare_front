@@ -6,22 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import carehalcare.carehalcare.R;
 
-public class ListNoticeAdapter extends BaseAdapter {
+public class NoticeListAdapter extends BaseAdapter {
+    //private ArrayList<Notice> noticeArrayList;
 
-    private ArrayList<ListPatientInfo> listnoti = new ArrayList<ListPatientInfo>() ;
-    public ListNoticeAdapter() {
+    private ArrayList<Notice> listnoti = new ArrayList<Notice>();
+
+    public NoticeListAdapter() {
 
     }
 
     @Override
     public int getCount() {
-        return listnoti.size() ;
+        return listnoti.size();
     }
 
     // ** 이 부분에서 리스트뷰에 데이터를 넣어줌 **
@@ -33,15 +34,17 @@ public class ListNoticeAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.activity_listinfo, parent, false);
+            convertView = inflater.inflate(R.layout.notice_list, parent, false);
         }
 
-        TextView p_notice = (TextView) convertView.findViewById(R.id.p_notice) ;
-        ListPatientInfo listViewItem = listnoti.get(position);
+        TextView p_notice = (TextView) convertView.findViewById(R.id.p_notice);
+        Notice listViewItem = listnoti.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
-        p_notice.setText(listViewItem.getContext());
+        p_notice.setText(listViewItem.getContent());
+        p_notice.setText(listViewItem.getCreatedDate());
 
+        /*
 
         //리스트뷰 클릭 이벤트
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -50,9 +53,10 @@ public class ListNoticeAdapter extends BaseAdapter {
                 Toast.makeText(context, (pos+1)+"번째 리스트가 클릭되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
+
+         */
         return convertView;
     }
-
     @Override
     public long getItemId(int position) {
         return position ;
@@ -63,10 +67,9 @@ public class ListNoticeAdapter extends BaseAdapter {
         return listnoti.get(position) ;
     }
 
-    // 데이터값 넣어줌
-    public void addInfo(String text) {
-        ListPatientInfo item = new ListPatientInfo();
-        item.setContext(text);
-        listnoti.add(item);
+    public void addInfo(Notice content)
+    {
+        listnoti.add(content);
     }
+
 }
