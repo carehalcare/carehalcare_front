@@ -64,13 +64,19 @@
             android:layout_gravity="center"
             android:layout_margin="10dp" >
 
-            <ListView
-                android:id="@+id/list_notice"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/dialog_radius" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/noti_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_notiview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 </LinearLayout>
