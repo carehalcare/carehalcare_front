@@ -9,24 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import carehalcare.carehalcare.R;
 
 public class NoticeViewAdapter extends RecyclerView.Adapter<NoticeViewAdapter.ViewHolder>{
 
-    private ArrayList<Notice> notices;
+    private List<Notice> notices;
+    //public NoticeViewAdapter(List<Notice> notices){ this.notices = notices; }
+    public NoticeViewAdapter (List<Notice> notices){ this.notices = notices; };
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tv_notice;
-
-        public ViewHolder(@NonNull View itemView){
-            super(itemView);
-            tv_notice = (TextView) itemView.findViewById(R.id.tv_noti);
-        }
-    }
-
-    public NoticeViewAdapter (ArrayList<Notice> Pnoti){ this.notices = Pnoti; };
-
+    @NonNull
     @Override
     public NoticeViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext())
@@ -36,9 +29,21 @@ public class NoticeViewAdapter extends RecyclerView.Adapter<NoticeViewAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoticeViewAdapter.ViewHolder holder, int position) {
-        holder.tv_notice.setText(notices.get(position).getContent());
-        holder.tv_notice.setText(notices.get(position).getCreatedDate());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Notice notice = notices.get(position);
+        if (notices != null && holder.tv_notice != null) {
+            holder.tv_notice.setText(notice.getContent() +"  " + notice.getCreatedDate());
+
+        }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        TextView tv_notice;
+
+        public ViewHolder(@NonNull View itemView){
+            super(itemView);
+            tv_notice = (TextView) itemView.findViewById(R.id.tv_notice);
+        }
     }
 
 

@@ -9,5 +9,5 @@ import retrofit2.http.Path;
 public interface NoticeApi {
 
     @GET("/notices/list/{puid}")
-    Call<Notice> getNotice(@Path("puid") String puid);
+    Call<List<Notice>> getNotice(@Path("puid") String puid);
 }

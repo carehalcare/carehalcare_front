@@ -55,32 +55,34 @@ public class PNoticeActivity extends AppCompatActivity {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.101.2.189:8080/") //연결된 네트워크 ip로 수정필요
+                .baseUrl("http://172.20.5.216:8080/") //연결된 네트워크 ip로 수정필요
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
         NoticeApi noticeApi = retrofit.create(NoticeApi.class);
 
-        Call<Notice> call = noticeApi.getNotice("userid1");
+        Call<List<Notice>> call = noticeApi.getNotice("userid1");
 
-        call.enqueue(new Callback<Notice>() {
+        call.enqueue(new Callback<List<Notice>>() {
             @Override
-            public void onResponse(Call<Notice> call, Response<Notice> response) {
+            public void onResponse(Call<List<Notice>> call, Response<List<Notice>> response) {
 
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        Notice notices = new Notice(response.body().getContent(),
-                                response.body().getCreatedDate());
-                        notiviewlist.add(0, notices);
-                        Log.e("userid: ", response.body().getCreatedDate().toString());
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Notice> notices = response.body();
+
+                    for (Notice notice : notices) {
+                        notiviewlist.add(notice);
                     }
+                    Log.d("연결 성공", "Status Code : " + response.code());
+                    noticeViewAdapter.notifyDataSetChanged();
+
                 } else {
-                    Log.d(TAG, "Status Code : " + response.code());
+                    Log.d("연결 실패", "Status Code : " + response.code());
                 }
             }
             @Override
-            public void onFailure(Call<Notice> call, Throwable t) {
+            public void onFailure(Call<List<Notice>> call, Throwable t) {
                 tv_notiview.setText(t.getMessage());
             }
         });

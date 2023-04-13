@@ -10,6 +10,9 @@ public class Notice {
         this.content = content;
         this.createdDate = createdDate;
     }
+
+    public Notice(){}
+
     public String getContent() {
         return content;
     }

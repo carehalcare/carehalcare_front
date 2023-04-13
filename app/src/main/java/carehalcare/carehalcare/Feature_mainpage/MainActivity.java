@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
     private Button commute, write, info, noti;
     private ImageButton btn_more, btn_setting, btn_siren;
-    private TextView tv_notiResult;
+    private TextView tv_noti1, tv_noti2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv_notiResult = (TextView)findViewById(R.id.tv_noti);
+        tv_noti1 = (TextView)findViewById(R.id.tv_noti1);
+        tv_noti2 = (TextView)findViewById(R.id.tv_noti2);
         commute = (Button) findViewById(R.id.menu1);
         write = (Button) findViewById(R.id.menu2);
         info = (Button) findViewById(R.id.menu3);
@@ -46,31 +47,45 @@ public class MainActivity extends AppCompatActivity {
         btn_siren = (ImageButton) findViewById(R.id.btn_siren);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.101.2.189:8080/")
+                .baseUrl("http://172.20.5.216:8080/")
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
         NoticeApi noticeApi = retrofit.create(NoticeApi.class);
 
-        Call<Notice> call = noticeApi.getNotice("userid1");
+        Call<List<Notice>> call = noticeApi.getNotice("userid1");
 
-        call.enqueue(new Callback<Notice>() {
+        call.enqueue(new Callback<List<Notice>>() {
             @Override
-            public void onResponse(Call<Notice> call, Response<Notice> response) {
+            public void onResponse(Call<List<Notice>> call, Response<List<Notice>> response) {
                 if (response.isSuccessful()) {
-                    Notice notices = response.body();
+
+                    List<Notice> notices = response.body();
                     String content = "";
-                    content += "내용: " + notices.getContent() + "\n";
-                    content += "작성날짜: " + notices.getCreatedDate() + "\n\n";
-                    tv_notiResult.append(content);
+                    int count = 0;
+
+                    for (Notice notice : notices) {
+
+                        content += "내용: " + notice.getContent() + "\n";
+                        content += "작성날짜: " + notice.getCreatedDate() + "\n";
+
+                        if (count == 0) {
+                            tv_noti1.setText(content);
+                        } else if (count == 1) {
+                            tv_noti2.append(content);
+                            break;
+                        }
+
+                        count++;
+                    }
                 }
                 else {
-                    Log.d(TAG, "Status Code : " + response.code());
+                    Log.d(TAG, "연결 실패 : " + response.code());
                 }
             }
             @Override
-            public void onFailure(Call<Notice> call, Throwable t) {
-                tv_notiResult.setText(t.getMessage());
+            public void onFailure(Call<List<Notice>> call, Throwable t) {
+                tv_noti1.setText(t.getMessage());
             }
         });
 

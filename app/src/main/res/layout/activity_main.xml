@@ -67,10 +67,27 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_noti"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tv_noti1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeStepGranularity="1sp"
                 android:layout_margin="5dp"
+                android:background="@drawable/dialog_radius"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_noti2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeStepGranularity="1sp"
+                android:layout_margin="5dp"
+                android:background="@drawable/dialog_radius"
                 android:textColor="@color/black" />
 
             <ImageButton
