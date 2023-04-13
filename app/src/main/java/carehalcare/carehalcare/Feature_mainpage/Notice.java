@@ -20,6 +20,11 @@ public class Notice {
         return createdDate;
     }
 
+    public String setCreatedDate(String newDateStr) {
+        this.createdDate = createdDate;
+        return newDateStr;
+    }
+
     //public String getUserId() { return userId; }
 
 }

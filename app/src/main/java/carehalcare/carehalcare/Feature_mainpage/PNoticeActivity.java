@@ -15,8 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import carehalcare.carehalcare.R;
 import retrofit2.Call;
@@ -34,8 +38,7 @@ public class PNoticeActivity extends AppCompatActivity {
     private ArrayList<Notice> notiviewlist;
     private TextView tv_notiview;
 
-
-    @Override
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pnotice);
@@ -73,6 +76,7 @@ public class PNoticeActivity extends AppCompatActivity {
 
                     for (Notice notice : notices) {
                         notiviewlist.add(notice);
+
                     }
                     Log.d("연결 성공", "Status Code : " + response.code());
                     noticeViewAdapter.notifyDataSetChanged();
