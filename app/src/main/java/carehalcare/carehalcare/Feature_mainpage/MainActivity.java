@@ -135,5 +135,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //일단 메인에서 설정 아이콘에서 연결시켜서 test, 로그인 api 완료시 로그인 id의 매칭되는 pid없을 경우 findpatient로 이동하게끔 변경
+        btn_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, FindPatientActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
