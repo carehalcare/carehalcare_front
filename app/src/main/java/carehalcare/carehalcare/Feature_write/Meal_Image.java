@@ -18,12 +18,15 @@ public class Meal_Image {
     @SerializedName("mealId")
     Long mealId;
 
-    public Meal_Image(Long id, String originalFilename, String storeFilename, String filePath, Long mealId) {
+    @SerializedName("encodedString")
+    private String encodedString;
+    public Meal_Image(Long id, String originalFilename, String storeFilename, String filePath, Long mealId, String encodedString) {
         this.id = id;
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
         this.filePath = filePath;
         this.mealId = mealId;
+        this.encodedString = encodedString;
     }
 
     public Long getId() {
@@ -64,5 +67,13 @@ public class Meal_Image {
 
     public void setMealId(Long mealId) {
         this.mealId = mealId;
+    }
+
+    public String getEncodedString() {
+        return encodedString;
+    }
+
+    public void setEncodedString(String encodedString) {
+        this.encodedString = encodedString;
     }
 }

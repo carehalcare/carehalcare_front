@@ -145,38 +145,38 @@ public class Meal_form extends AppCompatActivity {
 
                 Meal_API meal_api = retrofit.create(Meal_API.class);
                 //TODO 잠시 보내는거 해제 합니다.
-//                meal_api.postDatameal(map,names).enqueue(new Callback<Long>() {
-//                    @Override
-//                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
-//                        if(response.isSuccessful()){
-//                            if (response.body()!=null){
-//                                Log.e("?????????????????????????????","+");
-//                                Toast.makeText(getApplicationContext(),"저장이 완료되었습니다.",Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                        else {
-//                            Converter<ResponseBody, ErrorModel> converter = retrofit.responseBodyConverter(ErrorModel.class, new java.lang.annotation.Annotation[0]);
-//                            ErrorModel errorModel = null;
-//                            try {
-//                                errorModel = converter.convert(response.errorBody());
-//                                Log.e("error code???",""+errorModel.toString());
-//                                Log.e("error code???",""+response.body());
-//                                Log.e("error code???",""+response.message());
-//                                Log.e("YMC", "stringToJson msg: 실패" + response.code());
-//                                Toast.makeText(Meal_form.this, errorModel.toString(), Toast.LENGTH_SHORT).show();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Long> call, Throwable t) {
-//                        Log.e("통신에러","+"+t.toString());
-//                        Toast.makeText(getApplicationContext(), "통신에러", Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                });
+                meal_api.postDatameal(map,names).enqueue(new Callback<Long>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
+                        if(response.isSuccessful()){
+                            if (response.body()!=null){
+                                Log.e("?????????????????????????????","+");
+                                Toast.makeText(getApplicationContext(),"저장이 완료되었습니다.",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else {
+                            Converter<ResponseBody, ErrorModel> converter = retrofit.responseBodyConverter(ErrorModel.class, new java.lang.annotation.Annotation[0]);
+                            ErrorModel errorModel = null;
+                            try {
+                                errorModel = converter.convert(response.errorBody());
+                                Log.e("error code???",""+errorModel.toString());
+                                Log.e("error code???",""+response.body());
+                                Log.e("error code???",""+response.message());
+                                Log.e("YMC", "stringToJson msg: 실패" + response.code());
+                                Toast.makeText(Meal_form.this, errorModel.toString(), Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Long> call, Throwable t) {
+                        Log.e("통신에러","+"+t.toString());
+                        Toast.makeText(getApplicationContext(), "통신에러", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
                 finish();
             }
         });

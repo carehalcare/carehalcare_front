@@ -15,16 +15,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -54,15 +59,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.transform.Result;
 
 import carehalcare.carehalcare.R;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class EightMenuActivity extends AppCompatActivity implements Button.OnClickListener {
     private FrameLayout container;
@@ -73,7 +85,9 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     private static final int REQUEST_CODE = 1099;
     private Button gopic;
     Bitmap bitmap;
+
     private static final int MY_PERMISSION_CAMERA = 1111;
+    private static final int MY_PERMISSION_CAMERA2 = 1112;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
     private static final int REQUEST_IMAGE_CROP = 4444;
@@ -123,16 +137,15 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
 
         this.InitializeView();
-        checkPermission();
+        if (Build.VERSION.SDK_INT < 23){
+        }
+        else {
+            requestUserPermission();
+        }
     }
 
 
-
-
-
     public void InitializeView() {
-
-
         btn_active = (ImageButton) findViewById(R.id.btn_active);
         btn_meal = (ImageButton) findViewById(R.id.btn_meal);
         btn_medicine = (ImageButton) findViewById(R.id.btn_medicine);
@@ -140,16 +153,22 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         btn_toilet = (ImageButton) findViewById(R.id.btn_toilet);
         btn_wash = (ImageButton) findViewById(R.id.btn_wash);
         btn_clean = (ImageButton) findViewById(R.id.btn_clean);
-
-
     }
     // 각 버튼에 맞는 함수들
     public void onMeal(View view) {
         deleteview();
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Meal_API.URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        Meal_API mealapi = retrofit.create(Meal_API.class);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.meal_list,container,true);
-
 
         RecyclerView mrecyclerView= (RecyclerView) findViewById(R.id.recyclerview_meal_list);
         LinearLayoutManager mlayoutManager = new LinearLayoutManager(this);
@@ -163,6 +182,8 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                 mlayoutManager.getOrientation());
         mrecyclerView.addItemDecoration(dividerItemDecoration);
 
+        getmeallsit();
+
         Button buttonInsert = (Button)findViewById(R.id.btn_meal_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +194,7 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         mealAdapter.setOnItemClickListener(new Meal_adapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Meal_text detail_active_text = mealArrayList.get(position);
+                Meal_text detail_meal_text = mealArrayList.get(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(EightMenuActivity.this);
 
                 View view = LayoutInflater.from(EightMenuActivity.this)
@@ -187,13 +208,47 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                 final ImageView iv_meal_detail = dialog.findViewById(R.id.iv_meal_detail);
                 final TextView tv_meal_detail = dialog.findViewById(R.id.tv_meal_detail);
 
-                iv_meal_detail.setImageURI(detail_active_text.getPhotouri());
-                tv_meal_detail.setText(detail_active_text.getContent());
+                iv_meal_detail.setImageURI(detail_meal_text.getPhotouri());
+                Log.e("왜 안돼는건데?????????",""+detail_meal_text.getPhotouri().getPath());
+                tv_meal_detail.setText(detail_meal_text.getContent());
 
                 final Button btn_meal_detail = dialog.findViewById(R.id.btn_meal_detail);
                 btn_meal_detail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_detail_delete);
+                btn_meal_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                        builder.setTitle("삭제하기")
+                                .setMessage("삭제하시겠습니까?")
+                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mealapi.deleteData(detail_meal_text.getId()).enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                if (!response.isSuccessful()) {
+                                                    return;
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                Log.e("dummmm....................","뭐하며여?");
+                                            }
+                                        });
+                                        mealArrayList.remove(position);
+                                        mealAdapter.notifyItemRemoved(position);
+                                        mealAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNeutralButton("취소", null)
+                                .show();
                         dialog.dismiss();
                     }
                 });
@@ -221,6 +276,8 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mrecyclerView.getContext(),
                 mlayoutManager.getOrientation());
         mrecyclerView.addItemDecoration(dividerItemDecoration);
+
+
 
         Button buttonInsert = (Button)findViewById(R.id.btn_walk_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
@@ -1227,7 +1284,6 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     ActivityResultLauncher<Intent> activityResultDetail = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
-
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() ==2888){
@@ -1236,20 +1292,22 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
                         Uri uris = result.getData().getParcelableExtra("uris");
                         String tsa = result.getData().getStringExtra("edit");
+                        Log.e("왜 안돼는건데ㄹㄹㄹㄹㄹㄹㄹ",""+uris.getPath());
+
 
                         String mealTodayResult;
                         mealTodayResult = tsa;
 
 
                         //Meal_text dict = new Meal_text(imageUri, mealTodayResult, "uri");
-                        Meal_text dict = new Meal_text(uris, mealTodayResult, "uri");
+                        Meal_text dict = new Meal_text(uris, mealTodayResult, Long.valueOf(mealArrayList.get(0).getId()+1), "uri");
 
                         mealArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
                         mealAdapter.notifyItemInserted(0);
-                        //mAdapter.notifyDataSetChanged();
+                        mealAdapter.notifyDataSetChanged();
 
 
                     }
@@ -1278,14 +1336,19 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
                     // 인텐트에 전달할 때는 FileProvier의 Return값인 content://로만!!, providerURI의 값에 카메라 데이터를 넣어 보냄
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, providerURI);
 
-                    if (using==100){
-                        Intent intent = new Intent(this, Meal_form.class);
-                        intent.putExtra("uri", providerURI);
-                        activityResultDetail.launch(intent);}
+                    if (using == 100) {
+                        Log.e("dfdjfdkfjdskfjksdjflsjfk", "whwhwhwhwhwhwhwhw");
+                        Intent mealintent = new Intent(this, Meal_form.class);
+                        mealintent.putExtra("uri", providerURI);
+                        Log.e("whwhwhwhwhwhwhwh", "whwhwhwhwhwhwhwhw");
+                        activityResultDetail.launch(mealintent);
+                    }
+
+
                     else if (using==200){
-                        Intent intent = new Intent(this, Walk_form.class);
-                        intent.putExtra("uri", providerURI);
-                        walkResultDetail.launch(intent);
+                        Intent walkintent = new Intent(this, Walk_form.class);
+                        walkintent.putExtra("uri", providerURI);
+                        walkResultDetail.launch(walkintent);
                     }
 
                     activityResultPicture.launch(takePictureIntent);                }
@@ -1302,7 +1365,6 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
         File imageFile = null;
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "yeeun");
-
         if (!storageDir.exists()) {
             Log.i("mCurrentPhotoPath1", storageDir.toString());
             storageDir.mkdirs();
@@ -1310,7 +1372,7 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
 
         imageFile = new File(storageDir, imageFileName);
         mCurrentPhotoPath = imageFile.getAbsolutePath();
-
+        Log.e("현재 절대경로는 : ",""+mCurrentPhotoPath);
         return imageFile;
     }
 
@@ -1324,57 +1386,175 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         sendBroadcast(mediaScanIntent);
         Toast.makeText(this, "사진이 앨범에 저장되었습니다.", Toast.LENGTH_SHORT).show();
     }
-    private void checkPermission(){
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // 처음 호출시엔 if()안의 부분은 false로 리턴 됨 -> else{..}의 요청으로 넘어감
-            if ((ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) ||
-                    (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA))) {
-                new AlertDialog.Builder(this)
-                        .setTitle("알림")
-                        .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
-                        .setNeutralButton("설정", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                intent.setData(Uri.parse("package:" + getPackageName()));
-                                startActivity(intent);
-                            }
-                        })
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        })
-                        .setCancelable(false)
-                        .create()
-                        .show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSION_CAMERA);
+
+    private void requestUserPermission(){
+        try {
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
+                if (ActivityCompat.checkSelfPermission(EightMenuActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(EightMenuActivity.this, Manifest.permission.CAMERA)!=PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(EightMenuActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA}
+                            ,MY_PERMISSION_CAMERA);
+                } else {
+
+                }
+            } else{
+                if (ActivityCompat.checkSelfPermission(EightMenuActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(EightMenuActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(EightMenuActivity.this, Manifest.permission.CAMERA)!=PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(EightMenuActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA},MY_PERMISSION_CAMERA2);
+                } else {
+
+                }
             }
+        } catch (Exception e){
+
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSION_CAMERA:
-                for (int i = 0; i < grantResults.length; i++) {
-                    // grantResults[] : 허용된 권한은 0, 거부한 권한은 -1
-                    if (grantResults[i] < 0) {
-                        Toast.makeText(EightMenuActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                // 허용했다면 이 부분에서..
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode != -1){
+//            Log.e("28282828","d"+"   "+grantResults.length);
+//            Log.e("28282828","d"+"   "+grantResults[0]);
+//            for (int i=0;i<permissions.length;i++){
+//                Log.e("28282828","d"+"   "+permissions[i]);
+//            }
+//            Log.e("28282828","d"+"   "+PackageManager.PERMISSION_GRANTED);
+            for (int i = 0; i < grantResults.length; i++) {
+                // grantResults[] : 허용된 권한은 0, 거부한 권한은 -1
+                if (grantResults[i] < 0) {
+                    Log.e("거부된 권한",""+permissions[i]+"       "+i+"      "+grantResults[i]);
+                    // Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
+                }}
 
-                break;
+            switch (requestCode) {
+                case MY_PERMISSION_CAMERA:
+                    if (grantResults.length > 0 &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    } else{
+                        new AlertDialog.Builder(this)
+                                .setTitle("알림")
+                                .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
+                                .setNeutralButton("설정", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        intent.setData(Uri.parse("package:" + getPackageName()));
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        finish();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .create()
+                                .show();
+                    }
+                    break;
+                case MY_PERMISSION_CAMERA2:
+                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                            && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+
+                    }else {
+                        checkPermission();
+                    } break;
+                default:
+                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
         }
     }
+    @TargetApi(Build.VERSION_CODES.M)
+    private void checkPermission(){
+        boolean writeExternalStorageRationale = ActivityCompat.shouldShowRequestPermissionRationale(EightMenuActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(EightMenuActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (hasWriteExternalStoragePermission == PackageManager.PERMISSION_DENIED &&
+                writeExternalStorageRationale){
+            Toast.makeText(EightMenuActivity.this, "앱을 실행하려면 퍼미션을 허가하셔야 합니다.", Toast.LENGTH_SHORT).show();
+        } else if(hasWriteExternalStoragePermission == PackageManager.PERMISSION_DENIED
+                && !writeExternalStorageRationale){
+            new AlertDialog.Builder(this)
+                    .setTitle("알림")
+                    .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
+                    .setNeutralButton("설정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.parse("package:" + getPackageName()));
+                            startActivity(intent);
+                        }
+                    })
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+        } else if(hasWriteExternalStoragePermission == PackageManager.PERMISSION_GRANTED){
+        }
+    }
+    public void getmeallsit(){
+        ProgressDialog dialog = new ProgressDialog(EightMenuActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("식사 리스트 조회중...");
+        dialog.show();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Meal_API.URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        Meal_API meal_service = retrofit.create(Meal_API.class);
+        meal_service.getDatameal("userId3","puserId3").enqueue(new Callback<List<Meal_ResponseDTO>>() {
+            @Override
+            public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
+                if (response.body() != null) {
+                    List<Meal_ResponseDTO> datas = response.body();
+                    String encodedString;
+                    byte[] encodeByte;
+                    Bitmap mealbitmap;
 
 
+                    if (datas != null) {
+                        for (int i = 0; i < datas.size(); i++) {
 
+                            encodedString = response.body().get(i).getImages().get(0).getEncodedString();
+
+
+                            encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+                            mealbitmap = BitmapFactory.decodeByteArray( encodeByte, 0, encodeByte.length ) ;
+
+                            Meal_text dict_0 = new Meal_text(mealbitmap,
+                                    response.body().get(i).getContent(),response.body().get(i).getId());
+
+                            mealArrayList.add( dict_0);
+                            mealAdapter.notifyItemInserted(0);
+                            Log.e("음식리스트 출력", "********1*************1*********!");
+                        }
+                        Log.e("getDatameal end", "======================================");
+                    }
+                }dialog.dismiss();}
+            @Override
+            public void onFailure(Call<List<Meal_ResponseDTO>> call, Throwable t) {
+                Log.e("통신에러","+"+t.toString());
+                Toast.makeText(getApplicationContext(), "통신에러", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
     @Override
     public void onClick(View view) {
 

@@ -141,12 +141,20 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
 
 
 
-        //String seeText = mList.get(position).getContent();
         Uri seePhoto = mList.get(position).getPhotouri();
+        Bitmap seeBitPhoto = mList.get(position).getPhotobitmap();
 
-        //viewholder.tv_mealcontent.setText(seeText);
-        //      viewholder.iv_mealpic.setImageURI(seePhoto);
+
         Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_mealpic);
+
+
+        if (mList.get(position).getUripan() != null){
+            Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_mealpic);}
+        else {
+            Glide.with(viewholder.itemView).load(seeBitPhoto).into(viewholder.iv_mealpic);
+        }
+
+        //viewholder.iv_mealpic.setImageURI(seePhoto);
         Date today_date = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
         String seeText = format.format(today_date);

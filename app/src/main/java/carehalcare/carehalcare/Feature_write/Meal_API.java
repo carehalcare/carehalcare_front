@@ -7,6 +7,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -20,6 +21,8 @@ import retrofit2.http.Query;
 public interface Meal_API {
     String URL = "http://172.20.20.168:8080/";
 
+    @DELETE("/meals/{id}")
+    Call<Void> deleteData(@Path("id") Long id);
     @GET("meals/list/{userId}/{puserId}")
     Call<List<Meal_ResponseDTO>> getDatameal(
             @Path("userId") String userId,

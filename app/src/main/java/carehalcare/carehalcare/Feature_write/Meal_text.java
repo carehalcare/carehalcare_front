@@ -3,19 +3,44 @@ package carehalcare.carehalcare.Feature_write;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class Meal_text {
     int image;
     Uri photouri;
     String content;
     Bitmap photobitmap;
 
-    public Meal_text(Uri photouri, String content, String uri) {
+    Long id;
+    String uripan;
+    public Meal_text(Uri photouri, String content, Long id, String uripan) {
         this.photouri = photouri;
         this.content = content;
+        this.id = id;
+        this.uripan = uripan;
     }
-    public Meal_text(Bitmap photobitmap, String content) {
+    public Meal_text(Bitmap photobitmap, String content, Long id) {
         this.photobitmap = photobitmap;
         this.content = content;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUripan() {
+        return uripan;
+    }
+
+    public void setUripan(String uripan) {
+        this.uripan = uripan;
     }
 
     public Bitmap getPhotobitmap() {

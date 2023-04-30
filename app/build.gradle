@@ -50,4 +50,7 @@ dependencies {
 
     //선택사항 : http 통신 로그를 출력한다
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+    //String으로 retrofit받기
+    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
 }
