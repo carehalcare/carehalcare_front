@@ -31,8 +31,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private Button commute, write, info, noti;
-    private ImageButton btn_more, btn_setting, btn_siren;
+    private ImageButton btn_setting;
     private TextView tv_noti1, tv_noti2;
 
     private String formatDate(String dateStr) {
@@ -59,12 +60,10 @@ public class MainActivity extends AppCompatActivity {
         write = (Button) findViewById(R.id.menu2);
         info = (Button) findViewById(R.id.menu3);
         noti = (Button) findViewById(R.id.menu4);
-        btn_more = (ImageButton) findViewById(R.id.btn_morenoti);
         btn_setting = (ImageButton) findViewById(R.id.btn_setting);
-        btn_siren = (ImageButton) findViewById(R.id.btn_siren);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.20.5.216:8080/")
+                .baseUrl("http://192.168.0.78:8080/")
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
@@ -121,14 +120,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         noti.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, PNoticeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, PNoticeActivity.class);
