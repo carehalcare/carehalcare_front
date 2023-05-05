@@ -4,7 +4,7 @@
     <item
         android:id="@+id/rectangle_1"
         android:width="450dp"
-        android:height="720dp"
+        android:height="800dp"
         android:drawable="@drawable/rectangle_1" >
 
     </item>

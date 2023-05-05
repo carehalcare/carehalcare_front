@@ -4,6 +4,6 @@
     <item
         android:id="@+id/rectangle_3"
         android:width="450dp"
-        android:height="800dp"
+        android:height="900dp"
         android:drawable="@drawable/rectangle_3" />
 </layer-list>
