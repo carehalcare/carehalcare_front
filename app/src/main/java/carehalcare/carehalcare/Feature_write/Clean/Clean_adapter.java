@@ -1,4 +1,4 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Clean;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -10,12 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import carehalcare.carehalcare.R;
 
@@ -24,7 +27,7 @@ public class Clean_adapter extends RecyclerView.Adapter<Clean_adapter.CustomView
     private Context mContext;
 
     //아이템 클릭 리스너 인터페이스
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
     //리스너 객체 참조 변수
@@ -129,9 +132,13 @@ public class Clean_adapter extends RecyclerView.Adapter<Clean_adapter.CustomView
 
         viewholder.tv_todayClean.setText("주변청결");
         String seeText = mList.get(position).get_CleanTodayResult();
+        Date today_date = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
+        String cleanTodayResult = format.format(today_date)+" 기록확인하기";
+
         //if (seeText.length() >= 25){seeText = seeText.substring(0,25);};
         //viewholder.tv_todayCleanResult.setText(seeText+" ···");
-        viewholder.tv_todayCleanResult.setText(seeText);
+        viewholder.tv_todayCleanResult.setText(cleanTodayResult);
 
 
     }

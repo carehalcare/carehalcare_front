@@ -1,4 +1,6 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Clean;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Clean_text {
     String changeSheet;
@@ -6,15 +8,24 @@ public class Clean_text {
     String ventilation;
     String et_cleanForm;
 
+    Long id;
     String cleanTodayResult;
 
-    public Clean_text(String changeSheet, String changeCloth, String ventilation, String et_cleanForm, String cleanTodayResult) {
+    public Clean_text(String changeSheet, String changeCloth, String ventilation, String et_cleanForm) {
         this.changeSheet = changeSheet;
         this.changeCloth = changeCloth;
         this.ventilation = ventilation;
         this.et_cleanForm = et_cleanForm;
-        this.cleanTodayResult = cleanTodayResult;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String get_CleanTodayResult() {
         return cleanTodayResult;
     }
