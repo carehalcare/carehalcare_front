@@ -12,8 +12,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import carehalcare.carehalcare.R;
 import retrofit2.Call;
@@ -21,62 +28,66 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class PNoticeActivity extends AppCompatActivity {
 
-    ImageButton btn_home;
-    private ListView listnoti;
-    private ListNoticeAdapter notiadapter;
-    //private String[] context = {"공지", "공지공지"};
+    NoticeViewAdapter noticeViewAdapter;
+    private ImageButton btn_home;
+    private RecyclerView notiview;
+    private ArrayList<Notice> notiviewlist;
+    private TextView tv_notiview;
 
-    @SuppressLint("MissingInflatedId")
-    @Override
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workernoti);
+        setContentView(R.layout.activity_pnotice);
 
-         TextView p_notice = (TextView) findViewById(R.id.p_notice);
+        tv_notiview = (TextView) findViewById(R.id.tv_notiview);
         btn_home = (ImageButton) findViewById(R.id.btn_homenoti);
-        notiadapter = new ListNoticeAdapter();
-        listnoti = (ListView) findViewById(R.id.list_notice);
+        notiview = (RecyclerView) findViewById(R.id.noti_view);
 
-        listnoti.setAdapter(notiadapter);
-/*
-        for(int i=0; i < context.length; i++){
-            notiadapter.addInfo(context[i]);
-        }
- */
+        //LayoutManager 설정
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        notiview.setLayoutManager(layoutManager);
+
+        //어댑터 set
+        notiviewlist = new ArrayList<>();
+        noticeViewAdapter = new NoticeViewAdapter(notiviewlist);
+        notiview.setAdapter(noticeViewAdapter);
+
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.20.5.58:8080/") //연결된 네트워크 ip로 수정필요
+                .baseUrl("http://172.20.5.216:8080/") //연결된 네트워크 ip로 수정필요
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
         NoticeApi noticeApi = retrofit.create(NoticeApi.class);
 
-        Call<List<Notice>> call = noticeApi.getPosts();
+        Call<List<Notice>> call = noticeApi.getNotice("userid1");
 
         call.enqueue(new Callback<List<Notice>>() {
             @Override
             public void onResponse(Call<List<Notice>> call, Response<List<Notice>> response) {
-                if (response.isSuccessful()) {
+
+                if (response.isSuccessful() && response.body() != null) {
                     List<Notice> notices = response.body();
-                    String content = "";
 
                     for (Notice notice : notices) {
-                        content += "내용: " + notice.getContent() + "  ";
-                        content += "작성날짜: " + notice.getCreatedDate() + "\n";
-                        p_notice.append(content);
-                        notiadapter.addInfo(content);
-                        //list로 어떻게 받아야할 지 수정이 필요함
+                        notiviewlist.add(notice);
+
                     }
-                }
-                else {
-                    Log.d(TAG, "Status Code : " + response.code());
+                    Log.d("연결 성공", "Status Code : " + response.code());
+                    noticeViewAdapter.notifyDataSetChanged();
+
+                } else {
+                    Log.d("연결 실패", "Status Code : " + response.code());
                 }
             }
             @Override
             public void onFailure(Call<List<Notice>> call, Throwable t) {
-                p_notice.setText(t.getMessage());
+                tv_notiview.setText(t.getMessage());
             }
         });
 

@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background_login" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="로그인을 해주세요"
-        android:textSize="15dp"/>
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -96,6 +99,6 @@
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
             android:background="@mipmap/img_kakao" />
-    </LinearLayout>
 
+    </LinearLayout>
 </LinearLayout>
