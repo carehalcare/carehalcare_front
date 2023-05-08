@@ -1,7 +1,6 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Active;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -13,13 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Dictionary;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import carehalcare.carehalcare.R;
 
@@ -27,7 +26,7 @@ public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomVi
     private ArrayList<Active_text> mList;
     private Context mContext;
 
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
     //리스너 객체 참조 변수
@@ -128,7 +127,11 @@ public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomVi
 
 
         viewholder.tv_todayActive.setText("오늘의 활동");
-        viewholder.tv_todayActiveResult.setText(mList.get(position).getactiveTodayResult());
+        Date today_date = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
+        String activeTodayResult = format.format(today_date)+" 기록확인하기";
+        viewholder.tv_todayActiveResult.setText(activeTodayResult);
+
     }
 
     @Override
