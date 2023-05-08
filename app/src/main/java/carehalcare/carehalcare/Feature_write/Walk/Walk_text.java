@@ -1,21 +1,38 @@
-package carehalcare.carehalcare.Feature_write;
-
+package carehalcare.carehalcare.Feature_write.Walk;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-public class Meal_text {
+public class Walk_text {
     int image;
     Uri photouri;
-    String content;
     Bitmap photobitmap;
 
-    public Meal_text(Uri photouri, String content, String uri) {
+    Long id;
+    String uripan;
+    public Walk_text(Uri photouri, Long id, String uripan) {
         this.photouri = photouri;
-        this.content = content;
+        this.id = id;
+        this.uripan = uripan;
     }
-    public Meal_text(Bitmap photobitmap, String content) {
+    public Walk_text(Bitmap photobitmap, Long id) {
         this.photobitmap = photobitmap;
-        this.content = content;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUripan() {
+        return uripan;
+    }
+
+    public void setUripan(String uripan) {
+        this.uripan = uripan;
     }
 
     public Bitmap getPhotobitmap() {
@@ -34,13 +51,6 @@ public class Meal_text {
         this.photouri = photouri;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public int getImage() {
         return image;
@@ -49,5 +59,4 @@ public class Meal_text {
     public void setImage(int image) {
         this.image = image;
     }
-
 }

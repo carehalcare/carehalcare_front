@@ -1,4 +1,4 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Wash;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -14,35 +14,39 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import carehalcare.carehalcare.R;
 
-public class Sleep_adapter extends RecyclerView.Adapter<Sleep_adapter.CustomViewHolder>{
-    private ArrayList<Sleep_text> mList;
+public class Wash_adapter extends RecyclerView.Adapter<Wash_adapter.CustomViewHolder>{
+    private ArrayList<Wash_text> mList;
     private Context mContext;
 
     //아이템 클릭 리스너 인터페이스
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
     //리스너 객체 참조 변수
-    private Sleep_adapter.OnItemClickListener mListener = null;
+    private Wash_adapter.OnItemClickListener mListener = null;
     //리스너 객체 참조를 어댑터에 전달 메서드
-    public void setOnItemClickListener(Sleep_adapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(Wash_adapter.OnItemClickListener listener) {
         this.mListener = listener;
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
-        protected TextView tv_todaySleep;
-        protected TextView tv_todaySleepResult;
+        protected TextView tv_todayWash;
+        protected TextView tv_todayWashResult;
 
 
 
         public CustomViewHolder(View view) {
             super(view);
-            this.tv_todaySleep = (TextView) view.findViewById(R.id.tv_todaySleep);
-            this.tv_todaySleepResult = (TextView) view.findViewById(R.id.tv_todaySleepResult);
+            this.tv_todayWash = (TextView) view.findViewById(R.id.tv_todayWash);
+            this.tv_todayWashResult = (TextView) view.findViewById(R.id.tv_todayWashResult);
 
             view.setOnCreateContextMenuListener(this);
             //2. OnCreateContextMenuListener 리스너를 현재 클래스에서 구현한다고 설정해둡니다.
@@ -84,14 +88,14 @@ public class Sleep_adapter extends RecyclerView.Adapter<Sleep_adapter.CustomView
 
     }
 
-    public Sleep_adapter(ArrayList<Sleep_text> list) {
+    public Wash_adapter(ArrayList<Wash_text> list) {
         this.mList = list;
     }
 
     @Override
-    public Sleep_adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public Wash_adapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.sleep_onelist, viewGroup, false);
+                .inflate(R.layout.wash_onelist, viewGroup, false);
 
         CustomViewHolder viewHolder = new CustomViewHolder(view);
         return viewHolder;
@@ -101,19 +105,21 @@ public class Sleep_adapter extends RecyclerView.Adapter<Sleep_adapter.CustomView
 
 
     @Override
-    public void onBindViewHolder(@NonNull Sleep_adapter.CustomViewHolder viewholder, int position) {
+    public void onBindViewHolder(@NonNull Wash_adapter.CustomViewHolder viewholder, int position) {
 
-        viewholder.tv_todaySleep.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        viewholder.tv_todaySleepResult.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        viewholder.tv_todayWash.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        viewholder.tv_todayWashResult.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 
-        viewholder.tv_todaySleep.setGravity(Gravity.CENTER);
-        viewholder.tv_todaySleepResult.setGravity(Gravity.CENTER);
+        viewholder.tv_todayWash.setGravity(Gravity.CENTER);
+        viewholder.tv_todayWashResult.setGravity(Gravity.CENTER);
 
-        viewholder.tv_todaySleep.setText("수면상태");
-        String seeText = mList.get(position).getSleepTodayResult();
+        viewholder.tv_todayWash.setText("환자청결");
         //if (seeText.length() >= 25){seeText = seeText.substring(0,25);};
         //viewholder.tv_todayCleanResult.setText(seeText+" ···");
-        viewholder.tv_todaySleepResult.setText(seeText);
+        Date today_date = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
+        String washTodayResult = format.format(today_date)+" 기록확인하기";
+        viewholder.tv_todayWashResult.setText(washTodayResult);
 
 
     }
