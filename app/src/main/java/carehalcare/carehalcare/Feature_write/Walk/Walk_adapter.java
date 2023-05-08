@@ -1,10 +1,8 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Walk;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,10 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +33,7 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
     private Context mContext;
 
     //아이템 클릭 리스너 인터페이스
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
     //리스너 객체 참조 변수
@@ -133,26 +129,27 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
     public void onBindViewHolder(@NonNull Walk_adapter.CustomViewHolder viewholder, int position) {
 
         viewholder.tv_walkcontent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-
         viewholder.tv_walkcontent.setGravity(Gravity.CENTER);
 
 
+        Uri seePhoto = mList.get(position).getPhotouri();
+        Bitmap seeBitPhoto = mList.get(position).getPhotobitmap();
 
-        //String seeText = mList.get(position).getContent_walk();
-        Uri seePhoto = mList.get(position).getPhotouri_walk();
+
+        Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_walkpic);
+
+
+        if (mList.get(position).getUripan() != null){
+            Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_walkpic);}
+        else {
+            Glide.with(viewholder.itemView).load(seeBitPhoto).into(viewholder.iv_walkpic);
+        }
+
 
         Date today_date = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
         String seeText = format.format(today_date);
         viewholder.tv_walkcontent.setText(seeText);        //      viewholder.iv_mealpic.setImageURI(seePhoto);
-        Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_walkpic);
-
-
-
-        Log.v("################################################################",seePhoto.getPath());
-
-
-
 
     }
 
