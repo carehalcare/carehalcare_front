@@ -1,4 +1,4 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Wash;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -14,7 +14,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import carehalcare.carehalcare.R;
 
@@ -23,7 +27,7 @@ public class Wash_adapter extends RecyclerView.Adapter<Wash_adapter.CustomViewHo
     private Context mContext;
 
     //아이템 클릭 리스너 인터페이스
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
     //리스너 객체 참조 변수
@@ -110,10 +114,12 @@ public class Wash_adapter extends RecyclerView.Adapter<Wash_adapter.CustomViewHo
         viewholder.tv_todayWashResult.setGravity(Gravity.CENTER);
 
         viewholder.tv_todayWash.setText("환자청결");
-        String seeText = mList.get(position).getWashTodayResult();
         //if (seeText.length() >= 25){seeText = seeText.substring(0,25);};
         //viewholder.tv_todayCleanResult.setText(seeText+" ···");
-        viewholder.tv_todayWashResult.setText(seeText);
+        Date today_date = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
+        String washTodayResult = format.format(today_date)+" 기록확인하기";
+        viewholder.tv_todayWashResult.setText(washTodayResult);
 
 
     }

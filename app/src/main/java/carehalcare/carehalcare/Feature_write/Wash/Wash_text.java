@@ -1,4 +1,4 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Wash;
 
 public class Wash_text {
     String washface;
@@ -11,8 +11,9 @@ public class Wash_text {
     String et_washForm;
     String washTodayResult;
 
+    Long id;
     public Wash_text(String washface, String washmouth, String nailcare, String haircare, String bodyscrub,
-                     String et_bodyscrub, String shave, String et_washForm, String washTodayResult) {
+                     String et_bodyscrub, String shave, String et_washForm) {
         this.washface = washface;
         this.washmouth = washmouth;
         this.nailcare = nailcare;
@@ -21,7 +22,14 @@ public class Wash_text {
         this.et_bodyscrub = et_bodyscrub;
         this.shave = shave;
         this.et_washForm = et_washForm;
-        this.washTodayResult = washTodayResult;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getWashface() {
