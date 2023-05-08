@@ -1,13 +1,8 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Meal;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -24,9 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,11 +33,11 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
     private Context mContext;
 
     //아이템 클릭 리스너 인터페이스
-    interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
     //리스너 객체 참조 변수
-    private OnItemClickListener mListener = null;
+    public OnItemClickListener mListener = null;
     //리스너 객체 참조를 어댑터에 전달 메서드
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener;
@@ -89,7 +82,7 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
 
         }
         // 4. 컨텍스트 메뉴에서 항목 클릭시 동작을 설정합니다.
-        private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
+        public final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
 
 
 
@@ -159,13 +152,6 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
         String seeText = format.format(today_date);
         viewholder.tv_mealcontent.setText(seeText);
-
-
-
-        Log.v("################################################################",seePhoto.getPath());
-
-
-
 
     }
 

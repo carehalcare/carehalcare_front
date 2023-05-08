@@ -1,25 +1,21 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Meal;
 
 import com.google.gson.annotations.SerializedName;
 
 public class Meal_Image {
     @SerializedName("id")
     Long id;
-
     @SerializedName("originalFilename")
     String originalFilename;
-
     @SerializedName("storeFilename")
     String storeFilename;
-
     @SerializedName("filePath")
     String filePath;
-
     @SerializedName("mealId")
     Long mealId;
-
     @SerializedName("encodedString")
-    private String encodedString;
+    String encodedString;
+
     public Meal_Image(Long id, String originalFilename, String storeFilename, String filePath, Long mealId, String encodedString) {
         this.id = id;
         this.originalFilename = originalFilename;

@@ -1,4 +1,4 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Meal;
 
 import java.util.List;
 import java.util.Map;
@@ -6,22 +6,18 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface Meal_API {
-    String URL = "http://172.20.20.168:8080/";
+    String URL = "http://192.168.21.133:8080/";
 
-    @DELETE("/meals/{id}")
+    @DELETE("meals/{id}")
     Call<Void> deleteData(@Path("id") Long id);
     @GET("meals/list/{userId}/{puserId}")
     Call<List<Meal_ResponseDTO>> getDatameal(

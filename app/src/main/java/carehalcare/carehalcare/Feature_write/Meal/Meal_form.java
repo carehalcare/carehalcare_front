@@ -1,8 +1,7 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Meal;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,26 +25,24 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import carehalcare.carehalcare.Feature_write.ErrorModel;
 import carehalcare.carehalcare.R;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -61,7 +58,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Meal_form extends AppCompatActivity {
     ImageView imgtest;
     Button btn_save, btn_nono;
-
     EditText et_mealdetail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +78,11 @@ public class Meal_form extends AppCompatActivity {
         Log.e("content경로는 : ",""+contentpath);
         Log.e("absolute경로는 : ",""+absopath);
 
-//        Bitmap bitmaps = UriBitmap_meal(output);
-//        imgtest.setImageURI(Uri.parse(bitmaps));
         imgtest.setImageURI(Uri.parse(absopath));
-
-//        imgtest.setImageBitmap(bitmaps);
-
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uri uris = Uri.parse(contentpath);
-//                Uri uris = getImageUri(Meal_form.this,bitmaps);
                 String wow = et_mealdetail.getText().toString();
 
                 Intent intent = new Intent();
@@ -103,8 +93,8 @@ public class Meal_form extends AppCompatActivity {
                 Map<String, RequestBody> map = new HashMap<>();
 
                 RequestBody content = RequestBody.create(MediaType.parse("text/plain"),wow);
-                RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),"PuserId");
-                RequestBody puserId = RequestBody.create(MediaType.parse("text/plain"),"PpuserId");
+                RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),"userId1");
+                RequestBody puserId = RequestBody.create(MediaType.parse("text/plain"),"puserId1");
 
                 map.put("content", content);
                 map.put("userId", userId);
@@ -124,10 +114,7 @@ public class Meal_form extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 ArrayList<MultipartBody.Part> names = new ArrayList<>();
-//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
-//                RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), byteArrayOutputStream.toByteArray());
+
                 RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                 Log.e("과연과연과연과연",""+file.getName());
 
@@ -144,7 +131,6 @@ public class Meal_form extends AppCompatActivity {
                         .build();
 
                 Meal_API meal_api = retrofit.create(Meal_API.class);
-                //TODO 잠시 보내는거 해제 합니다.
                 meal_api.postDatameal(map,names).enqueue(new Callback<Long>() {
                     @Override
                     public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
@@ -191,17 +177,7 @@ public class Meal_form extends AppCompatActivity {
         });
 
     }
-//    private Uri getImageUri(Context context, Bitmap inImage) {
-//
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
-//        Log.e("현재 절대경로는**** : ",""+Uri.parse(path));
-//
-//        return Uri.parse(path);
-//
-//
-//    }
+
     public String[] UriBitmap_meal(Uri imageuris) {
         String[] twopath = new String[2];
         String contentpath = "";
@@ -224,12 +200,6 @@ public class Meal_form extends AppCompatActivity {
         strokePaint.setColor(Color.BLACK);
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(14);
-
-//        String strTime, strCovdate, strCovTime;
-//        strTime = PSH.utc2kst(String.valueOf(GPSpos.time));
-//        strCovdate = "20"+GPSpos.utcDate.substring(4,6)+"-"+
-//                GPSpos.utcDate.substring(2,4)+"-"+GPSpos.utcDate.substring(0,2);
-//        strCovdate = strTime.substring(0,2)+":"+strTime.substring(2,4)+":"+strTime.substring(4,6);
 
         Date today_date = Calendar.getInstance().getTime();
         SimpleDateFormat dformat = new SimpleDateFormat("yyyy년 M월 dd일", Locale.KOREAN);
