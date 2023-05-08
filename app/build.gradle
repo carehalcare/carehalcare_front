@@ -41,11 +41,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
     //gson
     implementation 'com.google.code.gson:gson:2.8.7'
 
@@ -58,8 +58,8 @@ dependencies {
 
     //String으로 retrofit받기
     implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
->>>>>>> Feature/carewrite
-=======
+//>>>>>>> Feature/carewrite
+//=======
     implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
->>>>>>> 2d051348f600a90b608eaf05b8f33c482127fdcc
+//>>>>>>> 2d051348f600a90b608eaf05b8f33c482127fdcc
 }
