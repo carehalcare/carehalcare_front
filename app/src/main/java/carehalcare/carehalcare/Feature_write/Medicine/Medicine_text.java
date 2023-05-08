@@ -1,4 +1,4 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Medicine;
 import com.google.gson.annotations.SerializedName;
 
 public class Medicine_text {
@@ -41,6 +41,14 @@ public class Medicine_text {
         this.userId = userId;
         this.puserId = puserId;
         this.id = id;
+    }
+
+    public Medicine_text(String time, String mealStatus, String medicine, String userId, String puserId) {
+        this.time = time;
+        this.mealStatus = mealStatus;
+        this.medicine = medicine;
+        this.userId = userId;
+        this.puserId = puserId;
     }
     public void Medicine_text_API(String time, String mealStatus, String medicine, String et_medicineForm, String medicineTodayResult){
         this.time = time;

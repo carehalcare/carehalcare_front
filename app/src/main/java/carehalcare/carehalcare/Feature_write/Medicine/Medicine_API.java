@@ -1,16 +1,10 @@
-package carehalcare.carehalcare.Feature_write;
+package carehalcare.carehalcare.Feature_write.Medicine;
 
-import java.util.HashMap;
 import java.util.List;
 
-import kotlin.jvm.JvmMultifileClass;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -18,7 +12,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Medicine_API {
-    String URL = "http://192.168.0.18:8080/";
+    String URL = "http://172.20.20.77:8080/";
     @Headers("Content-Type: application/json")
     @POST("administrations")
     Call<List<Medicine_text>> postDatamedicine(
@@ -43,5 +37,5 @@ public interface Medicine_API {
     );
 
     @DELETE("/administrations/{id}")
-    Call<Void> deleteData(@Path("id") Long id);
+    Call<Void> deleteDataMedicine(@Path("id") Long id);
 }
