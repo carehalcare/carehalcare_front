@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/dialog_radius"
     android:backgroundTint="#ffffff"
@@ -9,7 +9,6 @@
     android:minWidth="100dp"
     android:id="@+id/form_active"
     >
-
 
     <TextView
         android:layout_width="wrap_content"
@@ -107,10 +106,10 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_active_save"
         android:layout_marginTop="20dp"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/button_color"
+        android:background="@drawable/savebtn_radius"
         android:text="저장"></androidx.appcompat.widget.AppCompatButton>
 
 
