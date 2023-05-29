@@ -9,6 +9,9 @@
     <!--yeni-->
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
 
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
+
     <queries>
         <!-- Camera -->
         <intent>
@@ -26,9 +29,15 @@
         android:theme="@style/Theme.Carehalcare"
         tools:targetApi="31">
         <activity android:name=".Feature_write.Meal.Meal_form"
-            android:exported="true"></activity>
+            android:exported="true">
+        </activity>
         <activity android:name=".Feature_write.Walk.Walk_form"
-            android:exported="true"></activity>
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".Feature_NFC.CommuteActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".Feature_write.EightMenuActivity"
             android:exported="true">
