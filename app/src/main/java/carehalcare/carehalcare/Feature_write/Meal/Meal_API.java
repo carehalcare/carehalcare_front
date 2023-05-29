@@ -15,7 +15,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
 public interface Meal_API {
-    String URL = "http://192.168.21.133:8080/";
+    String URL = "http://192.168.0.18:8080/";
 
     @DELETE("meals/{id}")
     Call<Void> deleteData(@Path("id") Long id);
