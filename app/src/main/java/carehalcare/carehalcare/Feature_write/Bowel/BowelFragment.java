@@ -29,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_API;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_ResponseDTO;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_adapter;
@@ -51,7 +52,7 @@ public class BowelFragment extends Fragment {
             .setLenient()
             .create();
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Meal_API.URL)
+            .baseUrl(API_URL.URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 

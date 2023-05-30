@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.gson.Gson;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.R;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -26,7 +27,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FindPatientActivity extends AppCompatActivity {
 
-    public static final String BASEURL = "http://172.20.5.216:8080/";
+//    public static final String BASEURL = "http://172.20.5.216:8080/";
+    public static final String BASEURL = API_URL.URL;
+
     AppCompatButton btn_findId, btn_ok;
     ImageButton btn_home;
     TextView tv_result;

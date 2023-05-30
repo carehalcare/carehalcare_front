@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +55,7 @@ public class CommuteActivity extends AppCompatActivity {
             .setLenient()
             .create();
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(CommuteAPI.URL)
+            .baseUrl(API_URL.URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 

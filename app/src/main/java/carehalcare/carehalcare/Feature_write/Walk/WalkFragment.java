@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
@@ -76,7 +77,7 @@ public class WalkFragment extends Fragment {
             .setLenient()
             .create();
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Meal_API.URL)
+            .baseUrl(API_URL.URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 

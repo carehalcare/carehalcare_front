@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.ErrorModel;
 import carehalcare.carehalcare.R;
 import okhttp3.MediaType;
@@ -140,7 +141,7 @@ public class Meal_form extends AppCompatActivity {
                         .create();
 
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(Meal_API.URL)
+                        .baseUrl(API_URL.URL)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
 
