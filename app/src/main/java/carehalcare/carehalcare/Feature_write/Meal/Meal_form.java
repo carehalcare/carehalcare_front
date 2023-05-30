@@ -57,6 +57,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Meal_form extends AppCompatActivity {
+    String userid,puserid;
+
     ImageView imgtest;
     Button btn_save, btn_nono;
     EditText et_mealdetail;
@@ -72,6 +74,8 @@ public class Meal_form extends AppCompatActivity {
         et_mealdetail = (EditText)findViewById(R.id.et_meal_form);
 
         Uri output = getIntent().getParcelableExtra("uri");
+        userid = getIntent().getStringExtra("userid");
+        puserid = getIntent().getStringExtra("puserid");
 
         SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -108,8 +112,8 @@ public class Meal_form extends AppCompatActivity {
                 Map<String, RequestBody> map = new HashMap<>();
 
                 RequestBody content = RequestBody.create(MediaType.parse("text/plain"),wow);
-                RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),"userId1");
-                RequestBody puserId = RequestBody.create(MediaType.parse("text/plain"),"puserId1");
+                RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),userid);
+                RequestBody puserId = RequestBody.create(MediaType.parse("text/plain"),puserid);
 
                 map.put("content", content);
                 map.put("userId", userId);

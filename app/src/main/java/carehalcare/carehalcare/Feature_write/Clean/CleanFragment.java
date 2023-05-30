@@ -45,6 +45,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CleanFragment extends Fragment {
+    String userid,puserid;
+
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Clean_text> cleanArrayList;
     private Clean_adapter cleanAdapter;
@@ -70,6 +72,8 @@ public class CleanFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.clean_list,container,false);
         Clean_API cleanApi = retrofit.create(Clean_API.class);
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_clean_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -84,7 +88,7 @@ public class CleanFragment extends Fragment {
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
-        cleanApi.getDataClean("userId1","puserId1").enqueue(new Callback<List<Clean_ResponseDTO>>() {
+        cleanApi.getDataClean(userid,puserid).enqueue(new Callback<List<Clean_ResponseDTO>>() {
             @Override
             public void onResponse(Call<List<Clean_ResponseDTO>> call, Response<List<Clean_ResponseDTO>> response) {
                 if (response.isSuccessful()) {
@@ -162,7 +166,7 @@ public class CleanFragment extends Fragment {
                         cleanAdapter.notifyItemInserted(0);
                         cleanAdapter.notifyDataSetChanged();
 
-                        Clean_ResponseDTO savedict = new Clean_ResponseDTO("userId1","puserId1",cleaness,cleanForm);
+                        Clean_ResponseDTO savedict = new Clean_ResponseDTO(userid,puserid,cleaness,cleanForm);
                         cleanApi.postDataClean(savedict).enqueue(new Callback<List<Clean_ResponseDTO>>() {
                             @Override
                             public void onResponse(@NonNull Call<List<Clean_ResponseDTO>> call, @NonNull Response<List<Clean_ResponseDTO>> response) {
@@ -188,7 +192,7 @@ public class CleanFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Clean_text detail_clean_text = cleanArrayList.get(position);
-                cleanApi.getDataClean("userId1","puserId1").enqueue(new Callback<List<Clean_ResponseDTO>>() {
+                cleanApi.getDataClean(userid,puserid).enqueue(new Callback<List<Clean_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Clean_ResponseDTO>> call, Response<List<Clean_ResponseDTO>> response) {
                         if (response.isSuccessful()) {

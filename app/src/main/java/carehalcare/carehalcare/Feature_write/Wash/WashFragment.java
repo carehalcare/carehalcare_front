@@ -48,6 +48,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WashFragment extends Fragment {
+    String userid,puserid;
+
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Wash_text> washArrayList;
     private Wash_adapter washAdapter;
@@ -73,6 +75,8 @@ public class WashFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wash_list,container,false);
         Wash_API washApi = retrofit.create(Wash_API.class);
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_wash_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -89,7 +93,7 @@ public class WashFragment extends Fragment {
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        washApi.getDataWash("userId1","puserId1").enqueue(new Callback<List<Wash_ResponseDTO>>() {
+        washApi.getDataWash(userid,puserid).enqueue(new Callback<List<Wash_ResponseDTO>>() {
             @Override
             public void onResponse(Call<List<Wash_ResponseDTO>> call, Response<List<Wash_ResponseDTO>> response) {
                 if(response.isSuccessful()){
@@ -192,7 +196,7 @@ public class WashFragment extends Fragment {
                         washAdapter.notifyItemInserted(0);
                         washAdapter.notifyDataSetChanged();
 
-                        Wash_ResponseDTO savedict = new Wash_ResponseDTO("userId1","puserId1",cleaness,bodyscrub_point,washForm);
+                        Wash_ResponseDTO savedict = new Wash_ResponseDTO(userid,puserid,cleaness,bodyscrub_point,washForm);
                         washApi.postDataWash(savedict).enqueue(new Callback<List<Wash_ResponseDTO>>() {
                             @Override
                             public void onResponse(Call<List<Wash_ResponseDTO>> call, Response<List<Wash_ResponseDTO>> response) {
@@ -222,7 +226,7 @@ public class WashFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Wash_text detail_wash_text = washArrayList.get(position);
-                washApi.getDataWash("userId1","puserId1").enqueue(new Callback<List<Wash_ResponseDTO>>() {
+                washApi.getDataWash(userid,puserid).enqueue(new Callback<List<Wash_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Wash_ResponseDTO>> call, Response<List<Wash_ResponseDTO>> response) {
                         if(response.isSuccessful()){

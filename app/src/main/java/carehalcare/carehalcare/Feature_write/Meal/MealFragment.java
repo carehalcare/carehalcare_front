@@ -65,6 +65,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MealFragment extends Fragment {
+    String userid,puserid;
     Long ids;  //TODO ids는 삭제할 id값
     String mCurrentPhotoPath;
     Uri imageUri;
@@ -96,7 +97,8 @@ public class MealFragment extends Fragment {
         View view = inflater.inflate(R.layout.meal_list,container,false);
 
         Meal_API mealapi = retrofit.create(Meal_API.class);
-
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
 
 
         RecyclerView mrecyclerView= (RecyclerView) view.findViewById(R.id.recyclerview_meal_list);
@@ -127,7 +129,7 @@ public class MealFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Meal_text detail_meal_text = mealArrayList.get(position);
                 Meal_API meal_service = retrofit.create(Meal_API.class);
-                meal_service.getDatameal("userId1","puserId1").enqueue(new Callback<List<Meal_ResponseDTO>>() {
+                meal_service.getDatameal(userid,puserid).enqueue(new Callback<List<Meal_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
                         if (response.body() != null) {
@@ -217,7 +219,7 @@ public class MealFragment extends Fragment {
     }
     public void getmeallsit(){
         Meal_API meal_service = retrofit.create(Meal_API.class);
-        meal_service.getDatameal("userId1","puserId1").enqueue(new Callback<List<Meal_ResponseDTO>>() {
+        meal_service.getDatameal(userid,puserid).enqueue(new Callback<List<Meal_ResponseDTO>>() {
             @Override
             public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
                 if (response.body() != null) {
@@ -295,6 +297,8 @@ public class MealFragment extends Fragment {
                     if (using == 100) {
                         Intent mealintent = new Intent(getActivity(), Meal_form.class);
                         mealintent.putExtra("uri", providerURI);
+                        mealintent.putExtra("userid",userid);
+                        mealintent.putExtra("puserid",puserid);
                         activityResultDetail.launch(mealintent);
                     }
                     activityResultPicture.launch(takePictureIntent);

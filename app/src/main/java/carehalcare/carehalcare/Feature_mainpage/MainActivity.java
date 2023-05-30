@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Button commute, write, info, noti;
     private ImageButton btn_setting;
     private TextView tv_noti1, tv_noti2;
+    String userid, puserid;
 
     private String formatDate(String dateStr) {
         SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userid = "userid1";
+        puserid="puserid1";
 
         tv_noti1 = (TextView)findViewById(R.id.tv_noti1);
         tv_noti2 = (TextView)findViewById(R.id.tv_noti2);
@@ -101,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CommuteActivity.class);
+                intent.putExtra("userid",userid);
+                intent.putExtra("puserid",puserid);
                 startActivity(intent);
             }
         });
@@ -109,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EightMenuActivity.class);
+                intent.putExtra("userid",userid);
+                intent.putExtra("puserid",puserid);
                 startActivity(intent);
             }
         });

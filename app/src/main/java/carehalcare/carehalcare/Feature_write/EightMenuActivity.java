@@ -108,6 +108,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class EightMenuActivity extends AppCompatActivity implements Button.OnClickListener {
+    String userid, puserid;
     Long ids;  //TODO ids는 삭제할 id값
     LoadingDialog loadingDialog;
     private FrameLayout container;
@@ -148,6 +149,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         else {
             requestUserPermission();
         }
+
+        Intent intent = getIntent();
+        userid = intent.getStringExtra("userid");
+        puserid = intent.getStringExtra("puserid");
+
         loadingDialog = new LoadingDialog(this);
         loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         loadingDialog.setCancelable(false);
@@ -158,6 +164,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         MealFragment mealFragment = new MealFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        mealFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, mealFragment);
         transaction.commit();
 
@@ -167,6 +178,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         WalkFragment walkFragment = new WalkFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        walkFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, walkFragment);
         transaction.commit();
 
@@ -176,6 +192,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         MedicineFragment medicineFragment = new MedicineFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        medicineFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, medicineFragment);
         transaction.commit();
     }
@@ -185,6 +206,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         ActiveFragment activeFragment = new ActiveFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        activeFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, activeFragment);
         transaction.commit();
     }
@@ -193,6 +219,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         SleepFragment sleepFragment = new SleepFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        sleepFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, sleepFragment);
         transaction.commit();
 
@@ -201,6 +232,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         BowelFragment bowelFragment = new BowelFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        bowelFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, bowelFragment);
         transaction.commit();
 
@@ -209,6 +245,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         WashFragment washFragment = new WashFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        washFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, washFragment);
         transaction.commit();
 
@@ -217,6 +258,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         deleteview();
         CleanFragment cleanFragment = new CleanFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        cleanFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, cleanFragment);
         transaction.commit();
     }
@@ -226,128 +272,11 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     }
 
 
-    ActivityResultLauncher<Intent> activityResultPicture = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    try {
-                        if (result.getResultCode() == RESULT_OK){
-                            Log.i("REQUEST_TAKE_PHOTO", "OK");
-                            Log.i("카메라 Uri주소", imageUri.getPath());
-                        }
-                    } catch (Exception e) {
-                        Log.e("REQUEST_TAKE_PHOTO", e.toString());
-                    }
-                }
-            }
-    );
-    ActivityResultLauncher<Intent> walkResultDetail = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() ==2888){
-                        Uri uris = result.getData().getParcelableExtra("uris");
 
-                        Walk_text dict = new Walk_text(uris, Long.valueOf(1), "uri");
 
-                        walkArrayList.add(0, dict); //첫번째 줄에 삽입됨
-                        //mArrayList.add(dict); //마지막 줄에 삽입됨
 
-                        // 어댑터에서 RecyclerView에 반영하도록 합니다.
-                        walkAdapter.notifyItemInserted(0);
-                        walkAdapter.notifyDataSetChanged();
-                    }
-                }
-            });
-    ActivityResultLauncher<Intent> activityResultDetail = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() ==2888){
-                        Uri uris = result.getData().getParcelableExtra("uris");
-                        String tsa = result.getData().getStringExtra("edit");
-                        Log.e("왜 안돼는건데ㄹㄹㄹㄹㄹㄹㄹ",""+uris.getPath());
 
-                        String mealTodayResult;
-                        mealTodayResult = tsa;
-                        Date today_date = Calendar.getInstance().getTime();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
-                        String seeText = format.format(today_date);
 
-                        Meal_text dict = new Meal_text(uris, mealTodayResult, Long.valueOf(1), "uri",seeText,"uriuri");
-
-                        mealArrayList.add(0, dict); //첫번째 줄에 삽입됨
-                        //mArrayList.add(dict); //마지막 줄에 삽입됨
-
-                        // 어댑터에서 RecyclerView에 반영하도록 합니다.
-                        mealAdapter.notifyItemInserted(0);
-                        mealAdapter.notifyDataSetChanged();
-                    }
-                }
-            });
-
-    private void captureCamera(int using){
-        String state = Environment.getExternalStorageState();
-        // 외장 메모리 검사
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    Log.e("captureCamera Error", ex.toString());
-                }
-                if (photoFile != null) {
-                    // getUriForFile의 두 번째 인자는 Manifest provier의 authorites와 일치해야 함
-
-                    Uri providerURI = FileProvider.getUriForFile(this, getPackageName(), photoFile);
-                    imageUri = providerURI;
-
-                    // 인텐트에 전달할 때는 FileProvier의 Return값인 content://로만!!, providerURI의 값에 카메라 데이터를 넣어 보냄
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, providerURI);
-
-                    if (using == 100) {
-                        Log.e("dfdjfdkfjdskfjksdjflsjfk", "whwhwhwhwhwhwhwhw");
-                        Intent mealintent = new Intent(this, Meal_form.class);
-                        mealintent.putExtra("uri", providerURI);
-                        Log.e("whwhwhwhwhwhwhwh", "whwhwhwhwhwhwhwhw");
-                        activityResultDetail.launch(mealintent);
-                    }
-
-                    else if (using==200){
-                        Intent walkintent = new Intent(this, Walk_form.class);
-                        walkintent.putExtra("uri", providerURI);
-                        walkResultDetail.launch(walkintent);
-                    }
-                    activityResultPicture.launch(takePictureIntent);                }
-            }
-        } else {
-            Toast.makeText(this, "저장공간이 접근 불가능한 기기입니다", Toast.LENGTH_SHORT).show();
-            return;
-        }
-    }
-
-    public File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + ".jpg";
-        File imageFile = null;
-        File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "yeeun");
-        if (!storageDir.exists()) {
-            Log.i("mCurrentPhotoPath1", storageDir.toString());
-            storageDir.mkdirs();
-        }
-
-        imageFile = new File(storageDir, imageFileName);
-        mCurrentPhotoPath = imageFile.getAbsolutePath();
-        Log.e("현재 절대경로는 : ",""+mCurrentPhotoPath);
-        return imageFile;
-    }
 
     private void requestUserPermission(){
         try {
@@ -454,85 +383,6 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     }
 
 
-    public void getmeallsit(){
-        Meal_API meal_service = retrofit.create(Meal_API.class);
-        loadingDialog.show();
-        meal_service.getDatameal("userId1","puserId1").enqueue(new Callback<List<Meal_ResponseDTO>>() {
-            @Override
-            public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
-                if (response.body() != null) {
-                    List<Meal_ResponseDTO> datas = response.body();
-                    String encodedString;
-                    byte[] encodeByte;
-                    Bitmap mealbitmap;
-                    String filepath_;
-                    String times;
-                    for (int i = 0; i < datas.size(); i++) {
-
-                        encodedString = response.body().get(i).getImages().get(0).getEncodedString();
-
-                        encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-                        mealbitmap = BitmapFactory.decodeByteArray( encodeByte, 0, encodeByte.length ) ;
-
-                        filepath_ = response.body().get(i).getImages().get(0).getFilePath();
-                        times = response.body().get(i).getCreatedDateTime();
-                        Meal_text dict_0 = new Meal_text(filepath_,
-                                response.body().get(i).getContent(),response.body().get(i).getId(),times,"pth");
-//                        Meal_text dict_0 = new Meal_text(mealbitmap,
-//                                response.body().get(i).getContent(),response.body().get(i).getId());
-
-                        mealArrayList.add( dict_0);
-                        mealAdapter.notifyItemInserted(0);
-                        Log.e("음식리스트 출력", "********1*************1*********!");
-                    }
-                    Log.e("getDatameal end", "======================================");
-
-                    loadingDialog.dismiss();
-                }}
-            @Override
-            public void onFailure(Call<List<Meal_ResponseDTO>> call, Throwable t) {
-                Log.e("통신에러","+"+t.toString());
-                Toast.makeText(getApplicationContext(), "통신에러", Toast.LENGTH_SHORT).show();
-                loadingDialog.dismiss();
-            }
-        });
-
-    }
-    public void getwalklist(){
-        Walk_API walk_service = retrofit.create(Walk_API.class);
-        loadingDialog.show();
-        walk_service.getDataWalk("userId1","puserId1").enqueue(new Callback<List<Walk_ResponseDTO>>() {
-            @Override
-            public void onResponse(Call<List<Walk_ResponseDTO>> call, Response<List<Walk_ResponseDTO>> response) {
-                if (response.body() != null) {
-                    List<Walk_ResponseDTO> datas = response.body();
-                    String encodedString;
-                    byte[] encodeByte;
-                    Bitmap mealbitmap;
-                    for (int i = 0; i < datas.size(); i++) {
-                        encodedString = response.body().get(i).getImages().get(0).getEncodedString();
-                        encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-                        mealbitmap = BitmapFactory.decodeByteArray( encodeByte, 0, encodeByte.length ) ;
-
-                        Walk_text dict_0 = new Walk_text(mealbitmap,
-                                response.body().get(i).getId());
-
-                        walkArrayList.add( dict_0);
-                        walkAdapter.notifyItemInserted(0);
-                        Log.e("산책리스트 출력", "********1*************1*********!");
-                    }
-                    Log.e("getDatawalk end", "======================================");
-
-                    loadingDialog.dismiss();
-                }}
-            @Override
-            public void onFailure(Call<List<Walk_ResponseDTO>> call, Throwable t) {
-                Log.e("통신에러","+"+t.toString());
-                Toast.makeText(getApplicationContext(), "통신에러", Toast.LENGTH_SHORT).show();
-                loadingDialog.dismiss();
-            }
-        });
-    }
 
     @Override
     public void onClick(View view) {

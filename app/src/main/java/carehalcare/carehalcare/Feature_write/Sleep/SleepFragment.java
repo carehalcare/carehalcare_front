@@ -49,6 +49,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SleepFragment extends Fragment {
+    String userid,puserid;
+
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Sleep_text> sleepArrayList;
     private Sleep_adapter sleepAdapter;
@@ -76,6 +78,9 @@ public class SleepFragment extends Fragment {
 
         Sleep_API sleepApi = retrofit.create(Sleep_API.class);
 
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
+
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_sleep_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -90,7 +95,7 @@ public class SleepFragment extends Fragment {
 
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
-        sleepApi.getDataSleep("userId1","puserId1").enqueue(new Callback<List<Sleep_text>>() {
+        sleepApi.getDataSleep(userid,puserid).enqueue(new Callback<List<Sleep_text>>() {
             @Override
             public void onResponse(Call<List<Sleep_text>> call, Response<List<Sleep_text>> response) {
                 if (response.isSuccessful()) {
@@ -157,7 +162,7 @@ public class SleepFragment extends Fragment {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
                         sleepTodayResult = format.format(today_date)+" 기록확인하기";
 
-                        Sleep_text dict = new Sleep_text("userId1","puserId1",
+                        Sleep_text dict = new Sleep_text(userid,puserid,
                                 sleepstate, sleepForm);
                         sleepArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
@@ -195,7 +200,7 @@ public class SleepFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Sleep_text detail_sleep_text = sleepArrayList.get(position);
 
-                sleepApi.getDataSleep("userId1","puserId1").enqueue(new Callback<List<Sleep_text>>() {
+                sleepApi.getDataSleep(userid,puserid).enqueue(new Callback<List<Sleep_text>>() {
                     @Override
                     public void onResponse(Call<List<Sleep_text>> call, Response<List<Sleep_text>> response) {
                         if (response.isSuccessful()) {

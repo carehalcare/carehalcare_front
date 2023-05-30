@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -67,6 +68,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WalkFragment extends Fragment {
+    String userid,puserid;
     private ArrayList<Walk_text> walkArrayList;
     String mCurrentPhotoPath;
     Uri imageUri;
@@ -96,7 +98,8 @@ public class WalkFragment extends Fragment {
         View view = inflater.inflate(R.layout.walk_list,container,false);
 
         Walk_API walkApi = retrofit.create(Walk_API.class);
-
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
 
         RecyclerView mrecyclerView= (RecyclerView) view.findViewById(R.id.recyclerview_walk_list);
         LinearLayoutManager mlayoutManager = new LinearLayoutManager(getContext());
@@ -125,7 +128,7 @@ public class WalkFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Walk_text detail_walk_text = walkArrayList.get(position);
                 Walk_API walk_service = retrofit.create(Walk_API.class);
-                walk_service.getDataWalk("userId1","puserId1").enqueue(new Callback<List<Walk_ResponseDTO>>() {
+                walk_service.getDataWalk(userid,puserid).enqueue(new Callback<List<Walk_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Walk_ResponseDTO>> call, Response<List<Walk_ResponseDTO>> response) {
                         if (response.body() != null) {
@@ -153,10 +156,19 @@ public class WalkFragment extends Fragment {
 
                 final ImageView iv_walk_detail = dialog.findViewById(R.id.iv_walk_detail);
                 if (detail_walk_text.getPhotobitmap() == null){
-                    iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());
+                    if(detail_walk_text.getPhotouri()==null){
+                        Glide.with(getContext()).load(detail_walk_text.getFilepath()).into(iv_walk_detail);
+                    }
+                    else{iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());}
                 } else{
                     iv_walk_detail.setImageBitmap(detail_walk_text.getPhotobitmap());
                 }
+
+//                if (detail_walk_text.getPhotobitmap() == null){
+//                    iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());
+//                } else{
+//                    iv_walk_detail.setImageBitmap(detail_walk_text.getPhotobitmap());
+//                }
                 //iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());
 
                 final Button btn_walk_detail = dialog.findViewById(R.id.btn_walk_detail);
@@ -205,21 +217,27 @@ public class WalkFragment extends Fragment {
     }
     public void getwalklist(){
         Walk_API walk_service = retrofit.create(Walk_API.class);
-        walk_service.getDataWalk("userId1","puserId1").enqueue(new Callback<List<Walk_ResponseDTO>>() {
+        walk_service.getDataWalk(userid,puserid).enqueue(new Callback<List<Walk_ResponseDTO>>() {
             @Override
             public void onResponse(Call<List<Walk_ResponseDTO>> call, Response<List<Walk_ResponseDTO>> response) {
                 if (response.body() != null) {
                     List<Walk_ResponseDTO> datas = response.body();
-                    String encodedString;
-                    byte[] encodeByte;
-                    Bitmap mealbitmap;
-                    for (int i = 0; i < datas.size(); i++) {
-                        encodedString = response.body().get(i).getImages().get(0).getEncodedString();
-                        encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-                        mealbitmap = BitmapFactory.decodeByteArray( encodeByte, 0, encodeByte.length ) ;
+//                    String encodedString;
+//                    byte[] encodeByte;
+//                    Bitmap mealbitmap;
+                    String filepath_;
+                    String times;
 
-                        Walk_text dict_0 = new Walk_text(mealbitmap,
-                                response.body().get(i).getId());
+                    for (int i = 0; i < datas.size(); i++) {
+                        times = response.body().get(i).getCreatedDateTime();
+                        filepath_ = response.body().get(i).getImages().get(0).getFilePath();
+
+//                        encodedString = response.body().get(i).getImages().get(0).getEncodedString();
+//                        encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+//                        mealbitmap = BitmapFactory.decodeByteArray( encodeByte, 0, encodeByte.length ) ;
+
+                        Walk_text dict_0 = new Walk_text(filepath_,
+                                response.body().get(i).getId(),times,"path");
 
                         walkArrayList.add( dict_0);
                         walkAdapter.notifyItemInserted(0);
@@ -260,6 +278,8 @@ public class WalkFragment extends Fragment {
                    if (using==200){
                         Intent walkintent = new Intent(getActivity(), Walk_form.class);
                         walkintent.putExtra("uri", providerURI);
+                        walkintent.putExtra("userid",userid);
+                        walkintent.putExtra("puserid",puserid);
                         walkResultDetail.launch(walkintent);
                     }
                     activityResultPicture.launch(takePictureIntent);                }
@@ -310,7 +330,11 @@ public class WalkFragment extends Fragment {
                     if (result.getResultCode() ==2888){
                         Uri uris = result.getData().getParcelableExtra("uris");
 
-                        Walk_text dict = new Walk_text(uris, Long.valueOf(1), "uri");
+                        Date today_date = Calendar.getInstance().getTime();
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
+                        String seeText = format.format(today_date);
+
+                        Walk_text dict = new Walk_text(uris, Long.valueOf(1), "uri",seeText,"uriuri");
 
                         walkArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨

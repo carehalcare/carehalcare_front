@@ -41,6 +41,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CommuteActivity extends AppCompatActivity {
+    String userid, puserid;
     NfcAdapter nfcAdapter;
     PendingIntent pendingIntent;
     IntentFilter writingTagFilters[];
@@ -63,6 +64,11 @@ public class CommuteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commute);
+
+        Intent intent = getIntent();
+        userid = intent.getStringExtra("userid");
+        puserid = intent.getStringExtra("puserid");
+
         calendarView=findViewById(R.id.calendarView);
         diaryTextView=findViewById(R.id.tv_date);
         check_Btn=findViewById(R.id.btn_check);
@@ -126,7 +132,7 @@ public class CommuteActivity extends AppCompatActivity {
 
 
                 CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
-                commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
+                commuteAPI.getDataCommute(dtext,userid,puserid).enqueue(new Callback<List<CommuteResponseDto>>() {
                     @Override
                     public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                         if(response.isSuccessful()){
@@ -153,7 +159,7 @@ public class CommuteActivity extends AppCompatActivity {
                     }
                 });
 
-                checkDay(year,month,dayOfMonth,"userID");
+                checkDay(year,month,dayOfMonth,userid);
 
             }
         });
@@ -217,7 +223,7 @@ public class CommuteActivity extends AppCompatActivity {
         if(check_Btn.getText().equals("출근하기")){
             tv_hello.setText(getTime+" : ");
             CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
-            CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto("userid1","puserid1","0",
+            CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto(userid,puserid,"0",
                     getdates,gettimes);
             commuteAPI.postDataCommute(commuteSaveRequestDto).enqueue(new Callback<List<CommuteResponseDto>>() {
                 @Override
@@ -239,7 +245,7 @@ public class CommuteActivity extends AppCompatActivity {
         else if (check_Btn.getText().equals("퇴근하기")) {
             tv_bye.setText(getTime+" : "+text);
             CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
-            CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto("userid1","puserid1","1",
+            CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto(userid,puserid,"1",
                     getdates,gettimes);
             commuteAPI.postDataCommute(commuteSaveRequestDto).enqueue(new Callback<List<CommuteResponseDto>>() {
                 @Override
@@ -297,8 +303,6 @@ public class CommuteActivity extends AppCompatActivity {
     public void  checkDay(int cYear,int cMonth,int cDay,String userID){
 
         try{
-
-
             if(tv_hello.getText()=="출근시간"){
                 diaryTextView.setVisibility(View.VISIBLE);
                 tv_hello.setText("출근시간");
