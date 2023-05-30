@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class PNoticeActivity extends AppCompatActivity {
+    String userid, puserid;
 
     NoticeViewAdapter noticeViewAdapter;
     private ImageButton btn_home;
@@ -42,6 +44,9 @@ public class PNoticeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pnotice);
+        Intent intent = getIntent();
+        userid = intent.getStringExtra("userid");
+        puserid = intent.getStringExtra("puserid");
 
         tv_notiview = (TextView) findViewById(R.id.tv_notiview);
         btn_home = (ImageButton) findViewById(R.id.btn_homenoti);
@@ -58,7 +63,7 @@ public class PNoticeActivity extends AppCompatActivity {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.20.5.216:8080/") //연결된 네트워크 ip로 수정필요
+                .baseUrl(API_URL.URL) //연결된 네트워크 ip로 수정필요
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
