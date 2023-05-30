@@ -26,7 +26,7 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:textColor="@color/black"
-            android:background="@drawable/item_list_round"
+            android:background="@drawable/button_color"
             android:textStyle="bold"
             android:layout_marginRight="30dp"
             android:layout_width="100dp"
@@ -38,7 +38,7 @@
             android:textStyle="bold"
             android:layout_marginRight="30dp"
             android:text="점심"
-            android:background="@drawable/item_list_round"
+            android:background="@drawable/button_color"
             android:layout_width="100dp"
             android:layout_height="48dp"
             android:id="@+id/cb_lunch"/>
@@ -46,7 +46,7 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:text="저녁"
-            android:background="@drawable/item_list_round"
+            android:background="@drawable/button_color"
             android:layout_width="100dp"
             android:layout_height="48dp"
             android:id="@+id/cb_dinner"/>
@@ -67,7 +67,7 @@
         android:orientation="horizontal">
         <androidx.appcompat.widget.AppCompatCheckBox
             android:layout_marginRight="30dp"
-            android:background="@drawable/item_list_round"
+            android:background="@drawable/button_color"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_width="100dp"
@@ -77,7 +77,7 @@
         <androidx.appcompat.widget.AppCompatCheckBox
             android:layout_marginRight="30dp"
             android:textColor="@color/black"
-            android:background="@drawable/item_list_round"
+            android:background="@drawable/button_color"
             android:textStyle="bold"
             android:text="식전"
             android:layout_width="100dp"
@@ -87,7 +87,7 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:text="식후"
-            android:background="@drawable/item_list_round"
+            android:background="@drawable/button_color"
             android:layout_width="100dp"
             android:layout_height="48dp"
             android:id="@+id/cb_after"/>
