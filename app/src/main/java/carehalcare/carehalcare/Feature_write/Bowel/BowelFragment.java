@@ -45,6 +45,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BowelFragment extends Fragment {
+    String userid,puserid;
+
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Bowel_text> bowelArrayList;
     private Bowel_adapter bowelAdapter;
@@ -70,6 +72,8 @@ public class BowelFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bowel_list,container,false);
 
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
         Bowel_API bowelApi = retrofit.create(Bowel_API.class);
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_bowel_list);
@@ -87,7 +91,7 @@ public class BowelFragment extends Fragment {
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        bowelApi.getDataBowel("userId1","puserId1").enqueue(new Callback<List<Bowel_text>>() {
+        bowelApi.getDataBowel(userid,puserid).enqueue(new Callback<List<Bowel_text>>() {
             @Override
             public void onResponse(Call<List<Bowel_text>> call, Response<List<Bowel_text>> response) {
                 if (response.isSuccessful()) {
@@ -139,7 +143,7 @@ public class BowelFragment extends Fragment {
 
                         if (bowelForm.length()==0){bowelForm = "-";};
 
-                        Bowel_text dict = new Bowel_text("userId1","puserId1",bowelcount, bowelForm);
+                        Bowel_text dict = new Bowel_text(userid,puserid,bowelcount, bowelForm);
                         bowelArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 
@@ -176,7 +180,7 @@ public class BowelFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Bowel_text detail_bowel_text = bowelArrayList.get(position);
 
-                bowelApi.getDataBowel("userId1","puserId1").enqueue(new Callback<List<Bowel_text>>() {
+                bowelApi.getDataBowel(userid,puserid).enqueue(new Callback<List<Bowel_text>>() {
                     @Override
                     public void onResponse(Call<List<Bowel_text>> call, Response<List<Bowel_text>> response) {
                         if (response.isSuccessful()) {

@@ -45,6 +45,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MedicineFragment extends Fragment {
+    String userid,puserid;
+
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Medicine_text> medicineArrayList;
     private Medicine_adapter medicineAdapter;
@@ -70,6 +72,10 @@ public class MedicineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.medicine_list,container,false);
         Medicine_API medicineApi = retrofit.create(Medicine_API.class);
+
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
+
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_medicine_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -82,7 +88,7 @@ public class MedicineFragment extends Fragment {
 //        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
 //                mLinearLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
-        medicineApi.getDatamedicine("userId1","puserId1").enqueue(new Callback<List<Medicine_text>>() {
+        medicineApi.getDatamedicine(userid,puserid).enqueue(new Callback<List<Medicine_text>>() {
             @Override
             public void onResponse(Call<List<Medicine_text>> call, Response<List<Medicine_text>> response) {
                 if (response.isSuccessful()) {
@@ -161,8 +167,8 @@ public class MedicineFragment extends Fragment {
                         medicine_time = morning + lunch + dinner;
                         medicine_state = empty + before + after;
 
-                        Medicine_text dict = new Medicine_text(medicine_time, medicine_state, medicine_name, "userId1"
-                                ,"puserId1");
+                        Medicine_text dict = new Medicine_text(medicine_time, medicine_state, medicine_name, userid
+                                ,puserid);
                         medicineArrayList.add(0, dict); //첫번째 줄에 삽입됨
 
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
@@ -194,7 +200,7 @@ public class MedicineFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Medicine_text detail_medicine_text = medicineArrayList.get(position);
-                medicineApi.getDatamedicine("userId1","puserId1").enqueue(new Callback<List<Medicine_text>>() {
+                medicineApi.getDatamedicine(userid,puserid).enqueue(new Callback<List<Medicine_text>>() {
                     @Override
                     public void onResponse(Call<List<Medicine_text>> call, Response<List<Medicine_text>> response) {
                         if (response.isSuccessful()) {

@@ -45,6 +45,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ActiveFragment extends Fragment {
+    String userid,puserid;
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Active_text> activeArrayList;
     private Active_adapter activeAdapter;
@@ -69,6 +70,8 @@ public class ActiveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.active_list,container,false);
+        userid = this.getArguments().getString("userid");
+        puserid = this.getArguments().getString("puserid");
 
         Active_API activeApi = retrofit.create(Active_API.class);
 
@@ -91,7 +94,7 @@ public class ActiveFragment extends Fragment {
 //                mLinearLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        activeApi.getDataActive("userId1","puserId1").enqueue(new Callback<List<Active_text>>() {
+        activeApi.getDataActive(userid,puserid).enqueue(new Callback<List<Active_text>>() {
             @Override
             public void onResponse(Call<List<Active_text>> call, Response<List<Active_text>> response) {
                 if (response.isSuccessful()) {
@@ -162,12 +165,12 @@ public class ActiveFragment extends Fragment {
                         }else if(rb_changeno.isChecked()){
                             change="-";
                         }
-                        Active_text dict = new Active_text("userId1","puserId1",jahal,bohang,change);
+                        Active_text dict = new Active_text(userid,puserid,jahal,bohang,change);
                         Long id = Long.valueOf(1);
                         if (activeAdapter.getItemCount()!=0)
                         {id = Long.valueOf(activeArrayList.get(0).getId()+1);}
                         Active_text dict_0 = new Active_text(id,
-                                "userId1","puserId1",jahal,bohang,change);
+                                userid,puserid,jahal,bohang,change);
                         activeArrayList.add(0, dict_0); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 
@@ -202,7 +205,7 @@ public class ActiveFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Active_text detail_active_text = activeArrayList.get(position);
-                activeApi.getDataActive("userId1","puserId1").enqueue(new Callback<List<Active_text>>() {
+                activeApi.getDataActive(userid,puserid).enqueue(new Callback<List<Active_text>>() {
                     @Override
                     public void onResponse(Call<List<Active_text>> call, Response<List<Active_text>> response) {
                         if (response.isSuccessful()) {
