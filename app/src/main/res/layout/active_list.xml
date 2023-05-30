@@ -21,6 +21,8 @@
         android:scrollbarSize="5dp"
         android:scrollbarThumbVertical="@android:color/darker_gray"
         android:scrollbars="vertical"/>
+
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_active_insert"
         android:layout_width="match_parent"

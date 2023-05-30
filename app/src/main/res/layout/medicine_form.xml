@@ -3,7 +3,8 @@
     android:id="@+id/frame_medicine"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/dialog_radius"
+    android:backgroundTint="#ffffff"
     android:orientation="vertical">
 
     <TextView
@@ -16,10 +17,12 @@
         android:layout_marginLeft="10dp"/>
 
     <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="10dp">
+      >
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:textColor="@color/black"
@@ -58,9 +61,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"/>
     <LinearLayout
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
         <androidx.appcompat.widget.AppCompatCheckBox
             android:layout_marginRight="30dp"
@@ -103,7 +106,7 @@
         <EditText
             android:id="@+id/et_medicine_name"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:background="@drawable/memo_border"
@@ -112,34 +115,15 @@
             android:textAlignment="center"
             android:textColor="@color/black">
         </EditText>
-    <TextView
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="특이사항"></TextView>
-    <EditText
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_width="350dp"
-        android:layout_height="100dp"
-        android:background="@drawable/memo_border"
-        android:id="@+id/et_medicineForm"
-        android:hint="특이사항을 입력하세요"
-        android:textColorHint="@color/black"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        >
-    </EditText>
+
     <androidx.appcompat.widget.AppCompatButton
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="60dp"
-        android:layout_width="250dp"
+        android:layout_width="100dp"
         android:id="@+id/btn_medicine_save"
+        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_color"
+        android:layout_gravity="center"
+        android:background="@drawable/savebtn_radius"
         android:text="저장"></androidx.appcompat.widget.AppCompatButton>
 
 </LinearLayout>
