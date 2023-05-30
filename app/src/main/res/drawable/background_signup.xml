@@ -2,10 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Rectangle 1 -->
     <item
-        android:id="@+id/rectangle_1"
+        android:id="@+id/rectangle_3"
         android:width="450dp"
-        android:height="800dp"
-        android:drawable="@drawable/rectangle_1" >
+        android:height="900dp"
+        android:drawable="@drawable/rectangle_3" >
 
     </item>
 
