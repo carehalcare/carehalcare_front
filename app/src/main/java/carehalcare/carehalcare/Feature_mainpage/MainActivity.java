@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, PatientinfoActivity.class);
+                intent.putExtra("userid",userid);
+                intent.putExtra("puserid",puserid);
                 startActivity(intent);
             }
         });
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, PNoticeActivity.class);
+                intent.putExtra("userid",userid);
+                intent.putExtra("puserid",puserid);
                 startActivity(intent);
             }
         });

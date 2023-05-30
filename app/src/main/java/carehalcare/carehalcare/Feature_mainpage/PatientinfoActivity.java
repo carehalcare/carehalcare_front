@@ -36,7 +36,7 @@ public class PatientinfoActivity extends AppCompatActivity {
     private TextView tv_info;
 
     Call <PatientInfo> call;
-
+    String userid, puserid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +45,9 @@ public class PatientinfoActivity extends AppCompatActivity {
         btn_home = (ImageButton) findViewById(R.id.btn_homeinfo);
         tv_info = (TextView) findViewById(R.id.tv_info);
 
+        Intent intent = getIntent();
+        userid = intent.getStringExtra("userid");
+        puserid = intent.getStringExtra("puserid");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL.URL)
