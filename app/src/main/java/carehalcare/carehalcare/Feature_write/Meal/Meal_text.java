@@ -12,19 +12,44 @@ public class Meal_text {
     Uri photouri;
     String content;
     Bitmap photobitmap;
+    String filepath;
 
     Long id;
+    String datetime;
     String uripan;
-    public Meal_text(Uri photouri, String content, Long id, String uripan) {
+    public Meal_text(Uri photouri, String content, Long id, String uripan,String datetime,String uriuri) {
         this.photouri = photouri;
         this.content = content;
         this.id = id;
         this.uripan = uripan;
+        this.datetime = datetime;
     }
     public Meal_text(Bitmap photobitmap, String content, Long id) {
         this.photobitmap = photobitmap;
         this.content = content;
         this.id = id;
+    }
+    public Meal_text(String filepath, String content, Long id,String datetime,String pathpan) {
+        this.filepath = filepath;
+        this.content = content;
+        this.id = id;
+        this.datetime = datetime;
+    }
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 
     public Long getId() {

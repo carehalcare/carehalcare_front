@@ -71,7 +71,21 @@ public class Meal_form extends AppCompatActivity {
         et_mealdetail = (EditText)findViewById(R.id.et_meal_form);
 
         Uri output = getIntent().getParcelableExtra("uri");
-        String[] bitmaps = UriBitmap_meal(output);
+
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        Long mNow = System.currentTimeMillis();
+        Date mDate = new Date(mNow);
+
+
+        String itit = mFormat.format(mDate);
+        String[] its = itit.split(" ");
+        String dates = its[0];
+        String times = its[1];
+        Log.e("날짜는???? : ",""+dates+times);
+
+
+        String[] bitmaps = UriBitmap_meal(output,dates,times);
         String contentpath = bitmaps[0];
         String absopath = bitmaps[1];
 
@@ -178,7 +192,7 @@ public class Meal_form extends AppCompatActivity {
 
     }
 
-    public String[] UriBitmap_meal(Uri imageuris) {
+    public String[] UriBitmap_meal(Uri imageuris,String dates, String times) {
         String[] twopath = new String[2];
         String contentpath = "";
         String absolutePath = "";
@@ -201,12 +215,8 @@ public class Meal_form extends AppCompatActivity {
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(14);
 
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat dformat = new SimpleDateFormat("yyyy년 M월 dd일", Locale.KOREAN);
-        SimpleDateFormat tformat = new SimpleDateFormat("HH시 MM분 SS초", Locale.KOREAN);
-
-        dateText = dformat.format(today_date);
-        timeText = tformat.format(today_date);
+        dateText = "날짜: " + dates;
+        timeText = "시간: " + times;
         try {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 bm = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), imageuris)).copy(Bitmap.Config.ARGB_8888, true);

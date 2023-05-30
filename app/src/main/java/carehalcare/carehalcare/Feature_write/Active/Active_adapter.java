@@ -126,10 +126,10 @@ public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomVi
         viewholder.tv_todayActiveResult.setGravity(Gravity.CENTER);
 
 
-        viewholder.tv_todayActive.setText("오늘의 활동");
+        viewholder.tv_todayActive.setText("활동 기록 확인하기");
         Date today_date = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-        String activeTodayResult = format.format(today_date)+" 기록확인하기";
+        String activeTodayResult = format.format(today_date)+" 기록";
         viewholder.tv_todayActiveResult.setText(activeTodayResult);
 
     }

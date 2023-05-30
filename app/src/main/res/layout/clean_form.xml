@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/dialog_radius"
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp">
+        android:layout_gravity="center">
         <androidx.appcompat.widget.AppCompatCheckBox
             android:layout_width="100dp"
             android:layout_height="48dp"
@@ -50,17 +51,17 @@
     <TextView
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="특이사항"></TextView>
     <EditText
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
         android:layout_width="350dp"
         android:layout_height="150dp"
         android:id="@+id/et_cleanForm"
+        android:layout_gravity="center"
         android:background="@drawable/memo_border"
         android:hint="특이사항을 입력하세요"
         android:textColorHint="@color/black"
@@ -71,11 +72,11 @@
     </EditText>
     <androidx.appcompat.widget.AppCompatButton
         android:layout_marginTop="10dp"
-        android:layout_width="250dp"
+        android:layout_width="100dp"
+        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/button_color"
-        android:id="@+id/btn_clean_save"
+        android:background="@drawable/savebtn_radius"        android:id="@+id/btn_clean_save"
         android:text="저장"></androidx.appcompat.widget.AppCompatButton>
 
 </LinearLayout>

@@ -136,6 +136,7 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
 
         Uri seePhoto = mList.get(position).getPhotouri();
         Bitmap seeBitPhoto = mList.get(position).getPhotobitmap();
+        String filepath = mList.get(position).getFilepath();
 
 
         Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_mealpic);
@@ -144,14 +145,18 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
         if (mList.get(position).getUripan() != null){
             Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_mealpic);}
         else {
-            Glide.with(viewholder.itemView).load(seeBitPhoto).into(viewholder.iv_mealpic);
+            if(seeBitPhoto!=null){
+            Glide.with(viewholder.itemView).load(seeBitPhoto).into(viewholder.iv_mealpic);}
+            else {
+                Glide.with(viewholder.itemView).load(filepath).into(viewholder.iv_mealpic);
+            }
         }
 
         //viewholder.iv_mealpic.setImageURI(seePhoto);
         Date today_date = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
         String seeText = format.format(today_date);
-        viewholder.tv_mealcontent.setText(seeText);
+        viewholder.tv_mealcontent.setText(mList.get(position).getDatetime());
 
     }
 

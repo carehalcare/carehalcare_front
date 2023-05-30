@@ -20,16 +20,6 @@
             android:layout_gravity="center"
             android:id="@+id/iv_walk_form"/>
 
-        <TextView
-            android:layout_marginLeft="-120dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="특이사항"
-            />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

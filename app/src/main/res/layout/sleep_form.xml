@@ -3,7 +3,8 @@
     android:id="@+id/frame_sleep"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/dialog_radius"
+    android:backgroundTint="#ffffff"
     android:orientation="vertical">
 
     <TextView
@@ -13,13 +14,14 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="40dp"
-        android:layout_marginLeft="10dp"></TextView>
+        android:layout_marginLeft="20dp"></TextView>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp">
+        android:layout_gravity="center"
+        >
         <RadioGroup
             android:gravity="center"
             android:layout_width="match_parent"
@@ -54,13 +56,12 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="특이사항"></TextView>
     <EditText
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
         android:layout_width="350dp"
         android:layout_height="150dp"
         android:background="@drawable/memo_border"
@@ -69,14 +70,16 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:id="@+id/et_sleepForm"
+        android:layout_gravity="center"
         >
     </EditText>
     <androidx.appcompat.widget.AppCompatButton
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="70dp"
-        android:layout_width="250dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_color"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:background="@drawable/savebtn_radius"
         android:id="@+id/btn_sleep_save"
         android:text="저장"></androidx.appcompat.widget.AppCompatButton>
 

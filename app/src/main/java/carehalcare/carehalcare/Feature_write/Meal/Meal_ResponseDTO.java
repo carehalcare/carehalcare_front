@@ -15,8 +15,8 @@ public class Meal_ResponseDTO {
     String content;
     @SerializedName("images")
     List<Meal_Image> images;
-    @SerializedName("createdDate")
-    String createdDate;
+    @SerializedName("createdDateTime")
+    String createdDateTime;
 
     public Long getId() {
         return id;
@@ -58,11 +58,11 @@ public class Meal_ResponseDTO {
         this.images = images;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
+    public String getCreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }
