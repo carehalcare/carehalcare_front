@@ -60,6 +60,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Walk_form  extends AppCompatActivity {
+    String userid,puserid;
+
     ImageView imgtest;
     Button btn_save, btn_nono;
     @Override
@@ -73,7 +75,24 @@ public class Walk_form  extends AppCompatActivity {
         btn_nono = (Button) findViewById(R.id.btn_nono_walk_form);
 
         Uri output = getIntent().getParcelableExtra("uri");
-        String[] bitmaps = UriBitmap_walk(output);
+        userid = getIntent().getStringExtra("userid");
+        puserid = getIntent().getStringExtra("puserid");
+
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        Long mNow = System.currentTimeMillis();
+        Date mDate = new Date(mNow);
+
+
+        String itit = mFormat.format(mDate);
+        String[] its = itit.split(" ");
+        String dates = its[0];
+        String times = its[1];
+        Log.e("날짜는???? : ",""+dates+times);
+
+
+        String[] bitmaps = UriBitmap_walk(output,dates,times);
+
         String contentpath = bitmaps[0];
         String absopath = bitmaps[1];
 
@@ -92,8 +111,8 @@ public class Walk_form  extends AppCompatActivity {
 
                 Map<String, RequestBody> map = new HashMap<>();
 
-                RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),"userId1");
-                RequestBody puserId = RequestBody.create(MediaType.parse("text/plain"),"puserId1");
+                RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),userid);
+                RequestBody puserId = RequestBody.create(MediaType.parse("text/plain"),puserid);
 
                 map.put("userId", userId);
                 map.put("puserId", puserId);
@@ -172,7 +191,7 @@ public class Walk_form  extends AppCompatActivity {
 
     }
 
-    public String[] UriBitmap_walk(Uri imageuris) {
+    public String[] UriBitmap_walk(Uri imageuris,String dates, String times) {
         String[] twopath = new String[2];
         String contentpath = "";
         String absolutePath = "";
@@ -195,12 +214,9 @@ public class Walk_form  extends AppCompatActivity {
         strokePaint.setStyle(Paint.Style.STROKE);
         strokePaint.setStrokeWidth(14);
 
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat dformat = new SimpleDateFormat("yyyy년 M월 dd일", Locale.KOREAN);
-        SimpleDateFormat tformat = new SimpleDateFormat("HH시 MM분 SS초", Locale.KOREAN);
+        dateText = "날짜: " + dates;
+        timeText = "시간: " + times;
 
-        dateText = dformat.format(today_date);
-        timeText = tformat.format(today_date);
         try {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 bm = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), imageuris)).copy(Bitmap.Config.ARGB_8888, true);

@@ -13,8 +13,8 @@ public class Walk_ResponseDTO {
     String puserId;
     @SerializedName("images")
     List<Walk_Image> images;
-    @SerializedName("createdDate")
-    String createdDate;
+    @SerializedName("createdDateTime")
+    String createdDateTime;
 
     public Long getId() {
         return id;
@@ -48,11 +48,11 @@ public class Walk_ResponseDTO {
         this.images = images;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
+    public String getCreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

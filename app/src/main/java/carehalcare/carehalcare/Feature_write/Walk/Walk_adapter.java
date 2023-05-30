@@ -134,6 +134,7 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
 
         Uri seePhoto = mList.get(position).getPhotouri();
         Bitmap seeBitPhoto = mList.get(position).getPhotobitmap();
+        String filepath = mList.get(position).getFilepath();
 
 
         Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_walkpic);
@@ -142,9 +143,12 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
         if (mList.get(position).getUripan() != null){
             Glide.with(viewholder.itemView).load(seePhoto).into(viewholder.iv_walkpic);}
         else {
-            Glide.with(viewholder.itemView).load(seeBitPhoto).into(viewholder.iv_walkpic);
+            if(seeBitPhoto!=null){
+                Glide.with(viewholder.itemView).load(seeBitPhoto).into(viewholder.iv_walkpic);}
+            else {
+                Glide.with(viewholder.itemView).load(filepath).into(viewholder.iv_walkpic);
+            }
         }
-
 
         Date today_date = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
