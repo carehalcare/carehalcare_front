@@ -39,7 +39,7 @@
             android:exported="false">
         </activity>
         <activity
-            android:name=".Feature_write.EightMenuActivity"
+            android:name=".Feature_login.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,6 +47,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Feature_login.KakaologinActivity" />
+        <activity android:name=".Feature_login.SignupActivity"/>
+        <activity android:name=".Feature_login.LoginActivity"/>
+        <activity android:name=".Feature_mainpage.FindPatientActivity" />
+        <activity android:name=".Feature_mainpage.PatientinfoActivity"/>
+        <activity android:name=".Feature_mainpage.MainActivity"/>
+        <activity android:name=".Feature_mainpage.PNoticeActivity"/>
+        <activity android:name=".Feature_write.EightMenuActivity"/>
+
         <provider android:name="androidx.core.content.FileProvider"
             android:authorities="carehalcare.carehalcare"
             android:exported="false"
