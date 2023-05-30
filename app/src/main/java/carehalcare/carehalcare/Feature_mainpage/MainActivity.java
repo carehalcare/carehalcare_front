@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_NFC.CommuteActivity;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.R;
 import retrofit2.Call;
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         btn_setting = (ImageButton) findViewById(R.id.btn_setting);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.78:8080/")
+                .baseUrl(API_URL.URL)
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();
 
@@ -94,15 +96,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
+
         commute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                Intent intent = new Intent(MainActivity.this, CommuteActivity.class);
                 startActivity(intent);
             }
         });
-         */
+
         write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

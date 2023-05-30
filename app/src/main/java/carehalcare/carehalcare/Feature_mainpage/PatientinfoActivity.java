@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +47,7 @@ public class PatientinfoActivity extends AppCompatActivity {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.20.5.216:8080/")
+                .baseUrl(API_URL.URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create()) //파싱등록
                 .build();

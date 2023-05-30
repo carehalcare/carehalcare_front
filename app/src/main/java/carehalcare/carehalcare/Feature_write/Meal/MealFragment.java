@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.Active.Active_API;
 import carehalcare.carehalcare.Feature_write.Active.Active_adapter;
 import carehalcare.carehalcare.Feature_write.Active.Active_text;
@@ -76,7 +77,7 @@ public class MealFragment extends Fragment {
             .setLenient()
             .create();
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Meal_API.URL)
+            .baseUrl(API_URL.URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 
