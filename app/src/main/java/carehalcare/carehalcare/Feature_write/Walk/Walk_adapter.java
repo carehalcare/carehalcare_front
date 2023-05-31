@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -150,10 +151,17 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
             }
         }
 
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
-        String seeText = format.format(today_date);
-        viewholder.tv_walkcontent.setText(seeText);        //      viewholder.iv_mealpic.setImageURI(seePhoto);
+        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+        String newDate = "";
+        try {
+            Date date = originalFormat.parse(mList.get(position).getDatetime());
+            newDate = newFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        viewholder.tv_walkcontent.setText(newDate);        //      viewholder.iv_mealpic.setImageURI(seePhoto);
 
     }
 

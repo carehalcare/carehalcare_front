@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -153,10 +154,16 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
         }
 
         //viewholder.iv_mealpic.setImageURI(seePhoto);
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
-        String seeText = format.format(today_date);
-        viewholder.tv_mealcontent.setText(mList.get(position).getDatetime());
+        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+        String newDate = "";
+        try {
+            Date date = originalFormat.parse(mList.get(position).getDatetime());
+            newDate = newFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        viewholder.tv_mealcontent.setText(newDate);
 
     }
 

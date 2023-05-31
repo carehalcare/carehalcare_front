@@ -70,7 +70,7 @@ public class PNoticeActivity extends AppCompatActivity {
 
         NoticeApi noticeApi = retrofit.create(NoticeApi.class);
 
-        Call<List<Notice>> call = noticeApi.getNotice("userid1");
+        Call<List<Notice>> call = noticeApi.getNotice("puserid1");
 
         call.enqueue(new Callback<List<Notice>>() {
             @Override
