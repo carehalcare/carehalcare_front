@@ -164,6 +164,9 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
             e.printStackTrace();
         }
         viewholder.tv_mealcontent.setText(newDate);
+        if(mList.get(position).getUriuri()=="uriru"){
+            viewholder.tv_mealcontent.setText(mList.get(position).getDatetime());
+        }
 
     }
 

@@ -17,12 +17,14 @@ public class Meal_text {
     Long id;
     String datetime;
     String uripan;
+    String uriuri="";
     public Meal_text(Uri photouri, String content, Long id, String uripan,String datetime,String uriuri) {
         this.photouri = photouri;
         this.content = content;
         this.id = id;
         this.uripan = uripan;
         this.datetime = datetime;
+        this.uriuri = uriuri;
     }
     public Meal_text(Bitmap photobitmap, String content, Long id) {
         this.photobitmap = photobitmap;
@@ -34,6 +36,14 @@ public class Meal_text {
         this.content = content;
         this.id = id;
         this.datetime = datetime;
+    }
+
+    public String getUriuri() {
+        return uriuri;
+    }
+
+    public void setUriuri(String uriuri) {
+        this.uriuri = uriuri;
     }
 
     public String getDatetime() {

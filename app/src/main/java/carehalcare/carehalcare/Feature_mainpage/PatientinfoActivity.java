@@ -33,7 +33,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class PatientinfoActivity extends AppCompatActivity {
 
     private ImageButton btn_home;
-    private TextView tv_info;
+    private TextView tv_info,tv_info_name;
 
     Call <PatientInfo> call;
     String userid, puserid;
@@ -44,6 +44,7 @@ public class PatientinfoActivity extends AppCompatActivity {
 
         btn_home = (ImageButton) findViewById(R.id.btn_homeinfo);
         tv_info = (TextView) findViewById(R.id.tv_info);
+        tv_info_name= (TextView)findViewById(R.id.tv_info_name);
 
         Intent intent = getIntent();
         userid = intent.getStringExtra("userid");
@@ -65,31 +66,32 @@ public class PatientinfoActivity extends AppCompatActivity {
                     PatientInfo patientInfo = response.body();
 
                     String content = "";
-                    content += "이름: " + patientInfo.getPname() + "\n\n";
-
+//                    content += "이름: " + patientInfo.getPname() + "\n\n";
+//
                     //생년월일 출력 방식 변경 0000-00-00 -> 0000년 00월 00일
                     String birthDate = patientInfo.getPbirthDate();
                     String year = birthDate.substring(0, 4);
                     String month = birthDate.substring(4, 6);
                     String day = birthDate.substring(6, 8);
                     String formattedBirthDate = year + "년 " + month + "월 " + day + "일";
-                    content += "생년월일: " + formattedBirthDate + "\n\n";
+                    content += "생년월일     " + formattedBirthDate + "\n\n";
 
                     //성별 출력 방식 변경 F, M -> 여성 남성
                     String gender = patientInfo.getPsex();
                     //String gender = "";
                     if(gender.equals("F")){
-                        gender = "여성";
+                        gender = "(여)";
                     } else if(gender.equals("M")){
-                        gender = "남성";
+                        gender = "(남)";
                     } else{
-                        gender = "성별 정보 없음";
+                        gender = "(성별 정보 없음)";
                     }
-                    content += "성별: " + gender + "\n\n";
-                    content += "질환: " + patientInfo.getDisease() + "\n\n";
-                    content += "담당병원: " + patientInfo.getHospital() + "\n\n";
-                    content += "투약정보: " + patientInfo.getMedicine() + "\n\n";
-                    content += "성격: " + patientInfo.getRemark() + "\n\n";
+//                    content += "성별: " + gender + "\n\n";
+                    content += "질       환     " + patientInfo.getDisease() + "\n\n";
+                    content += "담당병원     " + patientInfo.getHospital() + "\n\n";
+                    content += "투약정보     " + patientInfo.getMedicine() + "\n\n";
+                    content += "성       격     " + patientInfo.getRemark() + "\n\n";
+                    tv_info_name.setText(patientInfo.getPname()+gender);
 
                     tv_info.setText(content);
                     Log.d("연결 성공", "Status Code : " + response.code());
