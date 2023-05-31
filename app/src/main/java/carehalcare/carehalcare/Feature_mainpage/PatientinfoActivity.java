@@ -70,8 +70,8 @@ public class PatientinfoActivity extends AppCompatActivity {
                     //생년월일 출력 방식 변경 0000-00-00 -> 0000년 00월 00일
                     String birthDate = patientInfo.getPbirthDate();
                     String year = birthDate.substring(0, 4);
-                    String month = birthDate.substring(5, 7);
-                    String day = birthDate.substring(8, 10);
+                    String month = birthDate.substring(4, 6);
+                    String day = birthDate.substring(6, 8);
                     String formattedBirthDate = year + "년 " + month + "월 " + day + "일";
                     content += "생년월일: " + formattedBirthDate + "\n\n";
 

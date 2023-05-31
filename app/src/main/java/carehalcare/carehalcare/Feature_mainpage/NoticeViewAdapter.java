@@ -50,9 +50,9 @@ public class NoticeViewAdapter extends RecyclerView.Adapter<NoticeViewAdapter.Vi
         Notice notice = notices.get(position);
         if (notices != null && holder.tv_notice != null) {
             //createdDate를 변경하여 저장
-            String newDate = formatDate(notice.getCreatedDate());
+            String newDate = formatDate(notice.getModifiedDateTime());
 
-            holder.tv_notice.setText(notice.setCreatedDate(newDate) + "\n" + notice.getContent());
+            holder.tv_notice.setText(newDate + "\n" + notice.getContent());
         }
     }
 
