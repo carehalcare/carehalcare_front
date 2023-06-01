@@ -5,11 +5,12 @@ import com.google.gson.annotations.SerializedName;
 public class FindPatient {
     @SerializedName("userId") String userId;
     @SerializedName("username") String username;
-    private String puserId, Id;
+    @SerializedName("puserId")String puserId;
+    private String Id;
 
-    public FindPatient(String puserId, String userId) {
-        this.puserId = userId;
-        this.userId = Id;
+    public FindPatient(String userId, String puserId) {
+        this.puserId = puserId;
+        this.userId = userId;
     }
 
     public FindPatient(){}

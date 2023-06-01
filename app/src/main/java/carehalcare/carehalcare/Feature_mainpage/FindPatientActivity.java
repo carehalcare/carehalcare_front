@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -101,26 +102,26 @@ public class FindPatientActivity extends AppCompatActivity {
                     return;
                 }
 
-                String newPid = "간병인ID";
+                String newPid = "puserid1";
 
                 // 새로운 PID를 서버에 보내어 등록하기
-                FindPatient findPatient = new FindPatient(newPid, pdatas.getUserId());
-                Call<FindPatient> post = findPatientApi.addPID(findPatient);
+                FindPatient findPatient = new FindPatient("userid1", "puserid1");
+                Call<Long> post = findPatientApi.addPID(findPatient);
 
-                post.enqueue(new Callback<FindPatient>() {
+                post.enqueue(new Callback<Long>() {
                     @Override
-                    public void onResponse(Call<FindPatient> post, Response<FindPatient> response) {
+                    public void onResponse(Call<Long> post, Response<Long> response) {
                         if (response.isSuccessful()) {
                             // TODO: 처리할 로직 작성
                             Log.e("보낸다 ========",response.body()+"");
-                            FindPatient body = response.body();
+                            Long body = response.body();
                         } else {
                             Log.d(TAG, "오류 발생 : " + response.code());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<FindPatient> call, Throwable t) {
+                    public void onFailure(Call<Long> call, Throwable t) {
                         tv_result.setText(t.getMessage());
                     }
                 });

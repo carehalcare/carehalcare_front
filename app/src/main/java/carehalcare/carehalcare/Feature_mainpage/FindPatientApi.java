@@ -12,5 +12,5 @@ public interface FindPatientApi {
     Call<FindPatient> getData(@Query("userId") String userId);
 
     @POST("/patients")
-    Call<FindPatient> addPID(@Body FindPatient findPatient);
+    Call<Long> addPID(@Body FindPatient findPatient);
 }
