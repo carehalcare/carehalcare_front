@@ -26,9 +26,12 @@ import com.google.gson.GsonBuilder;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -88,7 +91,76 @@ public class CommuteActivity extends AppCompatActivity {
         dialog_ornot.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 제거
         dialog_ornot.setContentView(R.layout.dialog_nfc_ornot);
 
+
+        CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
+        for (int iday = 1; iday < 31;iday++){
+            long now = System.currentTimeMillis();
+            Date mDate = new Date(now);
+            SimpleDateFormat simpleDateFormatYear = new SimpleDateFormat("yyyy");
+            SimpleDateFormat simpleDateFormatMonth = new SimpleDateFormat("MM");
+
+            int years = CalendarDay.today().getYear();
+            int months = CalendarDay.today().getMonth();
+            int days = iday;
+            String dtext = years+"-"+months+"-"+iday;
+
+            commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
+                @Override
+                public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
+                    if(response.isSuccessful()){
+                        if(response.body()!=null){
+                            for (int i = 0; i < response.body().size(); i++) {
+                                if(response.body().get(response.body().size()-1).getCategory().equals("1")){
+                                    calendarView.addDecorator(new EventDecorator(Color.RED, Collections.singletonList(
+                                            CalendarDay.from(years,months,days))));}
+                            }
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<List<CommuteResponseDto>> call, Throwable t) {
+                    Log.e("실패",t.toString());
+                }
+            });
+        }
+
+        calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                for (int iday = 1; iday < 32;iday++){
+                    long now = System.currentTimeMillis();
+
+                    int years = date.getYear();
+                    int months = date.getMonth();
+                    int days = iday;
+                    String dtext = years+"-"+months+"-"+iday;
+
+                    commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
+                        @Override
+                        public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
+                            if(response.isSuccessful()){
+                                if(response.body()!=null){
+                                    for (int i = 0; i < response.body().size(); i++) {
+                                        if(response.body().get(response.body().size()-1).getCategory().equals("1")){
+                                            calendarView.addDecorator(new EventDecorator(Color.RED, Collections.singletonList(
+                                                CalendarDay.from(years,months,days))));
+                                    }
+
+                                    }
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<List<CommuteResponseDto>> call, Throwable t) {
+                            Log.e("실패",t.toString());
+                        }
+                    });
+                }
+            }
+        });
+
         calendarView.setSelectedDate(CalendarDay.today());
+
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -96,6 +168,7 @@ public class CommuteActivity extends AppCompatActivity {
                 tv_bye.setVisibility(View.VISIBLE);
                 check_Btn.setVisibility(View.VISIBLE);
                 check_Btn.setBackgroundResource(R.drawable.nfc_dialog_radius);
+
                 int year = date.getYear();
                 int month = date.getMonth();
                 int dayOfMonth = date.getDay();
@@ -116,23 +189,21 @@ public class CommuteActivity extends AppCompatActivity {
                 int years = Integer.parseInt(simpleDateFormatYear.format(mDate));
                 int months = Integer.parseInt(simpleDateFormatMonth.format(mDate));
                 int days = Integer.parseInt(simpleDateFormatDay.format(mDate));
-                if(year<=years && month<=months && dayOfMonth<days){
-                    check_Btn.setEnabled(false);
-                    check_Btn.setText("기록할 수 없습니다");
-                    check_Btn.setBackgroundResource(R.drawable.nfc_enable_design);
-                }else if(year>=years && month>=months && dayOfMonth>days){
-                    check_Btn.setEnabled(false);
-                    check_Btn.setText("기록할 수 없습니다");
-                    check_Btn.setBackgroundResource(R.drawable.nfc_enable_design);
-                }
-
-                String smonth;
-                if(month < 10){int mmont = month; smonth = "0"+mmont;} else{smonth = ""+month;}
-                String dtext = year+"-"+smonth+"-"+dayOfMonth;
 
 
-                CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
-                commuteAPI.getDataCommute(dtext,userid,puserid).enqueue(new Callback<List<CommuteResponseDto>>() {
+                check_Btn.setEnabled(false);
+                check_Btn.setText("기록할 수 없습니다");
+                check_Btn.setBackgroundResource(R.drawable.nfc_enable_design);
+
+                if(year==years && month==months && dayOfMonth==days){
+                    check_Btn.setEnabled(true);
+                    check_Btn.setText("출근하기");
+                    check_Btn.setBackgroundResource(R.drawable.nfc_dialog_radius);}
+
+                String dtext = year+"-"+month+"-"+dayOfMonth;
+                Log.e("달력날짜",dtext);
+
+                commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
                     @Override
                     public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                         if(response.isSuccessful()){
@@ -149,6 +220,13 @@ public class CommuteActivity extends AppCompatActivity {
                                     }
                                     Log.e("출퇴근여부 : " + i, response.body().get(i).getCategory()+" "+response.body().get(i).getDate() +
                                             " "+response.body().get(i).getTime());
+                                    if(year!=years || month!=months || dayOfMonth!=days){
+                                        Log.e("달력날짜",month+"월"+dayOfMonth+"일");
+                                        Log.e("달력날짜",months+"월"+days+"일");
+                                        Log.e("달력날짜","ㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁ");
+                                        check_Btn.setEnabled(false);
+                                        check_Btn.setText("기록할 수 없습니다");
+                                        check_Btn.setBackgroundResource(R.drawable.nfc_enable_design);}
                                 }
                             }
                         }
@@ -158,7 +236,6 @@ public class CommuteActivity extends AppCompatActivity {
                         Log.e("실패",t.toString());
                     }
                 });
-
                 checkDay(year,month,dayOfMonth,userid);
 
             }
@@ -219,20 +296,29 @@ public class CommuteActivity extends AppCompatActivity {
         String getdates = sdf_date.format(date);
         String gettimes = sdf_time.format(date);
         String getTime = sdf.format(date);
+
+        SimpleDateFormat simpleDateFormatYear = new SimpleDateFormat("yyyy");
+        SimpleDateFormat simpleDateFormatMonth = new SimpleDateFormat("MM");
+        SimpleDateFormat simpleDateFormatDay = new SimpleDateFormat("dd");
+
+        int years = Integer.parseInt(simpleDateFormatYear.format(date));
+        int months = Integer.parseInt(simpleDateFormatMonth.format(date));
+        int days = Integer.parseInt(simpleDateFormatDay.format(date));
+        String dtext = years+"-"+months+"-"+days;
+
+
         Log.e("nfc리더 읽기 값 : ",text);
         if(check_Btn.getText().equals("출근하기")){
-            tv_hello.setText(getTime+" : ");
+            tv_hello.setText(getTime);
             CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
             CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto(userid,puserid,"0",
-                    getdates,gettimes);
+                    dtext,gettimes);
             commuteAPI.postDataCommute(commuteSaveRequestDto).enqueue(new Callback<List<CommuteResponseDto>>() {
                 @Override
                 public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                     if(response.isSuccessful()){
                         if (response.body()!=null){
                             CommuteResponseDto datas = response.body().get(0);
-                            Log.e("여부:",datas.getCategory());
-                            Log.e("시간:",datas.getDate()+datas.getTime());
                         }
                     }
                 }
@@ -243,18 +329,16 @@ public class CommuteActivity extends AppCompatActivity {
             });
         }
         else if (check_Btn.getText().equals("퇴근하기")) {
-            tv_bye.setText(getTime+" : "+text);
+            tv_bye.setText(getTime);
             CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
             CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto(userid,puserid,"1",
-                    getdates,gettimes);
+                    dtext,gettimes);
             commuteAPI.postDataCommute(commuteSaveRequestDto).enqueue(new Callback<List<CommuteResponseDto>>() {
                 @Override
                 public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                     if(response.isSuccessful()){
                         if (response.body()!=null){
                             CommuteResponseDto datas = response.body().get(0);
-                            Log.e("여부:",datas.getCategory());
-                            Log.e("시간:",datas.getDate()+datas.getTime());
                         }
                     }
                 }

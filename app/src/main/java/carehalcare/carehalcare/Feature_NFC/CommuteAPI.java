@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface CommuteAPI {
-    String URL = "http://192.168.0.18:8080/";
+    String URL = "http://192.168.21.215:8080/";
 
     @POST("commutes")
     Call<List<CommuteResponseDto>> postDataCommute(

@@ -1,5 +1,5 @@
 package carehalcare.carehalcare;
 
 public interface API_URL {
-    String URL = "http://172.20.4.127:8080/";
+    String URL = "http://192.168.0.18:8080/";
 }
