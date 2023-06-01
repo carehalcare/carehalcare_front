@@ -340,7 +340,7 @@ public class MealFragment extends Fragment {
                         String mealTodayResult;
                         mealTodayResult = tsa;
                         Date today_date = Calendar.getInstance().getTime();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss", Locale.getDefault());
                         String seeText = format.format(today_date);
 
                         Meal_text dict = new Meal_text(uris, mealTodayResult, Long.valueOf(1), "uri",seeText,"uriru");

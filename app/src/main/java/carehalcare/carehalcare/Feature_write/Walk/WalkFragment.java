@@ -331,7 +331,7 @@ public class WalkFragment extends Fragment {
                         Uri uris = result.getData().getParcelableExtra("uris");
 
                         Date today_date = Calendar.getInstance().getTime();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일 : HH시 MM분", Locale.getDefault());
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss", Locale.getDefault());
                         String seeText = format.format(today_date);
 
                         Walk_text dict = new Walk_text(uris, Long.valueOf(1), "uri",seeText,"uriuri");
