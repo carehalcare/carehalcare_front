@@ -2,23 +2,50 @@ package carehalcare.carehalcare.Feature_login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_mainpage.MainActivity;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button loginbtn;
-    Button newuserbtn;
+    Button loginbtn,newuserbtn;
+    private AlertDialog dialog;
+
     ImageButton kakaobtn;
+    EditText login_id,login_pw;
+    String UserEmail,UserPw,accessToken,refreshToken,grantType;
+    Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL.apiURL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TokenUtils.init(getApplicationContext());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -26,11 +53,55 @@ public class LoginActivity extends AppCompatActivity {
         newuserbtn = (Button) findViewById(R.id.btn_newuser);
         kakaobtn = (ImageButton) findViewById(R.id.btn_kakao);
 
+        login_id = (EditText)findViewById(R.id.loginidInput);
+        login_pw = (EditText)findViewById(R.id.loginpw);
+
+
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                String userEmail = login_id.getText().toString();
+                String userPwd = login_pw.getText().toString();
+                if (userEmail.equals("") || userPwd.equals("")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    dialog = builder.setMessage("모두 입력해주세요.").setNegativeButton("확인", null).create();
+                    dialog.show();
+                    return;
+                }
+                    SignupAPI signupAPI = retrofit.create(SignupAPI.class);
+                    LoginDto loginDto = new LoginDto(userEmail,userPwd);
+                    signupAPI.postlogin(loginDto).enqueue(new Callback<TokenDto>() {
+                        @Override
+                        public void onResponse(Call<TokenDto> call, Response<TokenDto> response) {
+                            if (response.isSuccessful()){
+                                if (response.body()!=null){
+                                    TokenDto tokenDto = response.body();
+                                    accessToken = tokenDto.getAccessToken();
+                                    refreshToken = tokenDto.getRefreshToken();
+                                    grantType = tokenDto.getGrantType();
+                                    TokenUtils.setAccessToken(response.body().getAccessToken());
+                                    TokenUtils.setRefreshToken(response.body().getRefreshToken());
+                                    TokenUtils.setUser_Id(userEmail);
+                                    Toast.makeText(getApplicationContext(), String.format("간병인님 환영합니다."), Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ID 혹은 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                        }
+                        @Override
+                        public void onFailure(Call<TokenDto> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "통신실패.", Toast.LENGTH_SHORT).show();
+                            Log.e("통신실패",t.toString());
+                            return;
+                        }
+                    });
+
+
             }
         });
 
@@ -45,8 +116,8 @@ public class LoginActivity extends AppCompatActivity {
         kakaobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, KakaologinActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(LoginActivity.this, KakaologinActivity.class);
+                //startActivity(intent);
             }
         });
     }
