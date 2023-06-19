@@ -11,8 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,8 +27,12 @@ import java.util.Locale;
 
 import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_NFC.CommuteActivity;
+import carehalcare.carehalcare.Feature_login.LoginDto;
+import carehalcare.carehalcare.Feature_login.SignupAPI;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn_setting;
     private TextView tv_noti1, tv_noti2;
     String userid, puserid;
+    TextView tv_welcommsg;
+    String user_name="";
+    Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL.URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build();
 
     private String formatDate(String dateStr) {
         SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -59,6 +76,36 @@ public class MainActivity extends AppCompatActivity {
 
         userid = "userid1";
         puserid="puserid1";
+
+        tv_welcommsg = (TextView)findViewById(R.id.tv_welcomemsg);
+        CaregiverAPI caregiverAPI = Retrofit_client.createService(CaregiverAPI.class,TokenUtils.getAccessToken("Access_Token"));
+        //CaregiverAPI caregiverAPI = retrofit.create(CaregiverAPI.class);
+        Log.e("토큰 이름",TokenUtils.getUser_Id("User_Id"));
+        Log.e("토큰 토큰",TokenUtils.getAccessToken("Access_Token"));
+
+        caregiverAPI.getCaregiverInfo(TokenUtils.getUser_Id("User_Id")).enqueue(new Callback<UserDTO>() {
+            @Override
+            public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                if (response.isSuccessful()){
+                    if (response.body()!=null){
+                        user_name = response.body().getUsername();
+                        Log.e("토큰받은 이름 ",user_name);
+                        tv_welcommsg.setText(user_name+" 간병인님\n환영합니다.");
+
+                    } else{
+                        Log.e("토큰받아오기 실패 ","user_name");
+                    }
+                }else{
+                    Log.e("실패" ,"연결이 안되었습니다");
+                }
+            }
+            @Override
+            public void onFailure(Call<UserDTO> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "통신실패.", Toast.LENGTH_SHORT).show();
+                Log.e("통신실패",t.toString());
+                return;
+            }
+        });
 
         tv_noti1 = (TextView)findViewById(R.id.tv_noti1);
         tv_noti2 = (TextView)findViewById(R.id.tv_noti2);
