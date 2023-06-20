@@ -1,5 +1,6 @@
 package carehalcare.carehalcare.Feature_login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,7 +18,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_mainpage.CaregiverAPI;
+import carehalcare.carehalcare.Feature_mainpage.FindPatientActivity;
 import carehalcare.carehalcare.Feature_mainpage.MainActivity;
+import carehalcare.carehalcare.Feature_mainpage.UserDTO;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.Retrofit_client;
 import carehalcare.carehalcare.TokenUtils;
@@ -28,12 +33,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
+
     Button loginbtn,newuserbtn;
     private AlertDialog dialog;
 
     ImageButton kakaobtn;
     EditText login_id,login_pw;
-    String UserEmail,UserPw,accessToken,refreshToken,grantType;
+    String UserEmail,UserPw,accessToken,refreshToken,grantType,puserid;
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
@@ -55,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
         login_id = (EditText)findViewById(R.id.loginidInput);
         login_pw = (EditText)findViewById(R.id.loginpw);
+        final ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar2);
+        progressBar.setVisibility(View.INVISIBLE);
 
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
@@ -70,9 +78,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
                     SignupAPI signupAPI = retrofit.create(SignupAPI.class);
                     LoginDto loginDto = new LoginDto(userEmail,userPwd);
-                    signupAPI.postlogin(loginDto).enqueue(new Callback<TokenDto>() {
+                    progressBar.setVisibility(View.VISIBLE);
+
+                CaregiverAPI caregiverAPI = Retrofit_client.createService(CaregiverAPI.class,TokenUtils.getAccessToken("Access_Token"));
+
+
+                signupAPI.postlogin(loginDto).enqueue(new Callback<TokenDto>() {
                         @Override
                         public void onResponse(Call<TokenDto> call, Response<TokenDto> response) {
+                            progressBar.setVisibility(View.GONE);
                             if (response.isSuccessful()){
                                 if (response.body()!=null){
                                     TokenDto tokenDto = response.body();
@@ -83,9 +97,40 @@ public class LoginActivity extends AppCompatActivity {
                                     TokenUtils.setRefreshToken(response.body().getRefreshToken());
                                     TokenUtils.setUser_Id(userEmail);
                                     Toast.makeText(getApplicationContext(), String.format("간병인님 환영합니다."), Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                    caregiverAPI.getCaregiverInfo(TokenUtils.getUser_Id("User_Id")).enqueue(new Callback<UserDTO>() {
+                                        @Override
+                                        public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                                            if (response.isSuccessful()){
+                                                if (response.body()!=null){
+                                                    //Log.e("dto",response.body().getPuserId());
+                                                    puserid = response.body().getPuserId();
+                                                    if (puserid==null){
+                                                        Intent intent = new Intent(LoginActivity.this, FindPatientActivity.class);
+                                                        intent.putExtra("puserid",puserid);
+                                                        startActivity(intent);
+                                                        finish();
+                                                        return;
+                                                    }
+                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                    return;
+                                                } else{
+                                                    Log.e("토큰받아오기 실패 ","user_name");
+                                                }
+                                            }else{
+                                                Log.e("실패" ,"연결이 안되었습니다");
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<UserDTO> call, Throwable t) {
+                                            Toast.makeText(getApplicationContext(), "통신실패.", Toast.LENGTH_SHORT).show();
+                                            Log.e("통신실패",t.toString());
+                                            return;
+                                        }
+                                    });
+
+
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), "ID 혹은 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
@@ -95,6 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(Call<TokenDto> call, Throwable t) {
+                            progressBar.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "통신실패.", Toast.LENGTH_SHORT).show();
                             Log.e("통신실패",t.toString());
                             return;

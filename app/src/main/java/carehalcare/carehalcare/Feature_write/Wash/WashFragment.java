@@ -40,7 +40,10 @@ import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_API;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_adapter;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_text;
+import carehalcare.carehalcare.Feature_write.Sleep.Sleep_API;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,14 +56,6 @@ public class WashFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Wash_text> washArrayList;
     private Wash_adapter washAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
-
     public WashFragment() {
         // Required empty public constructor
     }
@@ -74,7 +69,11 @@ public class WashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wash_list,container,false);
-        Wash_API washApi = retrofit.create(Wash_API.class);
+
+        Wash_API washApi = Retrofit_client.createService(Wash_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+
+        //Wash_API washApi = retrofit.create(Wash_API.class);
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 

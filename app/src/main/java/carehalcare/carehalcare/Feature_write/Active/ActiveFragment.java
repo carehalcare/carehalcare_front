@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_mainpage.CaregiverAPI;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_adapter;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_text;
@@ -38,6 +39,8 @@ import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,13 +52,6 @@ public class ActiveFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Active_text> activeArrayList;
     private Active_adapter activeAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
 
     public ActiveFragment() {
         // Required empty public constructor
@@ -73,7 +69,9 @@ public class ActiveFragment extends Fragment {
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
-        Active_API activeApi = retrofit.create(Active_API.class);
+        Active_API activeApi = Retrofit_client.createService(Active_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+        //Active_API activeApi = retrofit.create(Active_API.class);
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_active_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());

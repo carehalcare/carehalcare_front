@@ -34,10 +34,13 @@ import java.util.List;
 import java.util.Locale;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_write.Clean.Clean_API;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,13 +53,6 @@ public class MedicineFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Medicine_text> medicineArrayList;
     private Medicine_adapter medicineAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
 
     public MedicineFragment() {
         // Required empty public constructor
@@ -71,7 +67,9 @@ public class MedicineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.medicine_list,container,false);
-        Medicine_API medicineApi = retrofit.create(Medicine_API.class);
+        Medicine_API medicineApi = Retrofit_client.createService(Medicine_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+        //Medicine_API medicineApi = retrofit.create(Medicine_API.class);
 
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");

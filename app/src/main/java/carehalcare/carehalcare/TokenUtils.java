@@ -8,6 +8,8 @@ public class TokenUtils {
     private static final String Access_Token = "Access_Token";
     private static final String Refresh_Token = "Refresh_Token";
     private static final String User_Id = "User_Id";
+    private static final String PUser_Id = "PUser_Id";
+
     private Context mContext;
     private static SharedPreferences prefs;
     private static SharedPreferences.Editor prefsEditor;
@@ -31,6 +33,13 @@ public class TokenUtils {
 
     public static String getAccessToken(String defValue) {
         return prefs.getString(Access_Token,defValue);
+    }
+    public static void setPUser_Id(String value) {
+        prefsEditor.putString(PUser_Id, value).commit();
+    }
+
+    public static String getPUser_Id(String defValue) {
+        return prefs.getString(PUser_Id,defValue);
     }
 
     public static void setUser_Id(String value) {

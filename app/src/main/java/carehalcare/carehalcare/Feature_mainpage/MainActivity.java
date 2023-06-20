@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
         tv_welcommsg = (TextView)findViewById(R.id.tv_welcomemsg);
         CaregiverAPI caregiverAPI = Retrofit_client.createService(CaregiverAPI.class,TokenUtils.getAccessToken("Access_Token"));
-        //CaregiverAPI caregiverAPI = retrofit.create(CaregiverAPI.class);
         Log.e("토큰 이름",TokenUtils.getUser_Id("User_Id"));
         Log.e("토큰 토큰",TokenUtils.getAccessToken("Access_Token"));
 

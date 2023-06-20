@@ -110,7 +110,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class EightMenuActivity extends AppCompatActivity implements Button.OnClickListener {
     String userid, puserid;
     Long ids;  //TODO ids는 삭제할 id값
-    LoadingDialog loadingDialog;
     private FrameLayout container;
     private static final int REQUEST_CODE = 1099;
     private static final int MY_PERMISSION_CAMERA = 1111;
@@ -154,9 +153,6 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         userid = intent.getStringExtra("userid");
         puserid = intent.getStringExtra("puserid");
 
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        loadingDialog.setCancelable(false);
     }
 
     // 각 버튼에 맞는 함수들

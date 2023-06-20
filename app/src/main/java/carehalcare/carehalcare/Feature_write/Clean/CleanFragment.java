@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
@@ -38,6 +39,8 @@ import carehalcare.carehalcare.Feature_write.Wash.Wash_ResponseDTO;
 import carehalcare.carehalcare.Feature_write.Wash.Wash_adapter;
 import carehalcare.carehalcare.Feature_write.Wash.Wash_text;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,13 +53,6 @@ public class CleanFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Clean_text> cleanArrayList;
     private Clean_adapter cleanAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
 
     public CleanFragment() {
         // Required empty public constructor
@@ -71,7 +67,11 @@ public class CleanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.clean_list,container,false);
-        Clean_API cleanApi = retrofit.create(Clean_API.class);
+
+        Clean_API cleanApi = Retrofit_client.createService(Clean_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+
+       // Clean_API cleanApi = retrofit.create(Clean_API.class);
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
