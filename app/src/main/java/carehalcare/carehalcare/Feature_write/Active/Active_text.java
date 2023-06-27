@@ -23,15 +23,17 @@ public class Active_text {
     String position;
 
     String pan;
+    String createdDateTime;
 
-
-    public Active_text(Long id,String userId, String puserId, String rehabilitation, String walkingAssistance, String position) {
+    public Active_text(Long id,String userId, String puserId, String rehabilitation, String walkingAssistance, String position,
+                       String createdDateTime) {
         this.id = id;
         this.userId = userId;
         this.puserId = puserId;
         this.rehabilitation = rehabilitation;
         this.walkingAssistance = walkingAssistance;
         this.position = position;
+        this.createdDateTime = createdDateTime;
     }
     public Active_text(String userId, String puserId, String rehabilitation, String walkingAssistance, String position) {
         this.userId = userId;
@@ -41,6 +43,15 @@ public class Active_text {
         this.position = position;
         this.pan = pan;
     }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
+    }
+
     public String getUserId() {
         return userId;
     }

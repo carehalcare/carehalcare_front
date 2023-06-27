@@ -103,7 +103,8 @@ public class SleepFragment extends Fragment {
                             for (int i = 0; i < datas.size(); i++) {
                                 Sleep_text dict_0 = new Sleep_text(response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(), response.body().get(i).getState(),response.body().get(i).getContent(),
-                                        response.body().get(i).getId());
+                                        response.body().get(i).getId(),
+                                        response.body().get(i).getCreatedDateTime());
                                 sleepArrayList.add(dict_0);
                                 sleepAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getState()+" "+datas.get(i).getId() + ""+"어댑터카운터"+sleepAdapter.getItemCount());

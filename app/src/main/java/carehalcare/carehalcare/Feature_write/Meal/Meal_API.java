@@ -17,6 +17,11 @@ import retrofit2.http.Path;
 public interface Meal_API {
     String URL = "http://192.168.0.18:8080/";
 
+    @GET("meals/{id}")
+    Call<Meal_ResponseDTO> getdatameal2(
+            @Path("id") Long id
+    );
+
     @DELETE("meals/{id}")
     Call<Void> deleteData(@Path("id") Long id);
     @GET("meals/list/{userId}/{puserId}")

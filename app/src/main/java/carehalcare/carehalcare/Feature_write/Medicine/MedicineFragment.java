@@ -98,7 +98,8 @@ public class MedicineFragment extends Fragment {
                                 Medicine_text dict_0 = new Medicine_text(response.body().get(i).gettime(),
                                         response.body().get(i).getmealStatus(), response.body().get(i).getmedicine(),
                                         response.body().get(i).getUserid(),
-                                        response.body().get(i).getPuserid(),response.body().get(i).getId());
+                                        response.body().get(i).getPuserid(),response.body().get(i).getId(),
+                                        response.body().get(i).getCreatedDateTime());
                                 medicineArrayList.add(dict_0);
                                 medicineAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getmedicine()+" "+datas.get(i).getId() + ""+"어댑터카운터"+medicineAdapter.getItemCount());

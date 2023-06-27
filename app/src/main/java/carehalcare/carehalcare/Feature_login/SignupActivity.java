@@ -163,7 +163,7 @@ public class SignupActivity extends AppCompatActivity{
                                 }
                             }
                             else{
-                                Toast.makeText(getApplicationContext(), "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "회원가입에 실패하였습니다."+response.code(), Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }

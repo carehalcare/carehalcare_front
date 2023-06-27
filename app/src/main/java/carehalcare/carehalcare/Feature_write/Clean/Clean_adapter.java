@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -130,17 +131,30 @@ public class Clean_adapter extends RecyclerView.Adapter<Clean_adapter.CustomView
         viewholder.tv_todayCleanResult.setGravity(Gravity.CENTER);
 
 
-        viewholder.tv_todayClean.setText("주변청결");
-        String seeText = mList.get(position).get_CleanTodayResult();
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-        String cleanTodayResult = format.format(today_date)+" 기록확인하기";
+        viewholder.tv_todayClean.setText("주변청결 기록 확인하기");
+        if (mList.get(position).getCreatedDateTime()==null){
+            Date today_date = Calendar.getInstance().getTime();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.getDefault());
+            String activeTodayResult = format.format(today_date);
+            viewholder.tv_todayCleanResult.setText(activeTodayResult);
+        } else {
+            viewholder.tv_todayCleanResult.setText(formatDate(mList.get(position).getCreatedDateTime()));
 
-        //if (seeText.length() >= 25){seeText = seeText.substring(0,25);};
-        //viewholder.tv_todayCleanResult.setText(seeText+" ···");
-        viewholder.tv_todayCleanResult.setText(cleanTodayResult);
+        }
 
 
+    }
+    private String formatDate(String dateStr) {
+        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+        String newDate = "";
+        try {
+            Date date = originalFormat.parse(dateStr);
+            newDate = newFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
     }
 
     @Override

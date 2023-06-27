@@ -61,6 +61,8 @@ import carehalcare.carehalcare.Feature_write.Sleep.Sleep_API;
 import carehalcare.carehalcare.Feature_write.Sleep.Sleep_adapter;
 import carehalcare.carehalcare.Feature_write.Sleep.Sleep_text;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +99,9 @@ public class WalkFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.walk_list,container,false);
 
-        Walk_API walkApi = retrofit.create(Walk_API.class);
+//        Walk_API walkApi = retrofit.create(Walk_API.class);
+        Walk_API walkApi = Retrofit_client.createService(Walk_API.class, TokenUtils.getAccessToken("Access_Token"));
+
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
@@ -127,7 +131,9 @@ public class WalkFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Walk_text detail_walk_text = walkArrayList.get(position);
-                Walk_API walk_service = retrofit.create(Walk_API.class);
+//                Walk_API walk_service = retrofit.create(Walk_API.class);
+                Walk_API walk_service = Retrofit_client.createService(Walk_API.class, TokenUtils.getAccessToken("Access_Token"));
+
                 walk_service.getDataWalk(userid,puserid).enqueue(new Callback<List<Walk_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Walk_ResponseDTO>> call, Response<List<Walk_ResponseDTO>> response) {
@@ -216,7 +222,9 @@ public class WalkFragment extends Fragment {
         return view;
     }
     public void getwalklist(){
-        Walk_API walk_service = retrofit.create(Walk_API.class);
+//        Walk_API walk_service = retrofit.create(Walk_API.class);
+        Walk_API walk_service = Retrofit_client.createService(Walk_API.class, TokenUtils.getAccessToken("Access_Token"));
+
         walk_service.getDataWalk(userid,puserid).enqueue(new Callback<List<Walk_ResponseDTO>>() {
             @Override
             public void onResponse(Call<List<Walk_ResponseDTO>> call, Response<List<Walk_ResponseDTO>> response) {
@@ -253,6 +261,7 @@ public class WalkFragment extends Fragment {
             }
         });
     }
+    Uri providerURI;
     private void captureCamera(int using){
         String state = Environment.getExternalStorageState();
         // 외장 메모리 검사
@@ -269,18 +278,14 @@ public class WalkFragment extends Fragment {
                 if (photoFile != null) {
                     // getUriForFile의 두 번째 인자는 Manifest provier의 authorites와 일치해야 함
 
-                    Uri providerURI = FileProvider.getUriForFile(getContext(), getContext().getPackageName(), photoFile);
+                    providerURI = FileProvider.getUriForFile(getContext(), getContext().getPackageName(), photoFile);
                     imageUri = providerURI;
 
                     // 인텐트에 전달할 때는 FileProvier의 Return값인 content://로만!!, providerURI의 값에 카메라 데이터를 넣어 보냄
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, providerURI);
 
                    if (using==200){
-                        Intent walkintent = new Intent(getActivity(), Walk_form.class);
-                        walkintent.putExtra("uri", providerURI);
-                        walkintent.putExtra("userid",userid);
-                        walkintent.putExtra("puserid",puserid);
-                        walkResultDetail.launch(walkintent);
+
                     }
                     activityResultPicture.launch(takePictureIntent);                }
             }
@@ -313,6 +318,11 @@ public class WalkFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                     try {
                         if (result.getResultCode() == RESULT_OK){
+                            Intent walkintent = new Intent(getActivity(), Walk_form.class);
+                            walkintent.putExtra("uri", providerURI);
+                            walkintent.putExtra("userid",userid);
+                            walkintent.putExtra("puserid",puserid);
+                            walkResultDetail.launch(walkintent);
                             Log.i("REQUEST_TAKE_PHOTO", "OK");
                             Log.i("카메라 Uri주소", imageUri.getPath());
                         }

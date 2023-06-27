@@ -105,8 +105,7 @@ public class CleanFragment extends Fragment {
                                 if ((response.body().get(i).getCleanliness()).contains("환의교체완료")){changecloths = "환의교체완료";}
                                 if ((response.body().get(i).getCleanliness()).contains("환기완료")){ventilation = "환기완료";}
                                 Clean_text dict_0 = new Clean_text(changesheet,changecloths,ventilation,
-                                        response.body().get(i).getContent()
-                                );
+                                        response.body().get(i).getContent(),response.body().get(i).getCreatedDateTime());
                                 cleanArrayList.add(dict_0);
                                 cleanAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getCleanliness()+" "+datas.get(i).getId() + ""+"어댑터카운터"+cleanAdapter.getItemCount());
@@ -158,7 +157,7 @@ public class CleanFragment extends Fragment {
 
                         if (cleanForm.length()==0){cleanForm = "-";};
 
-                        Clean_text dict = new Clean_text(changeSheet,changeCloth,ventilation,cleanForm);
+                        Clean_text dict = new Clean_text(changeSheet,changeCloth,ventilation,cleanForm,null);
                         cleanArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 

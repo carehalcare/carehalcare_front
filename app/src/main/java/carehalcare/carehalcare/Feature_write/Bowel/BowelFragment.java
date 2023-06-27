@@ -101,7 +101,8 @@ public class BowelFragment extends Fragment {
                                 Bowel_text dict_0 = new Bowel_text(response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(),
                                         response.body().get(i).getId(),
-                                        response.body().get(i).getCount(),response.body().get(i).getContent());
+                                        response.body().get(i).getCount(),response.body().get(i).getContent(),
+                                        response.body().get(i).getCreatedDateTime());
                                 bowelArrayList.add(dict_0);
                                 bowelAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getCount()+" "+datas.get(i).getId() + ""+"어댑터카운터"+bowelAdapter.getItemCount());

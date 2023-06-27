@@ -7,8 +7,13 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,6 +27,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Retrofit_client {
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+
+
+
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()

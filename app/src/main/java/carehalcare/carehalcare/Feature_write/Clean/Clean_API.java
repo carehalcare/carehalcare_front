@@ -20,7 +20,7 @@ public interface Clean_API {
             @Body Clean_ResponseDTO cleanResponseDTO
     );
     @GET("scleanliness/{id}")
-    Call<List<Clean_ResponseDTO>> getDataClean_2(@Query("id") int id);
+    Call<Clean_ResponseDTO> getDataClean_2(@Path("id") Long id);
 
     @GET("scleanliness")
     Call<List<Clean_ResponseDTO>> getDataClean_3();

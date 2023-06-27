@@ -45,6 +45,8 @@ import java.util.Map;
 import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.ErrorModel;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -149,7 +151,9 @@ public class Meal_form extends AppCompatActivity {
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
 
-                Meal_API meal_api = retrofit.create(Meal_API.class);
+//                Meal_API meal_api = retrofit.create(Meal_API.class);
+                Meal_API meal_api = Retrofit_client.createService(Meal_API.class, TokenUtils.getAccessToken("Access_Token"));
+
                 meal_api.postDatameal(map,names).enqueue(new Callback<Long>() {
                     @Override
                     public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {

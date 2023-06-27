@@ -18,6 +18,11 @@ import retrofit2.http.Path;
 public interface Walk_API {
     String URL = "http://172.20.20.168:8080/";
 
+    @GET("meals/{id}")
+    Call<Walk_ResponseDTO> getdatawalk2(
+            @Path("id") Long id
+    );
+
     @DELETE("walks/{id}")
     Call<Void> deleteDataWalk(@Path("id") Long id);
 

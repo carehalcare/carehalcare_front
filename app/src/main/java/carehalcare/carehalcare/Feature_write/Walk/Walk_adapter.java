@@ -155,7 +155,7 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
         String newDate = "";
         try {
-            Date date = originalFormat.parse(mList.get(position).getDatetime());
+            Date date = originalFormat.parse(mList.get(position).getcreatedDateTime());
             newDate = newFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -163,7 +163,7 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
 
         viewholder.tv_walkcontent.setText(newDate);        //      viewholder.iv_mealpic.setImageURI(seePhoto);
         if(mList.get(position).getUriuri()=="uriuri"){
-            viewholder.tv_walkcontent.setText(mList.get(position).getDatetime());
+            viewholder.tv_walkcontent.setText(mList.get(position).getcreatedDateTime());
         }
 
     }

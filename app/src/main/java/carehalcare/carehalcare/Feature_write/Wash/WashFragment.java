@@ -114,11 +114,11 @@ public class WashFragment extends Fragment {
                                 if ((response.body().get(i).getCleanliness()).contains("세신")){bodyscrub = "세신 완료";}
                                 if ((response.body().get(i).getCleanliness()).contains("면도")){shave = "면도 완료";}
                                 Wash_text dict_0 = new Wash_text(washface,washmouth,nailcare,haircare,
-                                        response.body().get(i).getPart(),bodyscrub, shave,response.body().get(i).getContent());
+                                        response.body().get(i).getPart(),bodyscrub, shave,response.body().get(i).getContent(),
+                                        response.body().get(i).getCreatedDateTime());
                                 washArrayList.add(dict_0);
                                 washAdapter.notifyItemInserted(0);
-                                //Log.e("userid : " + i, datas.get(i).getUserid() + "");
-                                Log.e("현재id : " + i, datas.get(i).getCleanliness()+" "+datas.get(i).getId() + ""+"어댑터카운터"+washAdapter.getItemCount());
+                                Log.e("현재id : " + i, response.body().get(i).getCreatedDateTime() + ""+"어댑터카운터"+washAdapter.getItemCount());
                             }
                             Log.e("getSleep success", "======================================");
                         }
@@ -187,7 +187,7 @@ public class WashFragment extends Fragment {
 
                         String cleaness = washface+washmouth+nailcare+haircare+bodyscrub+shave;
                         Wash_text dict = new Wash_text(washface,washmouth,nailcare,haircare,bodyscrub,bodyscrub_point,
-                                shave,washForm);
+                                shave,washForm,null);
                         washArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 

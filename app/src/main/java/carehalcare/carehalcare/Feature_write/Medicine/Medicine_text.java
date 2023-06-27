@@ -20,6 +20,7 @@ public class Medicine_text {
     @SerializedName("id")
     Long id;
 
+    String createdDateTime;
 
     @SerializedName("body")
     String et_medicineForm;
@@ -34,13 +35,14 @@ public class Medicine_text {
         this.id = id;
     }
 
-    public Medicine_text(String time, String mealStatus, String medicine, String userId, String puserId,Long id) {
+    public Medicine_text(String time, String mealStatus, String medicine, String userId, String puserId,Long id,String createdDateTime) {
         this.time = time;
         this.mealStatus = mealStatus;
         this.medicine = medicine;
         this.userId = userId;
         this.puserId = puserId;
         this.id = id;
+        this.createdDateTime =createdDateTime;
     }
 
     public Medicine_text(String time, String mealStatus, String medicine, String userId, String puserId) {
@@ -112,5 +114,13 @@ public class Medicine_text {
 
     public void setMedicineTodayResult(String medicineTodayResult) {
         this.medicineTodayResult = medicineTodayResult;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

@@ -8,11 +8,11 @@ public class Notice {
     @SerializedName("content") String content;
     @SerializedName("modifiedDateTime") String modifiedDateTime;
 
-    @SerializedName("createdDate") String createdDate;
+    @SerializedName("createdDateTime") String createdDateTime;
     //@SerializedName("userId") String userId;
-    public Notice(String content, String createdDate) {
+    public Notice(String content, String createdDateTime) {
         this.content = content;
-        this.createdDate = createdDate;
+        this.createdDateTime = createdDateTime;
     }
 
     public Notice(){}
@@ -20,12 +20,12 @@ public class Notice {
     public String getContent() {
         return content;
     }
-    public String getCreatedDate() {
-        return createdDate;
+    public String getcreatedDateTime() {
+        return createdDateTime;
     }
 
-    public String setCreatedDate(String newDateStr) {
-        this.createdDate = createdDate;
+    public String setcreatedDateTime(String newDateStr) {
+        this.createdDateTime = createdDateTime;
         return newDateStr;
     }
 

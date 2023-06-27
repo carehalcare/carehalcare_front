@@ -20,7 +20,7 @@ public interface Wash_API {
             @Body Wash_ResponseDTO washResponseDTO
     );
     @GET("pcleanliness/{id}")
-    Call<List<Wash_ResponseDTO>> getDataWash_2(@Query("id") int id);
+    Call<Wash_ResponseDTO> getDataWash_2(@Path("id") Long id);
 
     @GET("pcleanliness")
     Call<List<Wash_ResponseDTO>> getDataWash_3();

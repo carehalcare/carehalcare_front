@@ -23,6 +23,8 @@ import java.util.List;
 
 import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,8 +59,10 @@ public class PatientinfoActivity extends AppCompatActivity {
                 .build();
 
         PInfoApi infoApi = retrofit.create(PInfoApi.class);
+        infoApi = Retrofit_client.createService(PInfoApi.class, TokenUtils.getAccessToken("Access_Token"));
 
-        call = infoApi.getDataInfo("userid1");
+
+        call = infoApi.getDataInfo(TokenUtils.getPUser_Id("PUser_Id"));
         call.enqueue(new Callback<PatientInfo>() {
             @Override
             public void onResponse(Call<PatientInfo> call, Response<PatientInfo> response) {

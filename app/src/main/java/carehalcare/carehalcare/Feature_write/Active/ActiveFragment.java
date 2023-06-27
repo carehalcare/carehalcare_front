@@ -103,7 +103,7 @@ public class ActiveFragment extends Fragment {
                             for (int i = 0; i < datas.size(); i++) {
                                 Active_text dict_0 = new Active_text(response.body().get(i).getId(),response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(),response.body().get(i).getRehabilitation(),response.body().get(i).getWalkingAssistance(),
-                                        response.body().get(i).getPosition());
+                                        response.body().get(i).getPosition(),response.body().get(i).getCreatedDateTime());
                                 activeArrayList.add(dict_0);
                                 activeAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getPosition()+" "+datas.get(i).getId() + ""+"어댑터카운터"+activeAdapter.getItemCount());
@@ -168,7 +168,7 @@ public class ActiveFragment extends Fragment {
                         if (activeAdapter.getItemCount()!=0)
                         {id = Long.valueOf(activeArrayList.get(0).getId()+1);}
                         Active_text dict_0 = new Active_text(id,
-                                userid,puserid,jahal,bohang,change);
+                                userid,puserid,jahal,bohang,change,null);
                         activeArrayList.add(0, dict_0); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 

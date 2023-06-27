@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,8 @@ import java.util.Locale;
 
 import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,8 +72,9 @@ public class PNoticeActivity extends AppCompatActivity {
                 .build();
 
         NoticeApi noticeApi = retrofit.create(NoticeApi.class);
+        noticeApi = Retrofit_client.createService(NoticeApi.class, TokenUtils.getAccessToken("Access_Token"));
 
-        Call<List<Notice>> call = noticeApi.getNotice("puserid1");
+        Call<List<Notice>> call = noticeApi.getNotice(TokenUtils.getPUser_Id("PUser_Id"));
 
         call.enqueue(new Callback<List<Notice>>() {
             @Override

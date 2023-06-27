@@ -3,6 +3,7 @@ package carehalcare.carehalcare.Feature_write.Bowel;
 import com.google.gson.annotations.SerializedName;
 
 public class Bowel_text {
+    String createdDateTime;
 
     @SerializedName("userId")
     String userId = "";
@@ -18,12 +19,13 @@ public class Bowel_text {
     @SerializedName("content")
     String content;
 
-    public Bowel_text(String userId,String puserId,Long id, Long count, String content) {
+    public Bowel_text(String userId,String puserId,Long id, Long count, String content,String createdDateTime) {
         this.id = id;
         this.userId = userId;
         this.puserId = puserId;
         this.count = count;
         this.content = content;
+        this.createdDateTime=createdDateTime;
     }
     public Bowel_text(String userId,String puserId,Long count, String content) {
         this.userId = userId;
@@ -69,5 +71,13 @@ public class Bowel_text {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

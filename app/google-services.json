@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "256584024499",
+    "project_id": "carehalcare-5bf01",
+    "storage_bucket": "carehalcare-5bf01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256584024499:android:0e6d751d8ffceaae43cbc6",
+        "android_client_info": {
+          "package_name": "carehalcare.carehalcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256584024499-5and0oojm5d9a62rbj2pr2bpl9v7m7p3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbsc9lpgoS2myYYKnxxxW9rKnzZP8CIco"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256584024499-5and0oojm5d9a62rbj2pr2bpl9v7m7p3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

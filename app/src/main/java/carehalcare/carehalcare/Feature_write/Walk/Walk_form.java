@@ -48,6 +48,8 @@ import carehalcare.carehalcare.Feature_write.ErrorModel;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_form;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -145,7 +147,8 @@ public class Walk_form  extends AppCompatActivity {
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
 
-                Walk_API walk_api = retrofit.create(Walk_API.class);
+//                Walk_API walk_api = retrofit.create(Walk_API.class);
+                Walk_API walk_api = Retrofit_client.createService(Walk_API.class, TokenUtils.getAccessToken("Access_Token"));
                 walk_api.postDataWalk(map,names).enqueue(new Callback<Long>() {
                     @Override
                     public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {

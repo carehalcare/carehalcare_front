@@ -63,6 +63,7 @@ import java.util.Locale;
 
 import carehalcare.carehalcare.Feature_write.Active.ActiveFragment;
 import carehalcare.carehalcare.Feature_write.Active.Active_API;
+import carehalcare.carehalcare.Feature_write.Allmenu.AllmenuFragment;
 import carehalcare.carehalcare.Feature_write.Bowel.BowelFragment;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_adapter;
@@ -100,6 +101,7 @@ import carehalcare.carehalcare.Feature_write.Wash.Wash_ResponseDTO;
 import carehalcare.carehalcare.Feature_write.Wash.Wash_adapter;
 import carehalcare.carehalcare.Feature_write.Wash.Wash_text;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -150,12 +152,38 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         }
 
         Intent intent = getIntent();
-        userid = intent.getStringExtra("userid");
-        puserid = intent.getStringExtra("puserid");
+//        userid = intent.getStringExtra("userid");
+//        puserid = intent.getStringExtra("puserid");
+        userid = TokenUtils.getUser_Id("User_Id");
+        puserid = TokenUtils.getPUser_Id("PUser_Id");
+
+        deleteview();
+        AllmenuFragment allmenuFragment = new AllmenuFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        allmenuFragment.setArguments(bundle);
+        transaction.replace(R.id.container_menu, allmenuFragment);
+        transaction.commit();
 
     }
 
     // 각 버튼에 맞는 함수들
+    public void onall(View view) {
+        deleteview();
+        AllmenuFragment allmenuFragment = new AllmenuFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("userid",userid);
+        bundle.putString("puserid",puserid);
+
+        allmenuFragment.setArguments(bundle);
+        transaction.replace(R.id.container_menu, allmenuFragment);
+        transaction.commit();
+
+    }
     public void onMeal(View view) {
         deleteview();
         MealFragment mealFragment = new MealFragment();

@@ -19,14 +19,17 @@ public class Sleep_text {
     @SerializedName("id")
     Long id;
 
+    String createdDateTime;
 
-    public Sleep_text(String userId, String puserId, String state, String content, Long id) {
+
+    public Sleep_text(String userId, String puserId, String state, String content, Long id,String createdDateTime) {
         this.userId = userId;
         this.puserId = puserId;
         this.state = state;
         this.content = content;
         this.sleepTodayResult = sleepTodayResult;
         this.id = id;
+        this.createdDateTime = createdDateTime;
     }
     public Sleep_text(String userId, String puserId, String state, String content) {
         this.userId = userId;
@@ -80,5 +83,13 @@ public class Sleep_text {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

@@ -58,6 +58,8 @@ import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Walk.Walk_form;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -96,7 +98,9 @@ public class MealFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.meal_list,container,false);
 
-        Meal_API mealapi = retrofit.create(Meal_API.class);
+        //Meal_API mealapi = retrofit.create(Meal_API.class);
+        Meal_API mealapi = Retrofit_client.createService(Meal_API.class, TokenUtils.getAccessToken("Access_Token"));
+
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
@@ -128,7 +132,9 @@ public class MealFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Meal_text detail_meal_text = mealArrayList.get(position);
-                Meal_API meal_service = retrofit.create(Meal_API.class);
+                //Meal_API meal_service = retrofit.create(Meal_API.class);
+                Meal_API meal_service = Retrofit_client.createService(Meal_API.class, TokenUtils.getAccessToken("Access_Token"));
+
                 meal_service.getDatameal(userid,puserid).enqueue(new Callback<List<Meal_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
@@ -218,7 +224,9 @@ public class MealFragment extends Fragment {
         return view;
     }
     public void getmeallsit(){
-        Meal_API meal_service = retrofit.create(Meal_API.class);
+//        Meal_API meal_service = retrofit.create(Meal_API.class);
+        Meal_API meal_service = Retrofit_client.createService(Meal_API.class, TokenUtils.getAccessToken("Access_Token"));
+
         meal_service.getDatameal(userid,puserid).enqueue(new Callback<List<Meal_ResponseDTO>>() {
             @Override
             public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
@@ -272,12 +280,12 @@ public class MealFragment extends Fragment {
         Log.e("현재 절대경로는 : ",""+mCurrentPhotoPath);
         return imageFile;
     }
+    Uri providerURI;
     private void captureCamera(int using){
         String state = Environment.getExternalStorageState();
         // 외장 메모리 검사
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
             if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
                 File photoFile = null;
                 try {
@@ -286,20 +294,12 @@ public class MealFragment extends Fragment {
                     Log.e("captureCamera Error", ex.toString());
                 }
                 if (photoFile != null) {
-                    // getUriForFile의 두 번째 인자는 Manifest provier의 authorites와 일치해야 함
-
-                    Uri providerURI = FileProvider.getUriForFile(getContext(), getContext().getPackageName(), photoFile);
+                    providerURI = FileProvider.getUriForFile(getContext(), getContext().getPackageName(), photoFile);
                     imageUri = providerURI;
-
                     // 인텐트에 전달할 때는 FileProvier의 Return값인 content://로만!!, providerURI의 값에 카메라 데이터를 넣어 보냄
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, providerURI);
-
                     if (using == 100) {
-                        Intent mealintent = new Intent(getActivity(), Meal_form.class);
-                        mealintent.putExtra("uri", providerURI);
-                        mealintent.putExtra("userid",userid);
-                        mealintent.putExtra("puserid",puserid);
-                        activityResultDetail.launch(mealintent);
+
                     }
                     activityResultPicture.launch(takePictureIntent);
 
@@ -318,6 +318,11 @@ public class MealFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                     try {
                         if (result.getResultCode() == RESULT_OK){
+                            Intent mealintent = new Intent(getActivity(), Meal_form.class);
+                            mealintent.putExtra("uri", providerURI);
+                            mealintent.putExtra("userid",userid);
+                            mealintent.putExtra("puserid",puserid);
+                            activityResultDetail.launch(mealintent);
                             Log.i("REQUEST_TAKE_PHOTO", "OK");
                             Log.i("카메라 Uri주소", imageUri.getPath());
                         }

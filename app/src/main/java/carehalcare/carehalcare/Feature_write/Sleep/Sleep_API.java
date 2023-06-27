@@ -21,7 +21,7 @@ public interface Sleep_API {
             @Body Sleep_text sleep_text
     );
     @GET("sleepstates/{id}")
-    Call<List<Sleep_text>> getDataSleep_2(@Query("id") int id);
+    Call<Sleep_text> getDataSleep_2(@Path("id") Long id);
 
     @GET("sleepstates")
     Call<List<Sleep_text>> getDataSleep_3();

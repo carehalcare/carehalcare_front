@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -127,11 +129,30 @@ public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomVi
 
 
         viewholder.tv_todayActive.setText("활동 기록 확인하기");
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-        String activeTodayResult = format.format(today_date)+" 기록";
-        viewholder.tv_todayActiveResult.setText(activeTodayResult);
+        Log.e("활동시간???"," "+mList.get(position).getCreatedDateTime());
+        if (mList.get(position).getCreatedDateTime()==null){
+            Date today_date = Calendar.getInstance().getTime();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.getDefault());
+            String activeTodayResult = format.format(today_date);
+            viewholder.tv_todayActiveResult.setText(activeTodayResult);
+        } else {
+            viewholder.tv_todayActiveResult.setText(formatDate(mList.get(position).getCreatedDateTime()));
 
+        }
+
+
+    }
+    private String formatDate(String dateStr) {
+        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+        String newDate = "";
+        try {
+            Date date = originalFormat.parse(dateStr);
+            newDate = newFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
     }
 
     @Override
