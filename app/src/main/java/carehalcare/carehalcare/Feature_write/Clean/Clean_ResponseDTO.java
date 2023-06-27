@@ -3,6 +3,8 @@ package carehalcare.carehalcare.Feature_write.Clean;
 import com.google.gson.annotations.SerializedName;
 
 public class Clean_ResponseDTO {
+    String createdDateTime;
+
     //간병인아이디
     @SerializedName("userId")
     String userId = "";
@@ -19,7 +21,8 @@ public class Clean_ResponseDTO {
     @SerializedName("content")
     String content;
 
-    public Clean_ResponseDTO(String userId, String puserId, String cleanliness, String content) {
+    public Clean_ResponseDTO(String userId, String puserId, String cleanliness, String content
+    ) {
         this.userId = userId;
         this.puserId = puserId;
         this.cleanliness = cleanliness;
@@ -64,5 +67,13 @@ public class Clean_ResponseDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

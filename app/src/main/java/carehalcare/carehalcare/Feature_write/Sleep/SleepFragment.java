@@ -42,6 +42,8 @@ import carehalcare.carehalcare.Feature_write.Medicine.Medicine_API;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_adapter;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_text;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,13 +56,6 @@ public class SleepFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Sleep_text> sleepArrayList;
     private Sleep_adapter sleepAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
 
     public SleepFragment() {
         // Required empty public constructor
@@ -76,7 +71,9 @@ public class SleepFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sleep_list,container,false);
 
-        Sleep_API sleepApi = retrofit.create(Sleep_API.class);
+        Sleep_API sleepApi = Retrofit_client.createService(Sleep_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+        //Sleep_API sleepApi = retrofit.create(Sleep_API.class);
 
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
@@ -106,7 +103,8 @@ public class SleepFragment extends Fragment {
                             for (int i = 0; i < datas.size(); i++) {
                                 Sleep_text dict_0 = new Sleep_text(response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(), response.body().get(i).getState(),response.body().get(i).getContent(),
-                                        response.body().get(i).getId());
+                                        response.body().get(i).getId(),
+                                        response.body().get(i).getCreatedDateTime());
                                 sleepArrayList.add(dict_0);
                                 sleepAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getState()+" "+datas.get(i).getId() + ""+"어댑터카운터"+sleepAdapter.getItemCount());

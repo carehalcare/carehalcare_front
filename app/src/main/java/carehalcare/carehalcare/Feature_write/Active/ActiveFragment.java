@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_mainpage.CaregiverAPI;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_adapter;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_text;
@@ -38,6 +39,8 @@ import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,13 +52,6 @@ public class ActiveFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Active_text> activeArrayList;
     private Active_adapter activeAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
 
     public ActiveFragment() {
         // Required empty public constructor
@@ -73,7 +69,9 @@ public class ActiveFragment extends Fragment {
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
-        Active_API activeApi = retrofit.create(Active_API.class);
+        Active_API activeApi = Retrofit_client.createService(Active_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+        //Active_API activeApi = retrofit.create(Active_API.class);
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_active_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -105,7 +103,7 @@ public class ActiveFragment extends Fragment {
                             for (int i = 0; i < datas.size(); i++) {
                                 Active_text dict_0 = new Active_text(response.body().get(i).getId(),response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(),response.body().get(i).getRehabilitation(),response.body().get(i).getWalkingAssistance(),
-                                        response.body().get(i).getPosition());
+                                        response.body().get(i).getPosition(),response.body().get(i).getCreatedDateTime());
                                 activeArrayList.add(dict_0);
                                 activeAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getPosition()+" "+datas.get(i).getId() + ""+"어댑터카운터"+activeAdapter.getItemCount());
@@ -170,7 +168,7 @@ public class ActiveFragment extends Fragment {
                         if (activeAdapter.getItemCount()!=0)
                         {id = Long.valueOf(activeArrayList.get(0).getId()+1);}
                         Active_text dict_0 = new Active_text(id,
-                                userid,puserid,jahal,bohang,change);
+                                userid,puserid,jahal,bohang,change,null);
                         activeArrayList.add(0, dict_0); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 

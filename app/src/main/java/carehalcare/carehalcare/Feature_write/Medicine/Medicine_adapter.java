@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -132,20 +133,36 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
         viewholder.tv_todayMedicine.setGravity(Gravity.CENTER);
         //viewholder.tv_todayMedicineResult.setGravity(Gravity.CENTER);
 
-        viewholder.tv_todayMedicine.setText("약 복용");
+        viewholder.tv_todayMedicine.setText("약 복용 기록 확인하기");
+
         String seeText = mList.get(position).getmealStatus();
-        //if (seeText.length() >= 25){seeText = seeText.substring(0,25);};
-        //viewholder.tv_todayCleanResult.setText(seeText+" ···");
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-        seeText = format.format(today_date)+" "+mList.get(position).gettime()+mList.get(position).getmealStatus()
+        String datedate = "";
+        if (mList.get(position).getCreatedDateTime()==null){
+            Date today_date = Calendar.getInstance().getTime();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.getDefault());
+            datedate = format.format(today_date);
+        } else {
+            datedate = formatDate(mList.get(position).getCreatedDateTime());
+        }
+        seeText = datedate+" "+mList.get(position).gettime()+mList.get(position).getmealStatus()
         +mList.get(position).getmedicine();
         viewholder.tv_todayMedicineResult.setText(seeText);
 
 
 
     }
-
+    private String formatDate(String dateStr) {
+        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
+        String newDate = "";
+        try {
+            Date date = originalFormat.parse(dateStr);
+            newDate = newFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
+    }
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);

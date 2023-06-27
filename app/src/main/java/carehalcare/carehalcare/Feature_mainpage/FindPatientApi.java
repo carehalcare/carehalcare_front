@@ -8,9 +8,9 @@ import retrofit2.http.Query;
 
 public interface FindPatientApi {
 
-    @GET("/patients")
-    Call<FindPatient> getData(@Query("userId") String userId);
+    @GET("patients")
+    Call<UserDTO> getData(@Query("userId") String userId);
 
-    @POST("/patients")
+    @POST("patients")
     Call<Long> addPID(@Body FindPatient findPatient);
 }

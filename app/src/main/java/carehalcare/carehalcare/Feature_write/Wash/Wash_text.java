@@ -10,10 +10,11 @@ public class Wash_text {
     String shave;
     String et_washForm;
     String washTodayResult;
+    String createdDateTime;
 
     Long id;
     public Wash_text(String washface, String washmouth, String nailcare, String haircare, String bodyscrub,
-                     String et_bodyscrub, String shave, String et_washForm) {
+                     String et_bodyscrub, String shave, String et_washForm,String createdDateTime) {
         this.washface = washface;
         this.washmouth = washmouth;
         this.nailcare = nailcare;
@@ -22,6 +23,7 @@ public class Wash_text {
         this.et_bodyscrub = et_bodyscrub;
         this.shave = shave;
         this.et_washForm = et_washForm;
+        this.createdDateTime = createdDateTime;
     }
 
     public Long getId() {
@@ -102,5 +104,13 @@ public class Wash_text {
 
     public void setWashTodayResult(String washTodayResult) {
         this.washTodayResult = washTodayResult;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

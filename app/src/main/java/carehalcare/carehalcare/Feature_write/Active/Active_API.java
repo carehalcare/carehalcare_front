@@ -21,7 +21,7 @@ public interface Active_API {
             @Body Active_text active_text
     );
     @GET("activities/{id}")
-    Call<List<Active_text>> getDataActive_2(@Query("id") int id);
+    Call<Active_text> getDataActive_2(@Path("id") Long id);
 
     @GET("activities")
     Call<List<Active_text>> getDataActive_3();

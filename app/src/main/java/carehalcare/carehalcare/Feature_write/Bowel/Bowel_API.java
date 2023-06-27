@@ -20,7 +20,7 @@ public interface Bowel_API {
             @Body Bowel_text bowel_text
     );
     @GET("bowelmovements/{id}")
-    Call<List<Bowel_text>> getDataBowel_2(@Query("id") int id);
+    Call<Bowel_text> getDataBowel_2(@Path("id") Long id);
 
     @GET("bowelmovements")
     Call<List<Bowel_text>> getDataBowel_3();

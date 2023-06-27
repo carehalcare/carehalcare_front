@@ -3,6 +3,8 @@ package carehalcare.carehalcare.Feature_write.Clean;
 import com.google.gson.annotations.SerializedName;
 
 public class Clean_text {
+    String createdDateTime;
+
     String changeSheet;
     String changeCloth;
     String ventilation;
@@ -11,11 +13,12 @@ public class Clean_text {
     Long id;
     String cleanTodayResult;
 
-    public Clean_text(String changeSheet, String changeCloth, String ventilation, String et_cleanForm) {
+    public Clean_text(String changeSheet, String changeCloth, String ventilation, String et_cleanForm,String createdDateTime) {
         this.changeSheet = changeSheet;
         this.changeCloth = changeCloth;
         this.ventilation = ventilation;
         this.et_cleanForm = et_cleanForm;
+        this.createdDateTime = createdDateTime;
     }
 
     public Long getId() {
@@ -63,5 +66,13 @@ public class Clean_text {
 
     public void setEt_cleanForm(String et_cleanForm) {
         this.et_cleanForm = et_cleanForm;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

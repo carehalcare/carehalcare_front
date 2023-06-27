@@ -8,7 +8,7 @@ public class Walk_text {
     Bitmap photobitmap;
 
     Long id;
-    String datetime;
+    String createdDateTime;
     String filepath;
     String uriuri ="";
 
@@ -16,7 +16,7 @@ public class Walk_text {
     public Walk_text(Uri photouri, Long id, String uripan,String datetime,String uriuri) {
         this.photouri = photouri;
         this.id = id;
-        this.datetime = datetime;
+        this.createdDateTime = createdDateTime;
         this.uripan = uripan;
         this.uriuri = uriuri;
     }
@@ -27,7 +27,7 @@ public class Walk_text {
     public Walk_text(String filepath, Long id,String datetime,String pathpan) {
         this.filepath = filepath;
         this.id = id;
-        this.datetime = datetime;
+        this.createdDateTime = createdDateTime;
     }
 
     public String getUriuri() {
@@ -38,12 +38,12 @@ public class Walk_text {
         this.uriuri = uriuri;
     }
 
-    public String getDatetime() {
-        return datetime;
+    public String getcreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setDatetime(String datetime) {
-        this.datetime = datetime;
+    public void setcreatedDateTime(String datetime) {
+        this.createdDateTime = datetime;
     }
 
     public String getFilepath() {

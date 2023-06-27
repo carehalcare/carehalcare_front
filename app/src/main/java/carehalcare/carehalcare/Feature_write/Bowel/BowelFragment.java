@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_mainpage.CaregiverAPI;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_API;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_ResponseDTO;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_adapter;
@@ -38,6 +39,8 @@ import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,14 +53,6 @@ public class BowelFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Bowel_text> bowelArrayList;
     private Bowel_adapter bowelAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
-
     public BowelFragment() {
         // Required empty public constructor
     }
@@ -74,7 +69,10 @@ public class BowelFragment extends Fragment {
 
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
-        Bowel_API bowelApi = retrofit.create(Bowel_API.class);
+
+        Bowel_API bowelApi = Retrofit_client.createService(Bowel_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+        //Bowel_API bowelApi = retrofit.create(Bowel_API.class);
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_bowel_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -103,7 +101,8 @@ public class BowelFragment extends Fragment {
                                 Bowel_text dict_0 = new Bowel_text(response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(),
                                         response.body().get(i).getId(),
-                                        response.body().get(i).getCount(),response.body().get(i).getContent());
+                                        response.body().get(i).getCount(),response.body().get(i).getContent(),
+                                        response.body().get(i).getCreatedDateTime());
                                 bowelArrayList.add(dict_0);
                                 bowelAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, datas.get(i).getCount()+" "+datas.get(i).getId() + ""+"어댑터카운터"+bowelAdapter.getItemCount());

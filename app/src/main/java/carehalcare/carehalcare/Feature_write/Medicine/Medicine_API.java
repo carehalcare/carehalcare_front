@@ -25,7 +25,7 @@ public interface Medicine_API {
 //            @Field("mealStatus") String mealStatus
     );
     @GET("administrations/{id}")
-    Call<List<Medicine_text>> getDatamedicine_2(@Query("id") int id);
+    Call<Medicine_text> getDatamedicine_2(@Path("id") Long id);
 
     @GET("administrations")
     Call<List<Medicine_text>> getDatamedicine_3();

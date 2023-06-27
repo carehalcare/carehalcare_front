@@ -40,7 +40,10 @@ import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_API;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_adapter;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_text;
+import carehalcare.carehalcare.Feature_write.Sleep.Sleep_API;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,14 +56,6 @@ public class WashFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Wash_text> washArrayList;
     private Wash_adapter washAdapter;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
-
     public WashFragment() {
         // Required empty public constructor
     }
@@ -74,7 +69,11 @@ public class WashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wash_list,container,false);
-        Wash_API washApi = retrofit.create(Wash_API.class);
+
+        Wash_API washApi = Retrofit_client.createService(Wash_API.class, TokenUtils.getAccessToken("Access_Token"));
+
+
+        //Wash_API washApi = retrofit.create(Wash_API.class);
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
@@ -115,11 +114,11 @@ public class WashFragment extends Fragment {
                                 if ((response.body().get(i).getCleanliness()).contains("세신")){bodyscrub = "세신 완료";}
                                 if ((response.body().get(i).getCleanliness()).contains("면도")){shave = "면도 완료";}
                                 Wash_text dict_0 = new Wash_text(washface,washmouth,nailcare,haircare,
-                                        response.body().get(i).getPart(),bodyscrub, shave,response.body().get(i).getContent());
+                                        response.body().get(i).getPart(),bodyscrub, shave,response.body().get(i).getContent(),
+                                        response.body().get(i).getCreatedDateTime());
                                 washArrayList.add(dict_0);
                                 washAdapter.notifyItemInserted(0);
-                                //Log.e("userid : " + i, datas.get(i).getUserid() + "");
-                                Log.e("현재id : " + i, datas.get(i).getCleanliness()+" "+datas.get(i).getId() + ""+"어댑터카운터"+washAdapter.getItemCount());
+                                Log.e("현재id : " + i, response.body().get(i).getCreatedDateTime() + ""+"어댑터카운터"+washAdapter.getItemCount());
                             }
                             Log.e("getSleep success", "======================================");
                         }
@@ -188,7 +187,7 @@ public class WashFragment extends Fragment {
 
                         String cleaness = washface+washmouth+nailcare+haircare+bodyscrub+shave;
                         Wash_text dict = new Wash_text(washface,washmouth,nailcare,haircare,bodyscrub,bodyscrub_point,
-                                shave,washForm);
+                                shave,washForm,null);
                         washArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 

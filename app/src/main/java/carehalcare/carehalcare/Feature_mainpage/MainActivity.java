@@ -11,8 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,8 +31,12 @@ import java.util.Locale;
 
 import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_NFC.CommuteActivity;
+import carehalcare.carehalcare.Feature_login.LoginDto;
+import carehalcare.carehalcare.Feature_login.SignupAPI;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,10 +46,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
 
+
     private Button commute, write, info, noti;
     private ImageButton btn_setting;
     private TextView tv_noti1, tv_noti2;
     String userid, puserid;
+    TextView tv_welcommsg;
+    String user_name="";
+    Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(API_URL.URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build();
 
     private String formatDate(String dateStr) {
         SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -57,8 +79,76 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        userid = "userid1";
-        puserid="puserid1";
+
+
+        userid = TokenUtils.getUser_Id("User_Id");
+        puserid= TokenUtils.getPUser_Id("PUser_Id");
+
+
+
+        tv_welcommsg = (TextView)findViewById(R.id.tv_welcomemsg);
+        CaregiverAPI caregiverAPI = Retrofit_client.createService(CaregiverAPI.class,TokenUtils.getAccessToken("Access_Token"));
+        Log.e("토큰 이름",TokenUtils.getUser_Id("User_Id"));
+        Log.e("토큰 토큰",TokenUtils.getAccessToken("Access_Token"));
+        PushmsgAPI pushmsgAPI = Retrofit_client.createService(PushmsgAPI.class,TokenUtils.getAccessToken("Token_Access"));
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        Log.d(" fcm token is : ", token);
+//                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        pushmsgAPI.postMSG(userid, token).enqueue(new Callback<Object>() {
+                            @Override
+                            public void onResponse(Call<Object> call, Response<Object> response) {
+                                if (response.isSuccessful()){
+                                    Log.e("msg 연결 성공", "Status Code : " + response.code());
+                                    //Log.e("msg 연결 성공", "Status Code : " + response.body().toString());
+                                } else{
+                                    Log.e("msg 연결 실패", "Status Code : " + response.code());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Object> call, Throwable t) {
+                                Log.e("통신오류","");
+                            }
+                        });
+                    }
+                });
+
+
+
+        caregiverAPI.getCaregiverInfo(TokenUtils.getUser_Id("User_Id")).enqueue(new Callback<UserDTO>() {
+            @Override
+            public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                if (response.isSuccessful()){
+                    if (response.body()!=null){
+                        user_name = response.body().getUsername();
+                        Log.e("토큰받은 이름 ",user_name);
+                        tv_welcommsg.setText(user_name+" 간병인님\n환영합니다.");
+
+                    } else{
+                        Log.e("토큰받아오기 실패 ","user_name");
+                    }
+                }else{
+                    Log.e("실패" ,"연결이 안되었습니다");
+                }
+            }
+            @Override
+            public void onFailure(Call<UserDTO> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "통신실패.", Toast.LENGTH_SHORT).show();
+                Log.e("통신실패",t.toString());
+                return;
+            }
+        });
 
         tv_noti1 = (TextView)findViewById(R.id.tv_noti1);
         tv_noti2 = (TextView)findViewById(R.id.tv_noti2);
@@ -68,37 +158,7 @@ public class MainActivity extends AppCompatActivity {
         noti = (Button) findViewById(R.id.menu4);
         btn_setting = (ImageButton) findViewById(R.id.btn_setting);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL.URL)
-                .addConverterFactory(GsonConverterFactory.create()) //파싱등록
-                .build();
 
-        NoticeApi noticeApi = retrofit.create(NoticeApi.class);
-
-        Call<List<Notice>> call = noticeApi.getNotice("userid1");
-
-        call.enqueue(new Callback<List<Notice>>() {
-            @Override
-            public void onResponse(Call<List<Notice>> call, Response<List<Notice>> response) {
-                if (response.isSuccessful()) {
-
-                    List<Notice> notices = response.body();
-                    if (notices.size() > 0) {
-                        tv_noti1.setText(formatDate(notices.get(0).getCreatedDate()) + "\n" + notices.get(0).getContent());
-                    }
-                    if (notices.size() > 1) {
-                        tv_noti2.setText(formatDate(notices.get(1).getCreatedDate()) + "\n" + notices.get(1).getContent());
-                    }
-                }
-                else {
-                    Log.d(TAG, "연결 실패 : " + response.code());
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Notice>> call, Throwable t) {
-                tv_noti1.setText(t.getMessage());
-            }
-        });
 
 
         commute.setOnClickListener(new View.OnClickListener() {
@@ -149,5 +209,48 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL.URL)
+                .addConverterFactory(GsonConverterFactory.create()) //파싱등록
+                .build();
+
+        NoticeApi noticeApi = Retrofit_client.createService(NoticeApi.class,TokenUtils.getAccessToken("Access_Token"));
+
+        Call<List<Notice>> call = noticeApi.getNotice(puserid);
+
+        call.enqueue(new Callback<List<Notice>>() {
+            @Override
+            public void onResponse(Call<List<Notice>> call, Response<List<Notice>> response) {
+                if (response.isSuccessful()) {
+
+                    List<Notice> notices = response.body();
+                    for(int i =0;i<response.body().size();i++){
+                        Log.d(TAG, i+"      공지사항최근 : " + response.body().get(i).getContent());
+
+                    }
+
+                    if (notices.size() == 1 ) {
+                        tv_noti1.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
+                    }
+                    else if (notices.size() >= 2) {
+                        tv_noti1.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
+                        tv_noti2.setText(formatDate(notices.get(1).getcreatedDateTime()) + "\n" + notices.get(1).getContent());
+                    }
+                }
+                else {
+                    Log.d(TAG, "연결 실패 : " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Notice>> call, Throwable t) {
+                tv_noti1.setText(t.getMessage());
+            }
+        });
+
     }
 }
