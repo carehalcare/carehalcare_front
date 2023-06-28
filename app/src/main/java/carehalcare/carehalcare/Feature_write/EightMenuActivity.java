@@ -61,6 +61,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import carehalcare.carehalcare.Feature_mainpage.MainActivity;
 import carehalcare.carehalcare.Feature_write.Active.ActiveFragment;
 import carehalcare.carehalcare.Feature_write.Active.Active_API;
 import carehalcare.carehalcare.Feature_write.Allmenu.AllmenuFragment;
@@ -134,6 +135,8 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     private Meal_adapter mealAdapter;
     private Walk_adapter walkAdapter;
     private ArrayList<Walk_text> walkArrayList;
+
+    Button btn_home;
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
@@ -163,7 +166,15 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         Bundle bundle = new Bundle();
         bundle.putString("userid",userid);
         bundle.putString("puserid",puserid);
-
+        btn_home = (Button)findViewById(R.id.btn_home);
+        btn_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_home = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent_home);
+                finish();
+            }
+        });
         allmenuFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, allmenuFragment);
         transaction.commit();

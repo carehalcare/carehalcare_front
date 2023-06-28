@@ -36,7 +36,10 @@ import java.util.Date;
 import java.util.List;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_mainpage.MainActivity;
 import carehalcare.carehalcare.R;
+import carehalcare.carehalcare.Retrofit_client;
+import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,19 +58,21 @@ public class CommuteActivity extends AppCompatActivity {
     public Button check_Btn;
     public TextView diaryTextView,tv_hello,tv_bye;
     Dialog dialog01, dialog_ornot;
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_URL.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
+    Button btn_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commute);
-
+        btn_home = (Button)findViewById(R.id.btn_home);
+        btn_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_home = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent_home);
+                finish();
+            }
+        });
         Intent intent = getIntent();
         userid = intent.getStringExtra("userid");
         puserid = intent.getStringExtra("puserid");
@@ -92,7 +97,8 @@ public class CommuteActivity extends AppCompatActivity {
         dialog_ornot.setContentView(R.layout.dialog_nfc_ornot);
 
 
-        CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
+//        CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
+        CommuteAPI commuteAPI = Retrofit_client.createService(CommuteAPI.class, TokenUtils.getAccessToken("Access_Token"));
         for (int iday = 1; iday < 31;iday++){
             long now = System.currentTimeMillis();
             Date mDate = new Date(now);
@@ -104,7 +110,7 @@ public class CommuteActivity extends AppCompatActivity {
             int days = iday;
             String dtext = years+"-"+months+"-"+iday;
 
-            commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
+            commuteAPI.getDataCommute(dtext,userid,puserid).enqueue(new Callback<List<CommuteResponseDto>>() {
                 @Override
                 public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                     if(response.isSuccessful()){
@@ -135,7 +141,7 @@ public class CommuteActivity extends AppCompatActivity {
                     int days = iday;
                     String dtext = years+"-"+months+"-"+iday;
 
-                    commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
+                    commuteAPI.getDataCommute(dtext,userid,puserid).enqueue(new Callback<List<CommuteResponseDto>>() {
                         @Override
                         public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                             if(response.isSuccessful()){
@@ -202,8 +208,9 @@ public class CommuteActivity extends AppCompatActivity {
 
                 String dtext = year+"-"+month+"-"+dayOfMonth;
                 Log.e("달력날짜",dtext);
+                Log.e("달력날짜 변동",years+"-"+months+"-"+days);
 
-                commuteAPI.getDataCommute(dtext,"userid1","puserid1").enqueue(new Callback<List<CommuteResponseDto>>() {
+                commuteAPI.getDataCommute(dtext,userid,puserid).enqueue(new Callback<List<CommuteResponseDto>>() {
                     @Override
                     public void onResponse(Call<List<CommuteResponseDto>> call, Response<List<CommuteResponseDto>> response) {
                         if(response.isSuccessful()){
@@ -310,7 +317,9 @@ public class CommuteActivity extends AppCompatActivity {
         Log.e("nfc리더 읽기 값 : ",text);
         if(check_Btn.getText().equals("출근하기")){
             tv_hello.setText(getTime);
-            CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
+//            CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
+            CommuteAPI commuteAPI = Retrofit_client.createService(CommuteAPI.class, TokenUtils.getAccessToken("Access_Token"));
+
             CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto(userid,puserid,"0",
                     dtext,gettimes);
             commuteAPI.postDataCommute(commuteSaveRequestDto).enqueue(new Callback<List<CommuteResponseDto>>() {
@@ -330,7 +339,8 @@ public class CommuteActivity extends AppCompatActivity {
         }
         else if (check_Btn.getText().equals("퇴근하기")) {
             tv_bye.setText(getTime);
-            CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
+            CommuteAPI commuteAPI = Retrofit_client.createService(CommuteAPI.class, TokenUtils.getAccessToken("Access_Token"));
+//            CommuteAPI commuteAPI = retrofit.create(CommuteAPI.class);
             CommuteSaveRequestDto commuteSaveRequestDto = new CommuteSaveRequestDto(userid,puserid,"1",
                     dtext,gettimes);
             commuteAPI.postDataCommute(commuteSaveRequestDto).enqueue(new Callback<List<CommuteResponseDto>>() {
