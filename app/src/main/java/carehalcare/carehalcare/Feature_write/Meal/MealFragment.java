@@ -132,99 +132,107 @@ public class MealFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 Meal_text detail_meal_text = mealArrayList.get(position);
-                //Meal_API meal_service = retrofit.create(Meal_API.class);
                 Meal_API meal_service = Retrofit_client.createService(Meal_API.class, TokenUtils.getAccessToken("Access_Token"));
 
                 meal_service.getDatameal(userid,puserid).enqueue(new Callback<List<Meal_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Meal_ResponseDTO>> call, Response<List<Meal_ResponseDTO>> response) {
+                        if (response.isSuccessful()){
                         if (response.body() != null) {
-                            List<Meal_ResponseDTO> datas = response.body();
-                            if (datas != null) {
-                                ids = datas.get(position).getId();
-                                Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
+                            try {
+                                List<Meal_ResponseDTO> datas = response.body();
+                                if (datas != null) {
+                                    ids = datas.get(position).getId();
+                                    Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                    View view = LayoutInflater.from(getContext())
+                                            .inflate(R.layout.meal_detail, null, false);
+                                    builder.setView(view);
+                                    final AlertDialog dialog = builder.create();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.show();
+
+                                    final ImageView iv_meal_detail = dialog.findViewById(R.id.iv_meal_detail);
+                                    final TextView tv_meal_detail = dialog.findViewById(R.id.tv_meal_detail);
+                                    Log.e("이미지비트맵",""+detail_meal_text.getPhotobitmap());
+                                    Log.e("이미지uri",""+detail_meal_text.getPhotouri());
+
+                                    if (detail_meal_text.getPhotobitmap() == null){
+                                        if(detail_meal_text.getPhotouri()==null){
+                                            Glide.with(getContext()).load(detail_meal_text.getFilepath()).into(iv_meal_detail);
+                                        }
+                                        else{iv_meal_detail.setImageURI(detail_meal_text.getPhotouri());}
+                                    } else{
+                                        iv_meal_detail.setImageBitmap(detail_meal_text.getPhotobitmap());
+                                    }
+
+                                    tv_meal_detail.setText(detail_meal_text.getContent());
+
+                                    final Button btn_meal_detail = dialog.findViewById(R.id.btn_meal_detail);
+                                    btn_meal_detail.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_detail_delete);
+                                    btn_meal_delete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                            builder.setTitle("삭제하기")
+                                                    .setMessage("삭제하시겠습니까?")
+                                                    .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            mealapi.deleteData(ids).enqueue(new Callback<Void>() {
+                                                                @Override
+                                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                    if (!response.isSuccessful()) {
+                                                                        return;
+                                                                    }
+                                                                }
+                                                                @Override
+                                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                                    Log.e("dummmm....................","뭐하며여?");
+                                                                }
+                                                            });
+                                                            mealArrayList.remove(position);
+                                                            mealAdapter.notifyItemRemoved(position);
+                                                            mealAdapter.notifyDataSetChanged();
+                                                        }
+                                                    })
+                                                    .setNeutralButton("취소", null)
+                                                    .show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                }
+
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
+
                         }}
+                    else{
+                            Log.e("등록중?","+");
+                            Toast.makeText(getContext(), "아직 등록 중 입니다, 기다려주세요", Toast.LENGTH_SHORT).show();
+                    }
+                    }
                     @Override
                     public void onFailure(Call<List<Meal_ResponseDTO>> call, Throwable t) {
                         Log.e("통신에러","+"+t.toString());
                         Toast.makeText(getContext(), "통신에러", Toast.LENGTH_SHORT).show();
-
                     }
                 });
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-                View view = LayoutInflater.from(getContext())
-                        .inflate(R.layout.meal_detail, null, false);
-                builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-
-                final ImageView iv_meal_detail = dialog.findViewById(R.id.iv_meal_detail);
-                final TextView tv_meal_detail = dialog.findViewById(R.id.tv_meal_detail);
-                Log.e("이미지비트맵",""+detail_meal_text.getPhotobitmap());
-                Log.e("이미지uri",""+detail_meal_text.getPhotouri());
-
-                if (detail_meal_text.getPhotobitmap() == null){
-                    if(detail_meal_text.getPhotouri()==null){
-                        Glide.with(getContext()).load(detail_meal_text.getFilepath()).into(iv_meal_detail);
-                    }
-                    else{iv_meal_detail.setImageURI(detail_meal_text.getPhotouri());}
-                } else{
-                    iv_meal_detail.setImageBitmap(detail_meal_text.getPhotobitmap());
-                }
-
-                tv_meal_detail.setText(detail_meal_text.getContent());
-
-                final Button btn_meal_detail = dialog.findViewById(R.id.btn_meal_detail);
-                btn_meal_detail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
-
-                final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_detail_delete);
-                btn_meal_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setTitle("삭제하기")
-                                .setMessage("삭제하시겠습니까?")
-                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        mealapi.deleteData(ids).enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                if (!response.isSuccessful()) {
-                                                    return;
-                                                }
-                                            }
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                                Log.e("dummmm....................","뭐하며여?");
-                                            }
-                                        });
-                                        mealArrayList.remove(position);
-                                        mealAdapter.notifyItemRemoved(position);
-                                        mealAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNeutralButton("취소", null)
-                                .show();
-                        dialog.dismiss();
-                    }
-                });
-
             }
         });
         return view;
     }
     public void getmeallsit(){
-//        Meal_API meal_service = retrofit.create(Meal_API.class);
         Meal_API meal_service = Retrofit_client.createService(Meal_API.class, TokenUtils.getAccessToken("Access_Token"));
 
         meal_service.getDatameal(userid,puserid).enqueue(new Callback<List<Meal_ResponseDTO>>() {

@@ -73,7 +73,9 @@
                 android:padding="7dp"
                 android:textSize="6pt"
                 android:background="@drawable/dialog_radius"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:maxLines="3"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/tv_noti2"
@@ -84,7 +86,9 @@
                 android:padding="7dp"
                 android:textSize="6pt"
                 android:background="@drawable/dialog_radius"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:maxLines="3"
+                android:ellipsize="end"/>
 
         </LinearLayout>
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="mytoast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#FFFFFF</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#5E8FE4</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#5E8FE4</item>
+        <!--        <item name="stIconStart">@drawable/update</item>-->
+        <item name="stIconEnd">@drawable/infomenu</item>
+        <item name="stLength">LONG</item>
+        <item name="stGravity">center</item>
+        <item name="stRadius">30dp</item>
+    </style>
+    <style name="mytoast1">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#FFFFFF</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#5E8FE4</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#5E8FE4</item>
+<!--        <item name="stIconStart">@drawable/update</item>-->
+        <!--        <item name="stIconEnd">@drawable/infomenu</item>-->
+        <item name="stLength">SHORT</item>
+        <item name="stGravity">center</item>
+        <item name="stRadius">100dp</item>
+    </style>
+</resources>

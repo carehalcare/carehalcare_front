@@ -137,85 +137,82 @@ public class WalkFragment extends Fragment {
                 walk_service.getDataWalk(userid,puserid).enqueue(new Callback<List<Walk_ResponseDTO>>() {
                     @Override
                     public void onResponse(Call<List<Walk_ResponseDTO>> call, Response<List<Walk_ResponseDTO>> response) {
+                        if (response.isSuccessful()){
                         if (response.body() != null) {
-                            List<Walk_ResponseDTO> datas = response.body();
-                            if (datas != null) {
+                            try {
+                                List<Walk_ResponseDTO> datas = response.body();
                                 ids = datas.get(position).getId();
                                 Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                View view = LayoutInflater.from(getContext())
+                                        .inflate(R.layout.walk_detail, null, false);
+                                builder.setView(view);
+                                final AlertDialog dialog = builder.create();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.show();
+
+                                final ImageView iv_walk_detail = dialog.findViewById(R.id.iv_walk_detail);
+                                if (detail_walk_text.getPhotobitmap() == null){
+                                    if(detail_walk_text.getPhotouri()==null){
+                                        Glide.with(getContext()).load(detail_walk_text.getFilepath()).into(iv_walk_detail);
+                                    }
+                                    else{iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());}
+                                } else{
+                                    iv_walk_detail.setImageBitmap(detail_walk_text.getPhotobitmap());
+                                }
+
+                                final Button btn_walk_detail = dialog.findViewById(R.id.btn_walk_detail);
+                                btn_walk_detail.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                final  Button btn_walk_delete = dialog.findViewById(R.id.btn_walk_detail_delete);
+                                btn_walk_delete.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                        builder.setTitle("삭제하기")
+                                                .setMessage("삭제하시겠습니까?")
+                                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        walkApi.deleteDataWalk(detail_walk_text.getId()).enqueue(new Callback<Void>() {
+                                                            @Override
+                                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                if (!response.isSuccessful()) {
+                                                                    return;
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                                Log.e("dummmm....................","뭐하며여?");
+                                                            }
+                                                        });
+                                                        walkArrayList.remove(position);
+                                                        walkAdapter.notifyItemRemoved(position);
+                                                        walkAdapter.notifyDataSetChanged();
+                                                    }
+                                                })
+                                                .setNeutralButton("취소", null)
+                                                .show();
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
-                        }}
+                        }}}
                     @Override
                     public void onFailure(Call<List<Walk_ResponseDTO>> call, Throwable t) {
                         Log.e("통신에러","+"+t.toString());
                         Toast.makeText(getContext(), "통신에러", Toast.LENGTH_SHORT).show();
                     }
                 });
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                View view = LayoutInflater.from(getContext())
-                        .inflate(R.layout.walk_detail, null, false);
-                builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-
-                final ImageView iv_walk_detail = dialog.findViewById(R.id.iv_walk_detail);
-                if (detail_walk_text.getPhotobitmap() == null){
-                    if(detail_walk_text.getPhotouri()==null){
-                        Glide.with(getContext()).load(detail_walk_text.getFilepath()).into(iv_walk_detail);
-                    }
-                    else{iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());}
-                } else{
-                    iv_walk_detail.setImageBitmap(detail_walk_text.getPhotobitmap());
-                }
-
-//                if (detail_walk_text.getPhotobitmap() == null){
-//                    iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());
-//                } else{
-//                    iv_walk_detail.setImageBitmap(detail_walk_text.getPhotobitmap());
-//                }
-                //iv_walk_detail.setImageURI(detail_walk_text.getPhotouri());
-
-                final Button btn_walk_detail = dialog.findViewById(R.id.btn_walk_detail);
-                btn_walk_detail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
-                final  Button btn_walk_delete = dialog.findViewById(R.id.btn_walk_detail_delete);
-                btn_walk_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setTitle("삭제하기")
-                                .setMessage("삭제하시겠습니까?")
-                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        walkApi.deleteDataWalk(detail_walk_text.getId()).enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                if (!response.isSuccessful()) {
-                                                    return;
-                                                }
-                                            }
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                                Log.e("dummmm....................","뭐하며여?");
-                                            }
-                                        });
-                                        walkArrayList.remove(position);
-                                        walkAdapter.notifyItemRemoved(position);
-                                        walkAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNeutralButton("취소", null)
-                                .show();
-                        dialog.dismiss();
-                    }
-                });
 
             }
         });
@@ -239,10 +236,6 @@ public class WalkFragment extends Fragment {
                     for (int i = 0; i < datas.size(); i++) {
                         times = response.body().get(i).getCreatedDateTime();
                         filepath_ = response.body().get(i).getImages().get(0).getFilePath();
-
-//                        encodedString = response.body().get(i).getImages().get(0).getEncodedString();
-//                        encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-//                        mealbitmap = BitmapFactory.decodeByteArray( encodeByte, 0, encodeByte.length ) ;
 
                         Walk_text dict_0 = new Walk_text(filepath_,
                                 response.body().get(i).getId(),times,"path");

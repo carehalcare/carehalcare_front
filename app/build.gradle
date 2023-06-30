@@ -77,6 +77,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
 
+    implementation 'io.github.muddz:styleabletoast:2.4.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
 

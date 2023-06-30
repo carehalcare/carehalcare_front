@@ -24,7 +24,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ganlogo_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Carehalcare"
@@ -57,6 +57,7 @@
         <activity android:name=".Feature_mainpage.MainActivity"/>
         <activity android:name=".Feature_mainpage.PNoticeActivity"/>
         <activity android:name=".Feature_write.EightMenuActivity"/>
+        <activity android:name=".Feature_mypage.MypageActivity"/>
 
         <provider android:name="androidx.core.content.FileProvider"
             android:authorities="carehalcare.carehalcare"

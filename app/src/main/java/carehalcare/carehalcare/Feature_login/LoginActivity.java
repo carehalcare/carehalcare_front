@@ -58,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         loginbtn = (Button) findViewById(R.id.btn_login);
         newuserbtn = (Button) findViewById(R.id.btn_newuser);
         kakaobtn = (ImageButton) findViewById(R.id.btn_kakao);
+        kakaobtn.setVisibility(View.INVISIBLE);
+
 
         login_id = (EditText)findViewById(R.id.loginidInput);
         login_pw = (EditText)findViewById(R.id.loginpw);
@@ -96,17 +98,23 @@ public class LoginActivity extends AppCompatActivity {
                                     TokenUtils.setAccessToken(response.body().getAccessToken());
                                     TokenUtils.setRefreshToken(response.body().getRefreshToken());
                                     TokenUtils.setUser_Id(userEmail);
-                                    Toast.makeText(getApplicationContext(), String.format("간병인님 환영합니다."), Toast.LENGTH_SHORT).show();
                                     caregiverAPI.getCaregiverInfo(TokenUtils.getUser_Id("User_Id")).enqueue(new Callback<UserDTO>() {
                                         @Override
                                         public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                                             if (response.isSuccessful()){
                                                 if (response.body()!=null){
                                                     //Log.e("dto",response.body().getPuserId());
+                                                    int code = response.body().getCode();
+                                                    if (code != 0){
+                                                        Toast.makeText(getApplicationContext(), String.format("보호자용 앱 ID입니다.\n보호자용앱에서" +
+                                                                "로그인 해주세요."), Toast.LENGTH_SHORT).show();
+                                                        return;
+                                                    }
                                                     puserid = response.body().getPuserId();
                                                     if (puserid==null){
                                                         Intent intent = new Intent(LoginActivity.this, FindPatientActivity.class);
                                                         intent.putExtra("puserid",puserid);
+                                                        Toast.makeText(getApplicationContext(), String.format("간병인님 환영합니다."), Toast.LENGTH_SHORT).show();
                                                         startActivity(intent);
                                                         finish();
                                                         return;
