@@ -24,7 +24,7 @@ public class Walk_text {
         this.photobitmap = photobitmap;
         this.id = id;
     }
-    public Walk_text(String filepath, Long id,String datetime,String pathpan) {
+    public Walk_text(String filepath, Long id,String createdDateTime,String pathpan) {
         this.filepath = filepath;
         this.id = id;
         this.createdDateTime = createdDateTime;
@@ -42,8 +42,8 @@ public class Walk_text {
         return createdDateTime;
     }
 
-    public void setcreatedDateTime(String datetime) {
-        this.createdDateTime = datetime;
+    public void setcreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 
     public String getFilepath() {

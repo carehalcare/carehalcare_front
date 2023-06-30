@@ -21,9 +21,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -43,10 +45,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import carehalcare.carehalcare.API_URL;
+import carehalcare.carehalcare.Feature_login.SignupActivity;
 import carehalcare.carehalcare.Feature_write.ErrorModel;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.Retrofit_client;
 import carehalcare.carehalcare.TokenUtils;
+import io.github.muddz.styleabletoast.StyleableToast;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -90,6 +94,8 @@ public class Meal_form extends AppCompatActivity {
         String dates = its[0];
         String times = its[1];
         Log.e("날짜는???? : ",""+dates+times);
+        Log.e("output???? : ",""+output);
+
 
 
         String[] bitmaps = UriBitmap_meal(output,dates,times);
@@ -98,6 +104,7 @@ public class Meal_form extends AppCompatActivity {
 
         Log.e("content경로는 : ",""+contentpath);
         Log.e("absolute경로는 : ",""+absopath);
+
 
         imgtest.setImageURI(Uri.parse(absopath));
         btn_save.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +117,8 @@ public class Meal_form extends AppCompatActivity {
                 intent.putExtra("edit",wow);
                 intent.putExtra("uris",uris);
                 setResult(2888, intent);
-
+//                StyleableToast.makeText(getApplicationContext(),"\n\n\n\n\n\n\n등록중입니다...\n등록완료 메세지가 뜰 때까지 기다려주세요!\n\n\n\n\n\n\n",Toast.LENGTH_LONG,
+//                        R.style.mytoast).show();
                 Map<String, RequestBody> map = new HashMap<>();
 
                 RequestBody content = RequestBody.create(MediaType.parse("text/plain"),wow);
@@ -160,7 +168,9 @@ public class Meal_form extends AppCompatActivity {
                         if(response.isSuccessful()){
                             if (response.body()!=null){
                                 Log.e("?????????????????????????????","+");
-                                Toast.makeText(getApplicationContext(),"저장이 완료되었습니다.",Toast.LENGTH_SHORT).show();
+                                StyleableToast.makeText(getApplicationContext(),"등록완료되었습니다!",Toast.LENGTH_SHORT,
+                                        R.style.mytoast).show();
+//                                Toast.makeText(getApplicationContext(),"저장이 완료되었습니다.",Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
@@ -183,7 +193,7 @@ public class Meal_form extends AppCompatActivity {
                     public void onFailure(Call<Long> call, Throwable t) {
                         Log.e("통신에러","+"+t.toString());
                         Toast.makeText(getApplicationContext(), "통신에러", Toast.LENGTH_SHORT).show();
-
+                        finish();
                     }
                 });
                 finish();
@@ -202,6 +212,8 @@ public class Meal_form extends AppCompatActivity {
     }
 
     public String[] UriBitmap_meal(Uri imageuris,String dates, String times) {
+        Log.e("YMC", "뭐야이게");
+
         String[] twopath = new String[2];
         String contentpath = "";
         String absolutePath = "";
@@ -282,6 +294,7 @@ public class Meal_form extends AppCompatActivity {
 
                 //TODO [경로 저장 실시]
                 contentpath = String.valueOf(item);
+                Log.e("YMC", "뭐야이게2"+contentpath);
                 //[콘텐츠 : 이미지 경로 저장]
                 //S_Preference.setString(getApplication(), "saveCameraScopeContent", String.valueOf(item));
 
@@ -290,6 +303,8 @@ public class Meal_form extends AppCompatActivity {
                 c.moveToNext();
                 absolutePath = c.getString(c.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
                 readFile(imgtest, absolutePath);
+                Log.e("YMC", "뭐야이게3"+absolutePath);
+
 
                 twopath[0] = contentpath;
                 twopath[1] = absolutePath;

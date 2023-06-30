@@ -50,6 +50,7 @@ import carehalcare.carehalcare.Feature_write.Meal.Meal_form;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.Retrofit_client;
 import carehalcare.carehalcare.TokenUtils;
+import io.github.muddz.styleabletoast.StyleableToast;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -154,8 +155,8 @@ public class Walk_form  extends AppCompatActivity {
                     public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                         if(response.isSuccessful()){
                             if (response.body()!=null){
-                                Toast.makeText(getApplicationContext(),"저장이 완료되었습니다.",Toast.LENGTH_SHORT).show();
-                            }
+                                StyleableToast.makeText(getApplicationContext(),"등록완료되었습니다!",Toast.LENGTH_SHORT,
+                                        R.style.mytoast).show();                            }
                         }
                         else {
                             Converter<ResponseBody, ErrorModel> converter = retrofit.responseBodyConverter(ErrorModel.class, new java.lang.annotation.Annotation[0]);

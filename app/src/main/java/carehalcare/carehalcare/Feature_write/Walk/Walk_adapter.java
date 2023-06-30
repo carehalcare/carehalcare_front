@@ -157,6 +157,7 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
         try {
             Date date = originalFormat.parse(mList.get(position).getcreatedDateTime());
             newDate = newFormat.format(date);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

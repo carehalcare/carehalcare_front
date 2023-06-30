@@ -33,6 +33,7 @@ import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_NFC.CommuteActivity;
 import carehalcare.carehalcare.Feature_login.LoginDto;
 import carehalcare.carehalcare.Feature_login.SignupAPI;
+import carehalcare.carehalcare.Feature_mypage.MypageActivity;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.Retrofit_client;
@@ -134,7 +135,9 @@ public class MainActivity extends AppCompatActivity {
                         user_name = response.body().getUsername();
                         Log.e("토큰받은 이름 ",user_name);
                         tv_welcommsg.setText(user_name+" 간병인님\n환영합니다.");
-
+                        if (response.body()!=null) {
+                            TokenUtils.setPUser_Id(response.body().getPuserId());
+                        }
                     } else{
                         Log.e("토큰받아오기 실패 ","user_name");
                     }
@@ -202,13 +205,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //일단 메인에서 설정 아이콘에서 연결시켜서 test, 로그인 api 완료시 로그인 id의 매칭되는 pid없을 경우 findpatient로 이동하게끔 변경
-//        btn_setting.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, FindPatientActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        btn_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MypageActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -238,8 +241,8 @@ public class MainActivity extends AppCompatActivity {
                         tv_noti1.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
                     }
                     else if (notices.size() >= 2) {
-                        tv_noti1.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
-                        tv_noti2.setText(formatDate(notices.get(1).getcreatedDateTime()) + "\n" + notices.get(1).getContent());
+                        tv_noti2.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
+                        tv_noti1.setText(formatDate(notices.get(1).getcreatedDateTime()) + "\n" + notices.get(1).getContent());
                     }
                 }
                 else {
@@ -253,4 +256,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    //뒤로가기 두번 클릭 시 앱 종료
+    private long backPressedTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        if(System.currentTimeMillis() > backPressedTime + 2000) {
+            backPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else if (System.currentTimeMillis() <= backPressedTime + 2000) {
+            finish();
+        }    }
+
 }
