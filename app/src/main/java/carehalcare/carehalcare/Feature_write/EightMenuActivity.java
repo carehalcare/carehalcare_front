@@ -148,11 +148,13 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eightmenu_main);
+
         container = (FrameLayout) findViewById(R.id.container_menu);
         if (Build.VERSION.SDK_INT < 23){}
         else {
             requestUserPermission();
         }
+
 
         Intent intent = getIntent();
 //        userid = intent.getStringExtra("userid");
@@ -166,7 +168,7 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         Bundle bundle = new Bundle();
         bundle.putString("userid",userid);
         bundle.putString("puserid",puserid);
-        btn_home = (Button)findViewById(R.id.btn_home);
+        btn_home = findViewById(R.id.btn_home);
         btn_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

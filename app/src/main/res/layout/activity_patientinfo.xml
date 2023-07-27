@@ -80,7 +80,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
@@ -92,27 +92,27 @@
 
                 <androidx.core.widget.NestedScrollView
                     xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scrollbars="vertical"
                     android:scrollbarFadeDuration="0"
-                    android:fadeScrollbars="false"
-                    android:layout_height="match_parent">
+                    android:fadeScrollbars="false">
+
                     <LinearLayout
                         android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                <TextView
-                    android:textStyle="bold"
-                    android:id="@+id/tv_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:textSize="9pt"
-                    android:textColor="@color/black" />
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/tv_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:textSize="9pt"
+                        android:textColor="@color/black" />
+
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>
 

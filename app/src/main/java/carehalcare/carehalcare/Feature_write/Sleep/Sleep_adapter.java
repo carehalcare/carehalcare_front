@@ -1,5 +1,7 @@
 package carehalcare.carehalcare.Feature_write.Sleep;
 
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -121,23 +123,12 @@ public class Sleep_adapter extends RecyclerView.Adapter<Sleep_adapter.CustomView
             String activeTodayResult = format.format(today_date);
             viewholder.tv_todaySleepResult.setText(activeTodayResult);
         } else {
-            viewholder.tv_todaySleepResult.setText(formatDate(mList.get(position).getCreatedDateTime()));
+            viewholder.tv_todaySleepResult.setText(formatDatestring(mList.get(position).getCreatedDateTime()));
 
         }
 
     }
-    private String formatDate(String dateStr) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(dateStr);
-            newDate = newFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
-    }
+
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);

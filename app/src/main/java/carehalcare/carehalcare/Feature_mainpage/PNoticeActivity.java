@@ -2,16 +2,25 @@ package carehalcare.carehalcare.Feature_mainpage;
 
 import static android.content.ContentValues.TAG;
 
+import static carehalcare.carehalcare.DateUtils.formatDate;
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +46,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class PNoticeActivity extends AppCompatActivity {
     String userid, puserid;
 
-    NoticeViewAdapter noticeViewAdapter;
+    private NoticeViewAdapter noticeViewAdapter;
     private ImageButton btn_home;
     private RecyclerView notiview;
     private ArrayList<Notice> notiviewlist;
@@ -105,6 +114,38 @@ public class PNoticeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(PNoticeActivity.this, MainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        noticeViewAdapter.setOnItemClickListener(new NoticeViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                // 리스트 항목 클릭 시 동작할 코드 작성
+                Notice notice = notiviewlist.get(position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(PNoticeActivity.this);
+                View view = LayoutInflater.from(PNoticeActivity.this)
+                        .inflate(R.layout.notice_detail, null, false);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
+
+                TextView notidetail = dialog.findViewById(R.id.tv_notidetail);
+                TextView notidate = dialog.findViewById(R.id.tv_notidate);
+
+                notidetail.setText(notice.getContent());
+                notidate.setText(formatDatestring(notice.getModifiedDateTime()));
+
+                Button btn_out = dialog.findViewById(R.id.btn_out);
+
+                btn_out.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }
