@@ -1,5 +1,7 @@
 package carehalcare.carehalcare.Feature_write.Active;
 
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -127,7 +129,6 @@ public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomVi
         viewholder.tv_todayActive.setGravity(Gravity.CENTER);
         viewholder.tv_todayActiveResult.setGravity(Gravity.CENTER);
 
-
         viewholder.tv_todayActive.setText("활동 기록 확인하기");
         Log.e("활동시간???"," "+mList.get(position).getCreatedDateTime());
         if (mList.get(position).getCreatedDateTime()==null){
@@ -136,23 +137,10 @@ public class Active_adapter extends RecyclerView.Adapter<Active_adapter.CustomVi
             String activeTodayResult = format.format(today_date);
             viewholder.tv_todayActiveResult.setText(activeTodayResult);
         } else {
-            viewholder.tv_todayActiveResult.setText(formatDate(mList.get(position).getCreatedDateTime()));
+            viewholder.tv_todayActiveResult.setText(formatDatestring(mList.get(position).getCreatedDateTime()));
 
         }
 
-
-    }
-    private String formatDate(String dateStr) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(dateStr);
-            newDate = newFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
     }
 
     @Override

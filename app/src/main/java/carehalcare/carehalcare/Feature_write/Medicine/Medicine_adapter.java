@@ -1,5 +1,7 @@
 package carehalcare.carehalcare.Feature_write.Medicine;
 
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -142,7 +144,7 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
             SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.getDefault());
             datedate = format.format(today_date);
         } else {
-            datedate = formatDate(mList.get(position).getCreatedDateTime());
+            datedate = formatDatestring(mList.get(position).getCreatedDateTime());
         }
         seeText = datedate+" "+mList.get(position).gettime()+mList.get(position).getmealStatus()
         +mList.get(position).getmedicine();
@@ -151,18 +153,7 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
 
 
     }
-    private String formatDate(String dateStr) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(dateStr);
-            newDate = newFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
-    }
+
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);

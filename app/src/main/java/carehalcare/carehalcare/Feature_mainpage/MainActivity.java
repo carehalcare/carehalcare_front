@@ -3,6 +3,8 @@ package carehalcare.carehalcare.Feature_mainpage;
 
 import static android.content.ContentValues.TAG;
 
+import static carehalcare.carehalcare.DateUtils.formatDate;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,24 +64,10 @@ public class MainActivity extends AppCompatActivity {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 
-    private String formatDate(String dateStr) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(dateStr);
-            newDate = newFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         userid = TokenUtils.getUser_Id("User_Id");
@@ -234,15 +222,15 @@ public class MainActivity extends AppCompatActivity {
                     List<Notice> notices = response.body();
                     for(int i =0;i<response.body().size();i++){
                         Log.d(TAG, i+"      공지사항최근 : " + response.body().get(i).getContent());
-
                     }
 
                     if (notices.size() == 1 ) {
                         tv_noti1.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
+                        tv_noti2.setVisibility(View.INVISIBLE);
                     }
-                    else if (notices.size() >= 2) {
-                        tv_noti2.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
-                        tv_noti1.setText(formatDate(notices.get(1).getcreatedDateTime()) + "\n" + notices.get(1).getContent());
+                    else if (notices.size() > 1) {
+                        tv_noti1.setText(formatDate(notices.get(0).getcreatedDateTime()) + "\n" + notices.get(0).getContent());
+                        tv_noti2.setText(formatDate(notices.get(1).getcreatedDateTime()) + "\n" + notices.get(1).getContent());
                     }
                 }
                 else {

@@ -26,26 +26,35 @@
         android:textColor="@color/black"
         android:gravity="center"
         android:id="@+id/tv_meal_detail"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_marginTop="10dp"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_meal_detail"
-        android:background="@drawable/button_color"
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/white"
+            android:id="@+id/btn_meal_detail_delete"
+            android:text="삭제하기"
+            android:background="@drawable/button_radius"
+            android:backgroundTint="@color/material_dynamic_neutral_variant30"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
 
-        android:text="닫기"/>
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_marginTop="10dp"
-        android:background="@color/material_dynamic_neutral_variant30"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_meal_detail_delete"
-
-        android:text="삭제"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:id="@+id/btn_meal_detail"
+            android:text="닫기"
+            android:background="@drawable/button_radius"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
     </LinearLayout>
 </LinearLayout>

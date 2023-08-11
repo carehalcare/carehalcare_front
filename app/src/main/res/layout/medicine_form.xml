@@ -124,6 +124,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/savebtn_radius"
-        android:text="저장"></androidx.appcompat.widget.AppCompatButton>
+        android:text="저장"/>
 
 </LinearLayout>

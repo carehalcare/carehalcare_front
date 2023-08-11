@@ -1,5 +1,7 @@
 package carehalcare.carehalcare.Feature_write.Allmenu;
 
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import android.content.Context;
 import android.media.Image;
 import android.provider.ContactsContract;
@@ -120,7 +122,7 @@ public class Allmenu_adapter extends RecyclerView.Adapter<Allmenu_adapter.Custom
         //viewholder.tv_allmenu_Date.setGravity(Gravity.CENTER);
         String category = "";
 
-        switch (mList.get(position).getCategory()){
+        switch (mList.get(position).getCategory()) {
             case "activities":
                 category = "활동";
                 viewholder.iv_allmenu_.setImageResource(R.drawable.activity);
@@ -154,34 +156,27 @@ public class Allmenu_adapter extends RecyclerView.Adapter<Allmenu_adapter.Custom
                 category = "산책";
                 viewholder.iv_allmenu_.setImageResource(R.drawable.walk);
                 break;
-            default: category ="default"; break;
+            default:
+                category = "default";
+                break;
 
 
         }
 
-        viewholder.tv_allmenu_Category.setText(category+" 기록 확인하기");
-        Date today_date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-        String activeTodayResult = format.format(today_date)+" 기록";
-        viewholder.tv_allmenu_Date.setText(formatDate(mList.get(position).getCreatedDateTime()));
-
+        viewholder.tv_allmenu_Category.setText(category + " 기록 확인하기");
+        if (mList.get(position).getCreatedDateTime() == null) {
+            Date today_date = Calendar.getInstance().getTime();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.getDefault());
+            String activeTodayResult = format.format(today_date);
+            viewholder.tv_allmenu_Date.setText(activeTodayResult);
+        } else {
+            viewholder.tv_allmenu_Date.setText(formatDatestring(mList.get(position).getCreatedDateTime()));
+        }
     }
 
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);
-    }
-    private String formatDate(String dateStr) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(dateStr);
-            newDate = newFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
     }
 
 }
