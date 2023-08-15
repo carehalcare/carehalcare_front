@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -149,23 +150,21 @@ public class BowelFragment extends Fragment {
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
                         bowelAdapter.notifyItemInserted(0);
                         bowelAdapter.notifyDataSetChanged();
-                        bowelApi.postDataBowel(dict).enqueue(new Callback<List<Bowel_text>>() {
+                        bowelApi.postDataBowel(dict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(Call<List<Bowel_text>> call, Response<List<Bowel_text>> response) {
+                            public void onResponse(Call<Long> call, Response<Long> response) {
                                 Log.e("######################################################","뭬야");
                                 Log.e("보낼때bodyek ============",response.body()+"");
 
                                 if (response.isSuccessful()) {
-                                    List<Bowel_text> body = response.body();
-                                    if (body != null) {
-                                    }
+
                                 } else {
                                     //실패
                                     Log.e("BoWel", "stringToJson msg: 실패" + response.code());
                                 }
                             }
                             @Override
-                            public void onFailure(Call<List<Bowel_text>> call, Throwable t) {}
+                            public void onFailure(Call<Long> call, Throwable t) {}
                         });
                         dialog.dismiss();
 
@@ -213,6 +212,7 @@ public class BowelFragment extends Fragment {
 
                 final Button btn_boweldetail = dialog.findViewById(R.id.btn_boweldetail);
                 final Button btn_boweldelete = dialog.findViewById(R.id.btn_boweldetail_delete);
+                final Button btn_off = dialog.findViewById(R.id.btn_off);
                 btn_boweldelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -243,6 +243,64 @@ public class BowelFragment extends Fragment {
                     }
                 });
                 btn_boweldetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                        View cview = LayoutInflater.from(getContext())
+                                .inflate(R.layout.bowel_form_change, null, false);
+                        builder.setView(cview);
+                        final AlertDialog dialog = builder.create();
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.show();
+
+                        EditText et_count = dialog.findViewById(R.id.et_bowelCount);
+                        EditText et_form = dialog.findViewById(R.id.et_bowelForm);
+                        Button btn_change = dialog.findViewById(R.id.btn_bowel_change);
+                        Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+
+                        et_count.setText(String.valueOf(detail_bowel_text.getCount()));
+                        et_form.setText(detail_bowel_text.getContent());
+
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        btn_change.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                Long count = Long.valueOf(et_count.getText().toString());
+                                String bowelForm = et_form.getText().toString();
+                                if (bowelForm.length()==0){bowelForm = "-";};
+
+                                Bowel_text_change update = new Bowel_text_change(ids, count, bowelForm);
+                                bowelApi.putDataBowel(update).enqueue(new Callback<Long>() {
+                                    @Override
+                                    public void onResponse(Call<Long> call, Response<Long> response) {
+
+                                        if (response.isSuccessful()) {
+                                            Log.e("수정성공 ============",response.body()+"");
+                                            Toast.makeText(getContext(), "배변 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+
+                                        } else {
+                                            //실패
+                                            Log.e("BoWel", "stringToJson msg: 실패" + response.code());
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Long> call, Throwable t) {}
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+
+                btn_off.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();

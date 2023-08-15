@@ -1,6 +1,5 @@
 package carehalcare.carehalcare.Feature_write.Active;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,41 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import carehalcare.carehalcare.API_URL;
-import carehalcare.carehalcare.Feature_mainpage.CaregiverAPI;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_adapter;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_text;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
-import carehalcare.carehalcare.Feature_write.EightMenuActivity;
-import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.Retrofit_client;
 import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class ActiveFragment extends Fragment {
     String userid,puserid;
@@ -53,8 +38,12 @@ public class ActiveFragment extends Fragment {
     private ArrayList<Active_text> activeArrayList;
     private Active_adapter activeAdapter;
 
+    private RadioButton rb_jahalyes , rb_jahalno, rb_bohangyes, rb_bohangno, rb_changeyes, rb_changeno;
+    private Button btn_save_active, btn_cancel, btn_change;
+
+    private TextView activedetail_jahal,activedetail_bohang, activedetail_change;
     public ActiveFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -66,12 +55,11 @@ public class ActiveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.active_list,container,false);
+
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
         Active_API activeApi = Retrofit_client.createService(Active_API.class, TokenUtils.getAccessToken("Access_Token"));
-
-        //Active_API activeApi = retrofit.create(Active_API.class);
 
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_active_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -80,17 +68,10 @@ public class ActiveFragment extends Fragment {
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-
-
         activeArrayList = new ArrayList<>();
 
         activeAdapter = new Active_adapter( activeArrayList);
         mRecyclerView.setAdapter(activeAdapter);
-
-
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLinearLayoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         activeApi.getDataActive(userid,puserid).enqueue(new Callback<List<Active_text>>() {
             @Override
@@ -132,41 +113,26 @@ public class ActiveFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
-                final RadioButton rb_jahalyes = dialog.findViewById(R.id.rb_jahalyes);
-                final RadioButton rb_jahalno = dialog.findViewById(R.id.rb_jahalno);
-                final RadioButton rb_bohangyes = dialog.findViewById(R.id.rb_bohangyes);
-                final RadioButton rb_bohangno = dialog.findViewById(R.id.rb_bohangno);
-                final RadioButton rb_changeyes =dialog.findViewById(R.id.rb_changeyes);
-                final RadioButton rb_changeno = dialog.findViewById(R.id.rb_changeno);
+                rb_jahalyes = dialog.findViewById(R.id.rb_jahalyes);
+                rb_jahalno = dialog.findViewById(R.id.rb_jahalno);
+                rb_bohangyes = dialog.findViewById(R.id.rb_bohangyes);
+                rb_bohangno = dialog.findViewById(R.id.rb_bohangno);
+                rb_changeyes =dialog.findViewById(R.id.rb_changeyes);
+                rb_changeno = dialog.findViewById(R.id.rb_changeno);
 
-                final Button btn_save_active = dialog.findViewById(R.id.btn_active_save);
+                btn_save_active = dialog.findViewById(R.id.btn_active_save);
                 btn_save_active.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        String jahal = "";
-                        String bohang = "";
-                        String change = "";
+                        String jahal = rb_jahalyes.isChecked() ? "Y" : "N";
+                        String bohang = rb_bohangyes.isChecked() ? "Y" : "N";
+                        String change = rb_changeyes.isChecked() ? "Y" : "N";
 
-                        if(rb_jahalyes.isChecked()){
-                            jahal = "재활치료 완료";
-                        }else if(rb_jahalno.isChecked()){
-                            jahal = "-";
-                        }
 
-                        if(rb_bohangyes.isChecked()){
-                            bohang = "보행도움 완료";
-                        }else if(rb_bohangno.isChecked()){
-                            bohang = "-";
-                        }
-
-                        if(rb_changeyes.isChecked()){
-                            change = "체위변경 완료";
-                        }else if(rb_changeno.isChecked()){
-                            change="-";
-                        }
                         Active_text dict = new Active_text(userid,puserid,jahal,bohang,change);
                         Long id = Long.valueOf(1);
                         if (activeAdapter.getItemCount()!=0)
-                        {id = Long.valueOf(activeArrayList.get(0).getId()+1);}
+                            id = Long.valueOf(activeArrayList.get(0).getId()+1);
+
                         Active_text dict_0 = new Active_text(id,
                                 userid,puserid,jahal,bohang,change,null);
                         activeArrayList.add(0, dict_0); //첫번째 줄에 삽입됨
@@ -175,23 +141,23 @@ public class ActiveFragment extends Fragment {
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
                         activeAdapter.notifyItemInserted(0);
                         activeAdapter.notifyDataSetChanged();
-                        activeApi.postDataActive(dict).enqueue(new Callback<List<Active_text>>() {
+                        activeApi.postDataActive(dict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(Call<List<Active_text>> call, Response<List<Active_text>> response) {
+                            public void onResponse(Call<Long> call, Response<Long> response) {
                                 Log.e("######################################################","뭬야");
                                 Log.e("보낼때bodyek ============",response.body()+"");
 
                                 if (response.isSuccessful()) {
-                                    List<Active_text> body = response.body();
-                                    if (body != null) {
-                                    }
+                                    Log.e("등록 성공 ============",response.body()+"");
+                                    Log.e("재활보행체위 값------------", jahal+bohang+change);
+                                    Toast.makeText(getContext(), "활동 기록이 등록되었습니다.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     //실패
                                     Log.e("활동", "stringToJson msg: 실패" + response.code());
                                 }
                             }
                             @Override
-                            public void onFailure(Call<List<Active_text>> call, Throwable t) {
+                            public void onFailure(Call<Long> call, Throwable t) {
                             }
                         });
                         dialog.dismiss();
@@ -229,16 +195,30 @@ public class ActiveFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
-                final TextView activedetail_jahal = dialog.findViewById(R.id.tv_activedetail_jahal);
-                final TextView activedetail_bohang = dialog.findViewById(R.id.tv_activedetail_bohang);
-                final TextView activedetail_change = dialog.findViewById(R.id.tv_activedetail_change);
+                activedetail_jahal = dialog.findViewById(R.id.tv_activedetail_jahal);
+                activedetail_bohang = dialog.findViewById(R.id.tv_activedetail_bohang);
+                activedetail_change = dialog.findViewById(R.id.tv_activedetail_change);
 
-                activedetail_jahal.setText(detail_active_text.getRehabilitation());
-                activedetail_bohang.setText(detail_active_text.getWalkingAssistance());
-                activedetail_change.setText(detail_active_text.getPosition());
+                String getjahal = detail_active_text.getRehabilitation();
+                String getbohang = detail_active_text.getWalkingAssistance();
+                String getchange = detail_active_text.getPosition();
+
+                if(getjahal.equals("Y"))
+                    activedetail_jahal.setText("재활치료 완료");
+                if(getbohang.equals("Y"))
+                    activedetail_bohang.setText("보행도움 완료");
+                if (getchange.equals("Y"))
+                    activedetail_change.setText("체위변경 완료");
+                else{
+                    activedetail_jahal.setText("X");
+                    activedetail_bohang.setText("X");
+                    activedetail_change.setText("X");
+                }
 
                 final Button btn_active_detail = dialog.findViewById(R.id.btn_active_detail);
                 final Button btn_active_delete = dialog.findViewById(R.id.btn_active_detail_delete);
+                final Button btn_active_off = dialog.findViewById(R.id.btn_off);
+
                 btn_active_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -269,7 +249,106 @@ public class ActiveFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
+
                 btn_active_detail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                        View cview = LayoutInflater.from(getContext())
+                                .inflate(R.layout.active_form_change, null, false);
+                        builder.setView(cview);
+                        final AlertDialog changedialog = builder.create();
+                        changedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        changedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        changedialog.show();
+
+                        rb_jahalyes = changedialog.findViewById(R.id.rb_jahalyes);
+                        rb_jahalno = changedialog.findViewById(R.id.rb_jahalno);
+                        rb_bohangyes = changedialog.findViewById(R.id.rb_bohangyes);
+                        rb_bohangno = changedialog.findViewById(R.id.rb_bohangno);
+                        rb_changeyes = changedialog.findViewById(R.id.rb_changeyes);
+                        rb_changeno = changedialog.findViewById(R.id.rb_changeno);
+                        btn_change = changedialog.findViewById(R.id.btn_active_change);
+                        btn_cancel = changedialog.findViewById(R.id.btn_cancel);
+
+                        String cjahal = detail_active_text.getRehabilitation();
+                        String cbohang = detail_active_text.getWalkingAssistance();
+                        String cchange = detail_active_text.getPosition();
+
+
+                        // 활동 상태 값에 따라 라디오 버튼 선택
+                        if (cjahal.equals("Y")) {
+                            rb_jahalyes.setChecked(true);
+                            rb_jahalno.setChecked(false);
+                        } else if (cjahal.equals("N")) {
+                            rb_jahalyes.setChecked(false);
+                            rb_jahalno.setChecked(true);
+                        }
+                        if (cbohang.equals("Y")) {
+                            rb_bohangyes.setChecked(true);
+                            rb_bohangno.setChecked(false);
+                        } else if (cbohang.equals("N")) {
+                            rb_bohangyes.setChecked(false);
+                            rb_bohangno.setChecked(true);
+                        }
+                        if (cchange.equals("Y")) {
+                            rb_changeyes.setChecked(true);
+                            rb_changeno.setChecked(false);
+                        } else if (cchange.equals("N")) {
+                            rb_changeyes.setChecked(false);
+                            rb_changeno.setChecked(true);
+                        }
+                        else {
+                            rb_jahalno.setChecked(true);
+                            rb_bohangno.setChecked(true);
+                            rb_changeno.setChecked(true);
+                        }
+
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                changedialog.dismiss();
+                            }
+                        });
+
+
+                        btn_change.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+
+                                String cjahal = rb_jahalyes.isChecked() ? "Y" : "N";
+                                String cbohang = rb_bohangyes.isChecked() ? "Y" : "N";
+                                String cchange = rb_changeyes.isChecked() ? "Y" : "N";
+                                Log.e("수정된 재활보행체위 값------------", cjahal+cbohang+cchange);
+
+                                Active_text_change updatedActive = new Active_text_change(ids, cjahal, cbohang, cchange);
+                                activeApi.putDataActive(updatedActive).enqueue(new Callback<Long>() {
+                                    @Override
+                                    public void onResponse(Call<Long> call, Response<Long> response) {
+
+                                        if (response.isSuccessful()) {
+                                            Log.e("수정성공 ============",response.body()+"");
+                                            Toast.makeText(getContext(), "활동 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+
+                                        } else {
+                                            //실패
+                                            Log.e("활동", "stringToJson msg: 실패" + response.code() + response.body());
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Long> call, Throwable t) {
+                                        Log.e("활동", "onFailure: 수정 실패", t);
+                                    }
+                                });
+                                changedialog.dismiss();
+                            }
+                        });
+                    }
+                });
+
+                btn_active_off.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();

@@ -174,20 +174,18 @@ public class MedicineFragment extends Fragment {
                         medicineAdapter.notifyItemInserted(0);
                         medicineAdapter.notifyDataSetChanged();
 
-                        medicineApi.postDatamedicine(dict).enqueue(new Callback<List<Medicine_text>>() {
+                        medicineApi.postDatamedicine(dict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(@NonNull Call<List<Medicine_text>> call, @NonNull Response<List<Medicine_text>> response) {
+                            public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                                 if (response.isSuccessful()) {
-                                    List<Medicine_text> body = response.body();
-                                    if (body != null) {
-                                    }
+
                                 } else {
                                     //실패
                                     Log.e("YMC", "stringToJson msg: 실패" + response.code());
                                 }
                             }
                             @Override
-                            public void onFailure(@NonNull Call<List<Medicine_text>> call, @NonNull Throwable t) {}
+                            public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
                         });
 
                         dialog.dismiss();

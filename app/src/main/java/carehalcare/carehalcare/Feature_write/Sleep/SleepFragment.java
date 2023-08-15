@@ -168,23 +168,21 @@ public class SleepFragment extends Fragment {
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
                         sleepAdapter.notifyItemInserted(0);
                         sleepAdapter.notifyDataSetChanged();
-                        sleepApi.postDataSleep(dict).enqueue(new Callback<List<Sleep_text>>() {
+                        sleepApi.postDataSleep(dict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(@NonNull Call<List<Sleep_text>> call, @NonNull Response<List<Sleep_text>> response) {
+                            public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                                 Log.e("######################################################","뭬야");
                                 Log.e("보낼때bodyek ============",response.body()+"");
 
                                 if (response.isSuccessful()) {
-                                    List<Sleep_text> body = response.body();
-                                    if (body != null) {
-                                    }
+
                                 } else {
                                     //실패
                                     Log.e("WAHTSLEEP", "stringToJson msg: 실패" + response.code());
                                 }
                             }
                             @Override
-                            public void onFailure(@NonNull Call<List<Sleep_text>> call, @NonNull Throwable t) {}
+                            public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
                         });
 
                         dialog.dismiss();

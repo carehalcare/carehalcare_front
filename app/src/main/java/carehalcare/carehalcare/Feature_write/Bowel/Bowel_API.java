@@ -9,14 +9,15 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Bowel_API {
-    String URL = "http://192.168.0.18:8080/";
+
     @Headers("Content-Type: application/json")
     @POST("bowelmovements")
-    Call<List<Bowel_text>> postDataBowel(
+    Call<Long> postDataBowel(
             @Body Bowel_text bowel_text
     );
     @GET("bowelmovements/{id}")
@@ -33,4 +34,10 @@ public interface Bowel_API {
 
     @DELETE("bowelmovements/{id}")
     Call<Void> deleteDataBowel(@Path("id") Long id);
+
+    @PUT("bowelmovements")
+    Call<Long> putDataBowel(
+            @Body Bowel_text_change bowel_text_change
+    );
+
 }
