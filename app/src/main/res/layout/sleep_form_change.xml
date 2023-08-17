@@ -15,11 +15,12 @@
         android:textStyle="bold"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="20dp"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
         android:layout_gravity="center"
         >
         <RadioGroup
@@ -29,22 +30,24 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="잘주무심"
+                android:text="좋음"
                 android:id="@+id/rb_goodsleep"
-                android:layout_marginRight="30dp" />
+                android:layout_weight="1" />
             <RadioButton
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:text="보통"
                 android:id="@+id/rb_sososleep"
-                android:layout_marginRight="30dp" />
+                android:layout_weight="1" />
             <RadioButton
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="잘못주무심"
-                android:id="@+id/rb_badsleep" />
+                android:text="나쁨"
+                android:id="@+id/rb_badsleep"
+                android:layout_weight="1"/>
+
         </RadioGroup>
 
     </LinearLayout>

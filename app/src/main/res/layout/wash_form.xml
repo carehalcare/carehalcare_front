@@ -30,7 +30,7 @@
             android:layout_height="48dp"
             android:text="세안"
             android:layout_marginRight="30dp"
-            android:background="@drawable/button_color"></androidx.appcompat.widget.AppCompatCheckBox>
+            android:background="@drawable/button_color"/>
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_washmouth"
             android:layout_width="100dp"
@@ -38,7 +38,7 @@
             android:layout_height="48dp"
             android:text="구강청결"
             android:layout_marginRight="30dp"
-            android:background="@drawable/button_color"></androidx.appcompat.widget.AppCompatCheckBox>
+            android:background="@drawable/button_color"/>
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_nailcare"
             android:layout_width="100dp"
@@ -46,7 +46,7 @@
             android:text="손발톱관리"
             android:textAlignment="center"
             android:background="@drawable/button_color"
-            ></androidx.appcompat.widget.AppCompatCheckBox>
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -129,8 +129,8 @@
         android:id="@+id/et_washForm"
         android:textAlignment="center"
         android:textColor="@color/black"
-        >
-    </EditText>
+        />
+
     <androidx.appcompat.widget.AppCompatButton
         android:layout_marginTop="10dp"
         android:layout_width="100dp"
@@ -139,6 +139,6 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:background="@drawable/savebtn_radius"
-        android:text="저장"></androidx.appcompat.widget.AppCompatButton>
+        android:text="저장"/>
 
 </LinearLayout>

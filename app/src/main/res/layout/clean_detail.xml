@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:id="@+id/btn_cleandtail"
+            android:id="@+id/btn_detail_change"
             android:text="수정"
             android:background="@drawable/button_radius"
             android:textStyle="bold"

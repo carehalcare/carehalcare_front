@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +24,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -41,7 +33,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,20 +40,16 @@ import java.util.Locale;
 
 import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.Active.Active_API;
-import carehalcare.carehalcare.Feature_write.Active.Active_adapter;
 import carehalcare.carehalcare.Feature_write.Active.Active_text;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_adapter;
 import carehalcare.carehalcare.Feature_write.Bowel.Bowel_text;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_API;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_ResponseDTO;
 import carehalcare.carehalcare.Feature_write.Clean.Clean_text;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.ErrorModel;
-import carehalcare.carehalcare.Feature_write.Meal.MealFragment;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_ResponseDTO;
-import carehalcare.carehalcare.Feature_write.Meal.Meal_form;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_text;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_API;
 import carehalcare.carehalcare.Feature_write.Medicine.Medicine_text;
@@ -251,7 +238,7 @@ public class AllmenuFragment extends Fragment {
                             Log.e("활동기록????",getRehabilitation+getWalkingAssistance+getPosition);
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             View view = LayoutInflater.from(getContext())
-                                    .inflate(R.layout.active_detail, null, false);
+                                    .inflate(R.layout.allmenu_active_detail, null, false);
                             builder.setView(view);
                             final AlertDialog dialog = builder.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -332,21 +319,16 @@ public class AllmenuFragment extends Fragment {
                             Log.e("투약기록????",gettime+getmealStatus+getmedicine);
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             View view = LayoutInflater.from(getContext())
-                                    .inflate(R.layout.medicine_detail, null, false);
+                                    .inflate(R.layout.allmenu_medicine_detail, null, false);
                             builder.setView(view);
                             final AlertDialog dialog = builder.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             dialog.show();
-
-                            final TextView medicine_detail_date = dialog.findViewById(R.id.tv_medicine_detail_date);
                             final TextView medicine_detail_timne = dialog.findViewById(R.id.tv_medicine_detail_timne);
                             final TextView medicine_detail_state = dialog.findViewById(R.id.tv_medicine_detail_state);
                             final TextView medicine_detail_name = dialog.findViewById(R.id.tv_medicine_detail_name);
-
-                            Date today_date = Calendar.getInstance().getTime();
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-                            medicine_detail_date.setText(formatDate(timedate));
+                            ;
                             medicine_detail_timne.setText(gettime);
                             medicine_detail_state.setText(getmealStatus);
                             medicine_detail_name.setText(getmedicine);
@@ -416,7 +398,7 @@ public class AllmenuFragment extends Fragment {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                             View view = LayoutInflater.from(getContext())
-                                    .inflate(R.layout.bowel_detail, null, false);
+                                    .inflate(R.layout.allmenu_bowel_detail, null, false);
                             builder.setView(view);
                             final AlertDialog dialog = builder.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -572,7 +554,7 @@ public class AllmenuFragment extends Fragment {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                             View view = LayoutInflater.from(getContext())
-                                    .inflate(R.layout.sleep_detail, null, false);
+                                    .inflate(R.layout.allmenu_sleep_detail, null, false);
                             builder.setView(view);
                             final AlertDialog dialog = builder.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -800,7 +782,7 @@ public class AllmenuFragment extends Fragment {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                             View view = LayoutInflater.from(getContext())
-                                    .inflate(R.layout.meal_detail, null, false);
+                                    .inflate(R.layout.allmenu_meal_detail, null, false);
                             builder.setView(view);
                             final AlertDialog dialog = builder.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -813,7 +795,7 @@ public class AllmenuFragment extends Fragment {
                             tv_meal_detail.setText(getContent);
 
                             final Button btn_meal_detail = dialog.findViewById(R.id.btn_meal_detail);
-                            final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_detail_delete);
+                            final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_delete);
 
                             btn_meal_delete.setOnClickListener(new View.OnClickListener() {
                                 @Override

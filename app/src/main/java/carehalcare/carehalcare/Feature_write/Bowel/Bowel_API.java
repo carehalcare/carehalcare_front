@@ -26,10 +26,10 @@ public interface Bowel_API {
     @GET("bowelmovements")
     Call<List<Bowel_text>> getDataBowel_3();
 
-    @GET("bowelmovements/list/{userId}/{puserId}")
+    @GET("bowelmovements/list/{uid}/{puid}")
     Call<List<Bowel_text>> getDataBowel(
-            @Path("userId") String userId,
-            @Path("puserId") String puserId
+            @Path("uid") String userId,
+            @Path("puid") String puserId
     );
 
     @DELETE("bowelmovements/{id}")

@@ -9,6 +9,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -16,7 +17,7 @@ public interface Wash_API {
     String URL = "http://192.168.0.18:8080/";
     @Headers("Content-Type: application/json")
     @POST("pcleanliness")
-    Call<List<Wash_ResponseDTO>> postDataWash(
+    Call<Long> postDataWash(
             @Body Wash_ResponseDTO washResponseDTO
     );
     @GET("pcleanliness/{id}")
@@ -33,4 +34,9 @@ public interface Wash_API {
 
     @DELETE("pcleanliness/{id}")
     Call<Void> deleteDataWash(@Path("id") Long id);
+
+    @PUT("pcleanliness")
+    Call<Long> putDataWash(
+            @Body Wash_text_change washTextChange
+    );
 }

@@ -1,5 +1,7 @@
 package carehalcare.carehalcare.Feature_write.Meal;
 
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -129,7 +131,7 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
     @Override
     public void onBindViewHolder(@NonNull Meal_adapter.CustomViewHolder viewholder, int position) {
 
-        viewholder.tv_mealcontent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        viewholder.tv_mealcontent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 
         viewholder.tv_mealcontent.setGravity(Gravity.CENTER);
 
@@ -153,17 +155,8 @@ public class Meal_adapter extends RecyclerView.Adapter<Meal_adapter.CustomViewHo
             }
         }
 
-        //viewholder.iv_mealpic.setImageURI(seePhoto);
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(mList.get(position).getDatetime());
-            newDate = newFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        viewholder.tv_mealcontent.setText(newDate);
+
+        viewholder.tv_mealcontent.setText(formatDatestring(mList.get(position).getDatetime()));
         if(mList.get(position).getUriuri()=="uriru"){
             viewholder.tv_mealcontent.setText(mList.get(position).getDatetime());
         }

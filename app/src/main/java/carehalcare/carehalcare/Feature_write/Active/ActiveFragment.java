@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ public class ActiveFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class ActiveFragment extends Fragment {
                             Log.e("getActive success", "======================================");
                         }
                     }
-                 }
+                }
             }
             @Override
             public void onFailure(Call<List<Active_text>> call, Throwable t) {
@@ -178,6 +180,7 @@ public class ActiveFragment extends Fragment {
                                 if (datas != null) {
                                     ids = response.body().get(position).getId();
                                     Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
+
                                 }
                             }}
                     }
@@ -205,15 +208,15 @@ public class ActiveFragment extends Fragment {
 
                 if(getjahal.equals("Y"))
                     activedetail_jahal.setText("재활치료 완료");
+                else activedetail_jahal.setText("X");
+
                 if(getbohang.equals("Y"))
                     activedetail_bohang.setText("보행도움 완료");
+                else activedetail_bohang.setText("X");
+
                 if (getchange.equals("Y"))
                     activedetail_change.setText("체위변경 완료");
-                else{
-                    activedetail_jahal.setText("X");
-                    activedetail_bohang.setText("X");
-                    activedetail_change.setText("X");
-                }
+                else activedetail_change.setText("X");
 
                 final Button btn_active_detail = dialog.findViewById(R.id.btn_active_detail);
                 final Button btn_active_delete = dialog.findViewById(R.id.btn_active_detail_delete);
@@ -277,7 +280,6 @@ public class ActiveFragment extends Fragment {
                         String cbohang = detail_active_text.getWalkingAssistance();
                         String cchange = detail_active_text.getPosition();
 
-
                         // 활동 상태 값에 따라 라디오 버튼 선택
                         if (cjahal.equals("Y")) {
                             rb_jahalyes.setChecked(true);
@@ -323,6 +325,7 @@ public class ActiveFragment extends Fragment {
                                 Log.e("수정된 재활보행체위 값------------", cjahal+cbohang+cchange);
 
                                 Active_text_change updatedActive = new Active_text_change(ids, cjahal, cbohang, cchange);
+
                                 activeApi.putDataActive(updatedActive).enqueue(new Callback<Long>() {
                                     @Override
                                     public void onResponse(Call<Long> call, Response<Long> response) {
@@ -330,8 +333,8 @@ public class ActiveFragment extends Fragment {
                                         if (response.isSuccessful()) {
                                             Log.e("수정성공 ============",response.body()+"");
                                             Toast.makeText(getContext(), "활동 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                            activeAdapter.notifyItemChanged(position);
                                             dialog.dismiss();
-
                                         } else {
                                             //실패
                                             Log.e("활동", "stringToJson msg: 실패" + response.code() + response.body());
@@ -340,6 +343,7 @@ public class ActiveFragment extends Fragment {
                                     @Override
                                     public void onFailure(Call<Long> call, Throwable t) {
                                         Log.e("활동", "onFailure: 수정 실패", t);
+                                        dialog.dismiss();
                                     }
                                 });
                                 changedialog.dismiss();

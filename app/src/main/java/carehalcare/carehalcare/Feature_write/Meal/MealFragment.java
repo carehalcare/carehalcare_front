@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ import carehalcare.carehalcare.API_URL;
 import carehalcare.carehalcare.Feature_write.Active.Active_API;
 import carehalcare.carehalcare.Feature_write.Active.Active_adapter;
 import carehalcare.carehalcare.Feature_write.Active.Active_text;
+import carehalcare.carehalcare.Feature_write.Active.Active_text_change;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Walk.Walk_form;
@@ -171,14 +173,75 @@ public class MealFragment extends Fragment {
                                     tv_meal_detail.setText(detail_meal_text.getContent());
 
                                     final Button btn_meal_detail = dialog.findViewById(R.id.btn_meal_detail);
-                                    btn_meal_detail.setOnClickListener(new View.OnClickListener() {
+                                    final Button btn_off = dialog.findViewById(R.id.btn_off);
+                                    btn_off.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             dialog.dismiss();
                                         }
                                     });
 
-                                    final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_detail_delete);
+                                    btn_meal_detail.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                            View cview = LayoutInflater.from(getContext())
+                                                    .inflate(R.layout.meal_form_change, null, false);
+                                            builder.setView(cview);
+                                            final AlertDialog cdialog = builder.create();
+                                            cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            cdialog.show();
+
+                                            EditText et_text = cdialog.findViewById(R.id.et_notice);
+                                            Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+                                            Button btn_change = cdialog.findViewById(R.id.btn_change);
+
+                                            et_text.setText(detail_meal_text.getContent());
+
+                                            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    cdialog.dismiss();
+                                                }
+                                            });
+
+                                            btn_change.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    String content = et_text.getText().toString();
+                                                    Meal_text_change update = new Meal_text_change(ids, content);
+
+                                                    mealapi.updateMeal(update).enqueue(new Callback<Long>() {
+                                                        @Override
+                                                        public void onResponse(Call<Long> call, Response<Long> response) {
+
+                                                            if (response.isSuccessful()) {
+                                                                Log.e("수정성공 ============",response.body()+"");
+
+                                                                cdialog.dismiss();
+                                                            } else {
+                                                                //실패
+                                                                Log.e("meal content", " 실패" + response.code() + response.body());
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onFailure(Call<Long> call, Throwable t) {
+                                                            Log.e("활동", "onFailure: 수정 실패", t);
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
+                                        }
+                                    });
+
+                                    final Button btn_meal_delete = dialog.findViewById(R.id.btn_meal_delete);
                                     btn_meal_delete.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {

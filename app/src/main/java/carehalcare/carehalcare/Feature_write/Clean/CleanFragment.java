@@ -29,15 +29,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import carehalcare.carehalcare.API_URL;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_API;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
-import carehalcare.carehalcare.Feature_write.EightMenuActivity;
-import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_API;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_ResponseDTO;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_adapter;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_text;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.Retrofit_client;
 import carehalcare.carehalcare.TokenUtils;
@@ -53,6 +45,11 @@ public class CleanFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Clean_text> cleanArrayList;
     private Clean_adapter cleanAdapter;
+
+    private CheckBox cb_changeSheet, cb_changeCloth, cb_ventilation ;
+    private EditText et_cleanForm;
+    private TextView detail_sheet, detail_cloth, detail_ventilation, et_detail_clean ;
+    private Button btn_clean_active;
 
     public CleanFragment() {
         // Required empty public constructor
@@ -71,7 +68,7 @@ public class CleanFragment extends Fragment {
         Clean_API cleanApi = Retrofit_client.createService(Clean_API.class, TokenUtils.getAccessToken("Access_Token"));
 
 
-       // Clean_API cleanApi = retrofit.create(Clean_API.class);
+        // Clean_API cleanApi = retrofit.create(Clean_API.class);
         userid = this.getArguments().getString("userid");
         puserid = this.getArguments().getString("puserid");
 
@@ -166,20 +163,18 @@ public class CleanFragment extends Fragment {
                         cleanAdapter.notifyDataSetChanged();
 
                         Clean_ResponseDTO savedict = new Clean_ResponseDTO(userid,puserid,cleaness,cleanForm);
-                        cleanApi.postDataClean(savedict).enqueue(new Callback<List<Clean_ResponseDTO>>() {
+                        cleanApi.postDataClean(savedict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(@NonNull Call<List<Clean_ResponseDTO>> call, @NonNull Response<List<Clean_ResponseDTO>> response) {
+                            public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                                 if (response.isSuccessful()) {
-                                    List<Clean_ResponseDTO> body = response.body();
-                                    if (body != null) {
-                                    }
+
                                 } else {
                                     //실패
                                     Log.e("clean", "stringToJson msg: 실패" + response.code());
                                 }
                             }
                             @Override
-                            public void onFailure(@NonNull Call<List<Clean_ResponseDTO>> call, @NonNull Throwable t) {}
+                            public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
                         });
                         dialog.dismiss();
                     }
@@ -218,18 +213,20 @@ public class CleanFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
-                final TextView detail_sheet = dialog.findViewById(R.id.tv_cleandatail_sheet);
-                final TextView detail_cloth = dialog.findViewById(R.id.tv_cleandatail_cloth);
-                final TextView detail_ventilationt = dialog.findViewById(R.id.tv_cleandatail_ventilation);
-                final TextView et_detail_clean  = dialog.findViewById(R.id.tv_cleandetail_et);
+                detail_sheet = dialog.findViewById(R.id.tv_cleandatail_sheet);
+                detail_cloth = dialog.findViewById(R.id.tv_cleandatail_cloth);
+                detail_ventilation = dialog.findViewById(R.id.tv_cleandatail_ventilation);
+                et_detail_clean  = dialog.findViewById(R.id.tv_cleandetail_et);
 
                 detail_sheet.setText(detail_clean_text.getChangeSheet());
                 detail_cloth.setText(detail_clean_text.getChangeCloth());
-                detail_ventilationt.setText(detail_clean_text.getVentilation());
+                detail_ventilation.setText(detail_clean_text.getVentilation());
                 et_detail_clean.setText(detail_clean_text.getEt_cleanForm());
 
-                final Button btn_cleandetail = dialog.findViewById(R.id.btn_cleandtail);
+                final Button btn_cleandetail = dialog.findViewById(R.id.btn_detail_change);
                 final Button btn_clean_delete = dialog.findViewById(R.id.btn_clean_delete_detail);
+                final Button btn_off = dialog.findViewById(R.id.btn_off);
+
                 btn_clean_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -260,10 +257,88 @@ public class CleanFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
-                btn_cleandetail.setOnClickListener(new View.OnClickListener() {
+
+                btn_off.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
+                    }
+                });
+
+                btn_cleandetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        View cview = LayoutInflater.from(getContext())
+                                .inflate(R.layout.clean_form_change, null, false);
+                        builder.setView(cview);
+                        final AlertDialog cdialog = builder.create();
+                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        cdialog.show();
+
+                        cb_changeSheet = cdialog.findViewById(R.id.cb_changeSheet);
+                        cb_changeCloth = cdialog.findViewById(R.id.cb_changeCloth);
+                        cb_ventilation = cdialog.findViewById(R.id.cb_ventilation);
+                        et_cleanForm = cdialog.findViewById(R.id.et_cleanForm);
+                        btn_clean_active = cdialog.findViewById(R.id.btn_clean_change);
+                        Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+
+                        String sheet = detail_clean_text.getChangeSheet();
+                        String cloth = detail_clean_text.getChangeCloth();
+                        String ventil = detail_clean_text.getVentilation();
+                        et_cleanForm.setText(detail_clean_text.getEt_cleanForm());
+
+                        if (sheet.contains("시트변경완료")) cb_changeSheet.setChecked(true);
+                        if (cloth.contains("환의교체완료")) cb_changeCloth.setChecked(true);
+                        if (ventil.contains("환기완료")) cb_ventilation.setChecked(true);
+
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cdialog.dismiss();
+                            }
+                        });
+
+                        btn_clean_active.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                String changeSheet = "-";
+                                String changeCloth = "-";
+                                String ventilation = "-";
+                                String cleanForm = et_cleanForm.getText().toString();
+
+                                if (cb_changeSheet.isChecked()){changeSheet = "시트변경완료 ";}
+
+                                if (cb_changeCloth.isChecked()){changeCloth = "환의교체완료 ";}
+
+                                if (cb_ventilation.isChecked()){ventilation = "환기완료 ";}
+
+                                String cleaness = changeSheet+" "+changeCloth+" "+ventilation;
+
+                                if (cleanForm.length()==0){cleanForm = "-";};
+
+                                Clean_text_change update = new Clean_text_change(ids,cleaness,cleanForm);
+                                cleanApi.putDataClean(update).enqueue(new Callback<Long>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
+                                        if (response.isSuccessful()) {
+                                            Long body = response.body();
+                                            if (body != null) {
+                                                cleanAdapter.notifyDataSetChanged();
+                                                cdialog.dismiss();
+                                            }
+                                        } else {
+                                            //실패
+                                            Log.e("clean수정 PUT", "수정 msg: 실패" + response.code());
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+
                     }
                 });
             }

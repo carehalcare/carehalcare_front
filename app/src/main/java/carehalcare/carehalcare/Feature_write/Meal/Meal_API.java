@@ -6,10 +6,12 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
@@ -41,5 +43,9 @@ public interface Meal_API {
             //@Part("mealImageVO") Meal_DTO mealImageVO);
             @PartMap Map<String, RequestBody> data,
             @Part List<MultipartBody.Part> images);
+
+    @PUT("meals")
+    Call<Long> updateMeal(
+            @Body Meal_text_change mealTextChange);
 
 }

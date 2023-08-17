@@ -25,10 +25,10 @@ public interface Active_API {
     @GET("activities")
     Call<List<Active_text>> getDataActive_3();
 
-    @GET("activities/list/{userId}/{puserId}")
+    @GET("activities/list/{uid}/{puid}")
     Call<List<Active_text>> getDataActive(
-            @Path("userId") String userId,
-            @Path("puserId") String puserId
+            @Path("uid") String userId,
+            @Path("puid") String puserId
     );
 
     @DELETE("activities/{id}")

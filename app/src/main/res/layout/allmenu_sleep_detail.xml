@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -16,21 +16,22 @@
 
         <TextView
             android:background="@drawable/detail_list"
-            android:textStyle="bold"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="주변청결 상태"
-            android:textColor="@color/black"/>
-        <TextView
+            android:layout_height="30dp"
+            android:text="수면상태"
             android:textStyle="bold"
-            android:background="@drawable/detail_list"
-            android:text="-"
             android:gravity="center"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="-"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/detail_list"
             android:textColor="@color/black"
-            android:id="@+id/tv_cleandatail_allmenu"/>
+            android:id="@+id/tv_sleepdetail_state"/>
     </LinearLayout>
 
     <LinearLayout
@@ -58,34 +59,33 @@
             android:layout_height="100dp"
             android:textColor="@color/black"
             android:text="-"
-            android:id="@+id/tv_cleandetail_et_allmenu"/>
+            android:id="@+id/tv_sleepdetail_et"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:id="@+id/btn_clean_delete_detail"
+            android:textColor="@color/white"
+            android:id="@+id/btn_sleep_delete_detail"
             android:text="삭제하기"
             android:background="@drawable/button_radius"
             android:backgroundTint="@color/material_dynamic_neutral_variant30"
-            android:textColor="@color/white"
             android:textStyle="bold"
             android:layout_gravity="center" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:id="@+id/btn_cleandtail"
+            android:id="@+id/btn_sleep_detail"
             android:text="닫기"
             android:background="@drawable/button_radius"
             android:textStyle="bold"

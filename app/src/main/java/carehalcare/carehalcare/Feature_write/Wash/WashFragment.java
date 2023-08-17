@@ -114,8 +114,7 @@ public class WashFragment extends Fragment {
                                 if ((response.body().get(i).getCleanliness()).contains("세신")){bodyscrub = "세신 완료";}
                                 if ((response.body().get(i).getCleanliness()).contains("면도")){shave = "면도 완료";}
                                 Wash_text dict_0 = new Wash_text(washface,washmouth,nailcare,haircare,
-                                        response.body().get(i).getPart(),bodyscrub, shave,response.body().get(i).getContent(),
-                                        response.body().get(i).getCreatedDateTime());
+                                        bodyscrub, response.body().get(i).getPart(), shave, response.body().get(i).getContent());
                                 washArrayList.add(dict_0);
                                 washAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, response.body().get(i).getCreatedDateTime() + ""+"어댑터카운터"+washAdapter.getItemCount());
@@ -186,8 +185,8 @@ public class WashFragment extends Fragment {
                         if (washForm.length()==0){washForm = "-";};
 
                         String cleaness = washface+washmouth+nailcare+haircare+bodyscrub+shave;
-                        Wash_text dict = new Wash_text(washface,washmouth,nailcare,haircare,bodyscrub,bodyscrub_point,
-                                shave,washForm,null);
+                        Wash_text dict = new Wash_text(washface,washmouth,nailcare,haircare,bodyscrub,
+                                shave,bodyscrub_point,washForm);
                         washArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 
@@ -196,13 +195,13 @@ public class WashFragment extends Fragment {
                         washAdapter.notifyDataSetChanged();
 
                         Wash_ResponseDTO savedict = new Wash_ResponseDTO(userid,puserid,cleaness,bodyscrub_point,washForm);
-                        washApi.postDataWash(savedict).enqueue(new Callback<List<Wash_ResponseDTO>>() {
+                        washApi.postDataWash(savedict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(Call<List<Wash_ResponseDTO>> call, Response<List<Wash_ResponseDTO>> response) {
+                            public void onResponse(Call<Long> call, Response<Long> response) {
                                 Log.e("######################################################","뭬야");
                                 Log.e("보낼때bodyek ============",response.body()+"");
                                 if (response.isSuccessful()) {
-                                    List<Wash_ResponseDTO> body = response.body();
+                                    Long body = response.body();
                                     if (body != null) {
                                     }
                                 } else {
@@ -211,7 +210,7 @@ public class WashFragment extends Fragment {
                                 }
                             }
                             @Override
-                            public void onFailure(Call<List<Wash_ResponseDTO>> call, Throwable t) {
+                            public void onFailure(Call<Long> call, Throwable t) {
                             }
                         });
 
@@ -271,6 +270,7 @@ public class WashFragment extends Fragment {
 
                 final Button btn_washdetail = dialog.findViewById(R.id.btn_wash_detail);
                 final Button btn_wash_delete = dialog.findViewById(R.id.btn_wash_detail_delete);
+                final Button btn_off = dialog.findViewById(R.id.btn_off);
                 btn_wash_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -301,10 +301,122 @@ public class WashFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
-                btn_washdetail.setOnClickListener(new View.OnClickListener() {
+                btn_off.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
+                    }
+                });
+
+                btn_washdetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        View cview = LayoutInflater.from(getContext())
+                                .inflate(R.layout.wash_form_change, null, false);
+                        builder.setView(cview);
+                        final AlertDialog cdialog = builder.create();
+                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        cdialog.show();
+
+                        final CheckBox cb_washface = cdialog.findViewById(R.id.cb_washface);
+                        final CheckBox cb_washmouth = cdialog.findViewById(R.id.cb_washmouth);
+                        final CheckBox cb_nailcare = cdialog.findViewById(R.id.cb_nailcare);
+                        final CheckBox cb_haircare = cdialog.findViewById(R.id.cb_haircare);
+                        final CheckBox cb_bodyscrub = cdialog.findViewById(R.id.cb_bodyscrub);
+                        final CheckBox cb_shave = cdialog.findViewById(R.id.cb_shave);
+
+                        final EditText et_bodyscrub = cdialog.findViewById(R.id.et_bodyscrub);
+                        final EditText et_washForm = cdialog.findViewById(R.id.et_washForm);
+                        final Button btn_wash_active = cdialog.findViewById(R.id.btn_wash_change);
+                        final Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+
+                        String form = detail_wash_text.getEt_washForm();
+                        String pointform = detail_wash_text.getEt_bodyscrub();
+                        et_washForm.setText(form);
+                        et_bodyscrub.setText(pointform);
+
+                        String face = detail_wash_text.getWashface();
+                        String mouth = detail_wash_text.getWashmouth();
+                        String nail = detail_wash_text.getNailcare();
+                        String hair = detail_wash_text.getHaircare();
+                        String body = detail_wash_text.getBodyscrub();
+                        String shave = detail_wash_text.getShave();
+
+                        if(face.contains("완료")) cb_washface.setChecked(true);
+                        if(mouth.contains("완료")) cb_washmouth.setChecked(true);
+                        if(nail.contains("완료")) cb_nailcare.setChecked(true);
+                        if(hair.contains("완료")) cb_haircare.setChecked(true);
+                        if(body.contains("완료")) cb_bodyscrub.setChecked(true);
+                        if(shave.contains("완료")) cb_shave.setChecked(true);
+
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cdialog.dismiss();
+                            }
+                        });
+                        btn_wash_active.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                String washface = "";
+                                String washmouth = "";
+                                String nailcare = "";
+                                String haircare = "";
+                                String bodyscrub = "";
+                                String shave = "";
+
+                                String bodyscrub_point = et_bodyscrub.getText().toString();
+                                String washForm = et_washForm.getText().toString();
+
+                                if (cb_washface.isChecked()){washface = "세안 완료 ";}
+                                else if (cb_washface.isChecked() == false){washface = "-";}
+
+                                if (cb_washmouth.isChecked()){washmouth = "구강청결 완료 ";}
+                                else if (cb_washmouth.isChecked() == false){washmouth = "-";}
+
+                                if (cb_nailcare.isChecked()){nailcare = "손발톱관리 완료 ";}
+                                else  if (cb_nailcare.isChecked() == false){nailcare = "-";}
+
+                                if (cb_haircare.isChecked()){haircare = "세발간호 완료 ";}
+                                else  if (cb_haircare.isChecked() == false){haircare = "-";}
+
+                                if (cb_bodyscrub.isChecked()){bodyscrub = "세신 완료 ";}
+                                else  if (cb_bodyscrub.isChecked() == false){bodyscrub = "-";}
+
+                                if (cb_shave.isChecked()){shave = "면도 완료 ";}
+                                else  if (cb_shave.isChecked() == false){shave = "-";}
+
+                                if (bodyscrub_point.length()==0){bodyscrub_point = "-";};
+                                if (washForm.length()==0){washForm = "-";};
+
+                                String cleaness = washface+washmouth+nailcare+haircare+bodyscrub+shave;
+
+                                Wash_text_change update = new Wash_text_change(ids,cleaness,bodyscrub_point,washForm);
+                                washApi.putDataWash(update).enqueue(new Callback<Long>() {
+                                    @Override
+                                    public void onResponse(Call<Long> call, Response<Long> response) {
+                                        if (response.isSuccessful()) {
+                                            Long body = response.body();
+                                            if (body != null) {
+                                                Log.e("clean수정 PUT", "ok---------" + response.code());
+                                                cdialog.dismiss();
+                                            }
+                                        } else {
+                                            //실패
+                                            Log.e("Pclean수정 PUT", "수정 msg: 실패" + response.code());
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Long> call, Throwable t) {
+                                    }
+                                });
+
+                                dialog.dismiss();
+                            }
+                        });
+
                     }
                 });
             }

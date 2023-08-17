@@ -27,10 +27,10 @@ public interface Sleep_API {
     @GET("sleepstates")
     Call<List<Sleep_text>> getDataSleep_3();
 
-    @GET("sleepstates/list/{userId}/{puserId}")
+    @GET("sleepstates/list/{uid}/{puid}")
     Call<List<Sleep_text>> getDataSleep(
-            @Path("userId") String userId,
-            @Path("puserId") String puserId
+            @Path("uid") String userId,
+            @Path("puid") String puserId
     );
 
     @DELETE("sleepstates/{id}")

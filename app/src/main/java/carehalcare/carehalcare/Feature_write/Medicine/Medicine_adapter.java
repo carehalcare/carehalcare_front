@@ -146,9 +146,9 @@ public class Medicine_adapter extends RecyclerView.Adapter<Medicine_adapter.Cust
         } else {
             datedate = formatDatestring(mList.get(position).getCreatedDateTime());
         }
-        seeText = datedate+" "+mList.get(position).gettime()+mList.get(position).getmealStatus()
-        +mList.get(position).getmedicine();
-        viewholder.tv_todayMedicineResult.setText(seeText);
+//        seeText = datedate+" "+mList.get(position).gettime()+mList.get(position).getmealStatus()
+//        +mList.get(position).getmedicine();
+        viewholder.tv_todayMedicineResult.setText(datedate);
 
 
 

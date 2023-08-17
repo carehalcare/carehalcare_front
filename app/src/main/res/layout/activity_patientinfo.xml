@@ -27,11 +27,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_centerInParent="true"
-            android:text="환자 정보"
-            android:textSize="10pt"
-            android:textColor="@color/black" />
+            android:gravity="center"
+            android:text="환자정보"
+            android:textColor="@color/black"
+            android:textSize="10pt" />
 
     </RelativeLayout>
 
@@ -56,13 +56,6 @@
         android:gravity="center"
         android:background="@drawable/radius_rec" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="환자 상세 정보"
-            android:textSize="8pt"
-            android:textColor="@color/black"/>
         <ImageView
             android:layout_marginTop="20dp"
             android:layout_width="120dp"

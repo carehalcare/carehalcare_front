@@ -30,12 +30,6 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import carehalcare.carehalcare.API_URL;
-import carehalcare.carehalcare.Feature_mainpage.CaregiverAPI;
-import carehalcare.carehalcare.Feature_write.Clean.Clean_API;
-import carehalcare.carehalcare.Feature_write.Clean.Clean_ResponseDTO;
-import carehalcare.carehalcare.Feature_write.Clean.Clean_adapter;
-import carehalcare.carehalcare.Feature_write.Clean.Clean_text;
 import carehalcare.carehalcare.Feature_write.DividerItemDecorator;
 import carehalcare.carehalcare.Feature_write.EightMenuActivity;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
@@ -250,15 +244,15 @@ public class BowelFragment extends Fragment {
                         View cview = LayoutInflater.from(getContext())
                                 .inflate(R.layout.bowel_form_change, null, false);
                         builder.setView(cview);
-                        final AlertDialog dialog = builder.create();
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.show();
+                        final AlertDialog cdialog = builder.create();
+                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        cdialog.show();
 
-                        EditText et_count = dialog.findViewById(R.id.et_bowelCount);
-                        EditText et_form = dialog.findViewById(R.id.et_bowelForm);
-                        Button btn_change = dialog.findViewById(R.id.btn_bowel_change);
-                        Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+                        EditText et_count = cdialog.findViewById(R.id.et_bowelCount);
+                        EditText et_form = cdialog.findViewById(R.id.et_bowelForm);
+                        Button btn_change = cdialog.findViewById(R.id.btn_bowel_change);
+                        Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
 
                         et_count.setText(String.valueOf(detail_bowel_text.getCount()));
                         et_form.setText(detail_bowel_text.getContent());
@@ -266,17 +260,17 @@ public class BowelFragment extends Fragment {
                         btn_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                dialog.dismiss();
+                                cdialog.dismiss();
                             }
                         });
 
                         btn_change.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 Long count = Long.valueOf(et_count.getText().toString());
-                                String bowelForm = et_form.getText().toString();
-                                if (bowelForm.length()==0){bowelForm = "-";};
+                                String content = et_form.getText().toString();
+                                if (content.length()==0){content = "-";};
 
-                                Bowel_text_change update = new Bowel_text_change(ids, count, bowelForm);
+                                Bowel_text_change update = new Bowel_text_change(ids, count, content);
                                 bowelApi.putDataBowel(update).enqueue(new Callback<Long>() {
                                     @Override
                                     public void onResponse(Call<Long> call, Response<Long> response) {
@@ -284,7 +278,7 @@ public class BowelFragment extends Fragment {
                                         if (response.isSuccessful()) {
                                             Log.e("수정성공 ============",response.body()+"");
                                             Toast.makeText(getContext(), "배변 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
+                                            cdialog.dismiss();
 
                                         } else {
                                             //실패

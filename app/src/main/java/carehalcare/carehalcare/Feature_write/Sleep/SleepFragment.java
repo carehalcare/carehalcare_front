@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -56,6 +57,11 @@ public class SleepFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Sleep_text> sleepArrayList;
     private Sleep_adapter sleepAdapter;
+
+    private TextView tv_sleepdetail_state, tv_sleepdetail_et;
+    private Button btn_sleep_detail, btn_sleep_delete, btn_off;
+    private RadioButton rb_goodsleep, rb_sososleep, rb_badsleep;
+    private EditText et_sleepForm;
 
     public SleepFragment() {
         // Required empty public constructor
@@ -149,11 +155,11 @@ public class SleepFragment extends Fragment {
                         String sleepTodayResult = "";
 
                         if (rb_goodsleep.isChecked()){
-                            sleepstate = "잘주무심";
+                            sleepstate = "좋음";
                         } else if (rb_sososleep.isChecked()){
                             sleepstate = "보통";
                         } else if (rb_badsleep.isChecked()){
-                            sleepstate = "잘못주무심";
+                            sleepstate = "나쁨";
                         }
                         if (sleepForm.length()==0){sleepForm = "-";};
                         Date today_date = Calendar.getInstance().getTime();
@@ -223,14 +229,15 @@ public class SleepFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
-                final TextView tv_sleepdetail_state = dialog.findViewById(R.id.tv_sleepdetail_state);
-                final TextView tv_sleepdetail_et = dialog.findViewById(R.id.tv_sleepdetail_et);
+                tv_sleepdetail_state = dialog.findViewById(R.id.tv_sleepdetail_state);
+                tv_sleepdetail_et = dialog.findViewById(R.id.tv_sleepdetail_et);
 
                 tv_sleepdetail_state.setText(detail_sleep_text.getState());
                 tv_sleepdetail_et.setText(detail_sleep_text.getContent());
 
-                final Button btn_sleep_detail = dialog.findViewById(R.id.btn_sleep_detail);
-                final Button btn_sleep_delete = dialog.findViewById(R.id.btn_sleep_delete_detail);
+                btn_sleep_detail = dialog.findViewById(R.id.btn_sleep_detail);
+                btn_sleep_delete = dialog.findViewById(R.id.btn_sleep_delete_detail);
+                btn_off = dialog.findViewById(R.id.btn_off);
                 btn_sleep_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -260,10 +267,84 @@ public class SleepFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
-                btn_sleep_detail.setOnClickListener(new View.OnClickListener() {
+                btn_off.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
+                    }
+                });
+
+                btn_sleep_detail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        View cview = LayoutInflater.from(getContext())
+                                .inflate(R.layout.sleep_form_change, null, false);
+                        builder.setView(cview);
+                        final AlertDialog cdialog = builder.create();
+                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        cdialog.show();
+
+                        rb_goodsleep = cdialog.findViewById(R.id.rb_goodsleep);
+                        rb_sososleep = cdialog.findViewById(R.id.rb_sososleep);
+                        rb_badsleep = cdialog.findViewById(R.id.rb_badsleep);
+                        et_sleepForm = cdialog.findViewById(R.id.et_sleepForm);
+
+                        final Button btn_change = cdialog.findViewById(R.id.btn_sleep_change);
+                        final Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+
+                        String state = detail_sleep_text.getState();
+                        String form = detail_sleep_text.getContent();
+
+                        if (state.contains("좋음")) rb_goodsleep.setChecked(true);
+                        if (state.contains("보통")) rb_sososleep.setChecked(true);
+                        if (state.contains("나쁨")) rb_badsleep.setChecked(true);
+                        et_sleepForm.setText(form);
+
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cdialog.dismiss();
+                            }
+                        });
+                        btn_change.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                String sstate = "";
+                                String scontent = et_sleepForm.getText().toString();
+
+                                if (rb_goodsleep.isChecked()){
+                                    sstate = "좋음";
+                                } else if (rb_sososleep.isChecked()){
+                                    sstate = "보통";
+                                } else if (rb_badsleep.isChecked()){
+                                    sstate = "나쁨";
+                                }
+                                if (scontent.length()==0){scontent = "-";};
+
+                                Sleep_text_change update = new Sleep_text_change(ids, sstate, scontent);
+                                sleepApi.putDataSleep(update).enqueue(new Callback<Long>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.e("sleep 수정 ok", response.body() +"");
+                                            sleepAdapter.notifyDataSetChanged();
+                                            cdialog.dismiss();
+                                        } else {
+                                            //실패
+                                            Log.e("sleep 수정 실패", "stringToJson msg: 실패" + response.code());
+                                            Toast.makeText(getContext(), "통신 실패",  Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
+                                });
+
+                                dialog.dismiss();
+                            }
+                        });
+
                     }
                 });
             }

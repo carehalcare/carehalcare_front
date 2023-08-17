@@ -71,7 +71,7 @@
             android:textSize="9pt"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:text="이름\n(000님 간병인)"/>
+            android:text="이름\n"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_logout"
@@ -79,56 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/button_radius"
-            android:text="LOGOUT"/>
+            android:text="로그아웃"/>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/menu1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dialog_radius"
-                android:layout_marginBottom="15dp"
-                android:backgroundTint="#EAEEFF"
-                android:text="내 정보"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/menu2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dialog_radius"
-                android:layout_marginBottom="15dp"
-                android:backgroundTint="#EAEEFF"
-                android:text="회원 정보 수정"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/menu3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dialog_radius"
-                android:layout_marginBottom="15dp"
-                android:backgroundTint="#EAEEFF"
-                android:text="알림 기록"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/menu4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dialog_radius"
-                android:layout_marginBottom="15dp"
-                android:backgroundTint="#EAEEFF"
-                android:text="권한 설정"/>
-
-        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
