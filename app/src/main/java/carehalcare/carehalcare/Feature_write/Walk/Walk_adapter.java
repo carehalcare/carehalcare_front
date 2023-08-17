@@ -1,5 +1,8 @@
 package carehalcare.carehalcare.Feature_write.Walk;
 
+import static carehalcare.carehalcare.DateUtils.formatDate;
+import static carehalcare.carehalcare.DateUtils.formatDatestring;
+
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -129,7 +132,7 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
     @Override
     public void onBindViewHolder(@NonNull Walk_adapter.CustomViewHolder viewholder, int position) {
 
-        viewholder.tv_walkcontent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        viewholder.tv_walkcontent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         viewholder.tv_walkcontent.setGravity(Gravity.CENTER);
 
 
@@ -151,21 +154,13 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
             }
         }
 
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-        String newDate = "";
-        try {
-            Date date = originalFormat.parse(mList.get(position).getcreatedDateTime());
-            newDate = newFormat.format(date);
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        viewholder.tv_walkcontent.setText(formatDatestring(mList.get(position).getcreatedDateTime()));
 
-        viewholder.tv_walkcontent.setText(newDate);        //      viewholder.iv_mealpic.setImageURI(seePhoto);
-        if(mList.get(position).getUriuri()=="uriuri"){
-            viewholder.tv_walkcontent.setText(mList.get(position).getcreatedDateTime());
-        }
+        //      viewholder.iv_mealpic.setImageURI(seePhoto);
+//        if(mList.get(position).getUriuri()=="uriuri"){
+//            viewholder.tv_walkcontent.setText(mList.get(position).getcreatedDateTime());
+//        }
 
     }
 

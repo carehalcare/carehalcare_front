@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="유의사항"
+            android:text="전달사항"
             android:textColor="@color/black"
             android:textSize="10pt" />
 
@@ -54,13 +54,6 @@
         android:gravity="center|top"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:textSize="8pt"
-            android:text="보호자 전달사항"
-            android:textColor="@color/black" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/noti_view"

@@ -10,6 +10,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -17,7 +18,7 @@ public interface Sleep_API {
     String URL = "http://172.20.4.180:8080/";
     @Headers("Content-Type: application/json")
     @POST("sleepstates")
-    Call<List<Sleep_text>> postDataSleep(
+    Call<Long> postDataSleep(
             @Body Sleep_text sleep_text
     );
     @GET("sleepstates/{id}")
@@ -26,12 +27,17 @@ public interface Sleep_API {
     @GET("sleepstates")
     Call<List<Sleep_text>> getDataSleep_3();
 
-    @GET("sleepstates/list/{userId}/{puserId}")
+    @GET("sleepstates/list/{uid}/{puid}")
     Call<List<Sleep_text>> getDataSleep(
-            @Path("userId") String userId,
-            @Path("puserId") String puserId
+            @Path("uid") String userId,
+            @Path("puid") String puserId
     );
 
     @DELETE("sleepstates/{id}")
     Call<Void> deleteDataSleep(@Path("id") Long id);
+
+    @PUT("sleepstates")
+    Call<Long> putDataSleep(
+            @Body Sleep_text_change sleep_text_change
+    );
 }

@@ -2,15 +2,8 @@ package carehalcare.carehalcare.Feature_write.Clean;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Clean_ResponseDTO {
+public class Clean_text_change {
     String createdDateTime;
-
-    //간병인아이디
-    @SerializedName("userId")
-    String userId = "";
-    //보호자아이디
-    @SerializedName("puserId")
-    String puserId="";
 
     @SerializedName("id")
     Long id;
@@ -21,28 +14,12 @@ public class Clean_ResponseDTO {
     @SerializedName("content")
     String content;
 
-    public Clean_ResponseDTO(String userId, String puserId, String cleanliness, String content) {
-        this.userId = userId;
-        this.puserId = puserId;
+    public Clean_text_change(Long id, String cleanliness, String content) {
+        this.id = id;
         this.cleanliness = cleanliness;
         this.content = content;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getPuserId() {
-        return puserId;
-    }
-
-    public void setPuserId(String puserId) {
-        this.puserId = puserId;
-    }
 
     public Long getId() {
         return id;

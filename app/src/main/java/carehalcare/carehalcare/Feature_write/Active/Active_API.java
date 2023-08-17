@@ -2,22 +2,21 @@ package carehalcare.carehalcare.Feature_write.Active;
 
 import java.util.List;
 
-import carehalcare.carehalcare.Feature_write.Medicine.Medicine_text;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_text;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
+
 
 public interface Active_API {
-    String URL = "http://192.168.0.18:8080/";
+
     @Headers("Content-Type: application/json")
     @POST("activities")
-    Call<List<Active_text>> postDataActive(
+    Call<Long> postDataActive(
             @Body Active_text active_text
     );
     @GET("activities/{id}")
@@ -26,12 +25,18 @@ public interface Active_API {
     @GET("activities")
     Call<List<Active_text>> getDataActive_3();
 
-    @GET("activities/list/{userId}/{puserId}")
+    @GET("activities/list/{uid}/{puid}")
     Call<List<Active_text>> getDataActive(
-            @Path("userId") String userId,
-            @Path("puserId") String puserId
+            @Path("uid") String userId,
+            @Path("puid") String puserId
     );
 
     @DELETE("activities/{id}")
     Call<Void> deleteDataActive(@Path("id") Long id);
+
+    //수정
+    @PUT("activities")
+    Call<Long> putDataActive(
+            @Body Active_text_change active_text_change
+    );
 }

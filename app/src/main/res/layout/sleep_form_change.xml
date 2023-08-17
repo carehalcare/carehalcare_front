@@ -23,7 +23,6 @@
         android:layout_margin="10dp"
         android:layout_gravity="center"
         >
-
         <RadioGroup
             android:gravity="center"
             android:layout_width="match_parent"
@@ -41,13 +40,14 @@
                 android:layout_height="48dp"
                 android:text="보통"
                 android:id="@+id/rb_sososleep"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:text="나쁨"
                 android:id="@+id/rb_badsleep"
                 android:layout_weight="1"/>
+
         </RadioGroup>
 
     </LinearLayout>
@@ -69,17 +69,36 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:id="@+id/et_sleepForm"
-        android:layout_gravity="center"
-        >
-    </EditText>
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_marginTop="20dp"
-        android:layout_width="100dp"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center"
-        android:background="@drawable/savebtn_radius"
-        android:id="@+id/btn_sleep_save"
-        android:text="저장"></androidx.appcompat.widget.AppCompatButton>
+        android:layout_margin="20dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/savebtn_radius"
+            android:backgroundTint="#CCCCCC"
+            android:text="취소"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_sleep_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/savebtn_radius"
+            android:text="수정"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

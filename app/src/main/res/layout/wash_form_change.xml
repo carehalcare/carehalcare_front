@@ -45,9 +45,10 @@
             android:layout_height="48dp"
             android:text="손발톱관리"
             android:textAlignment="center"
-            android:background="@drawable/button_color"
-            />
+            android:background="@drawable/button_color"/>
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,7 +64,7 @@
             android:text="세발간호"
             android:textAlignment="center"
             android:layout_marginRight="30dp"
-            android:background="@drawable/button_color"></androidx.appcompat.widget.AppCompatCheckBox>
+            android:background="@drawable/button_color"/>
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_bodyscrub"
             android:layout_width="100dp"
@@ -71,7 +72,7 @@
             android:text="세신"
             android:textAlignment="center"
             android:layout_marginRight="30dp"
-            android:background="@drawable/button_color"></androidx.appcompat.widget.AppCompatCheckBox>
+            android:background="@drawable/button_color"/>
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_shave"
             android:layout_width="100dp"
@@ -79,7 +80,7 @@
             android:text="면도"
             android:textAlignment="center"
             android:background="@drawable/button_color"
-            ></androidx.appcompat.widget.AppCompatCheckBox>
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -117,7 +118,7 @@
         android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="특이사항"></TextView>
+        android:text="특이사항"/>
     <EditText
         android:layout_marginTop="10dp"
         android:layout_gravity="center"
@@ -130,15 +131,35 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_marginTop="10dp"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_wash_save"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/savebtn_radius"
-        android:text="저장"/>
+        android:layout_margin="20dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/savebtn_radius"
+            android:backgroundTint="#CCCCCC"
+            android:text="취소"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_wash_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/savebtn_radius"
+            android:text="수정"/>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>

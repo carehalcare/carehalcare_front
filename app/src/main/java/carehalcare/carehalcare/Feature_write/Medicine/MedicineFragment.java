@@ -1,5 +1,7 @@
 package carehalcare.carehalcare.Feature_write.Medicine;
 
+import static carehalcare.carehalcare.DateUtils.formatDate;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -53,6 +55,8 @@ public class MedicineFragment extends Fragment {
     Long ids;  //TODO ids는 삭제할 id값
     private ArrayList<Medicine_text> medicineArrayList;
     private Medicine_adapter medicineAdapter;
+
+    private CheckBox cb_morning, cb_lunch, cb_dinner, cb_empty , cb_before, cb_after;
 
     public MedicineFragment() {
         // Required empty public constructor
@@ -129,12 +133,12 @@ public class MedicineFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
-                final CheckBox cb_morning = dialog.findViewById(R.id.cb_morning);
-                final CheckBox cb_lunch = dialog.findViewById(R.id.cb_lunch);
-                final CheckBox cb_dinner = dialog.findViewById(R.id.cb_dinner);
-                final CheckBox cb_empty = dialog.findViewById(R.id.cb_empty);
-                final CheckBox cb_before = dialog.findViewById(R.id.cb_before);
-                final CheckBox cb_after = dialog.findViewById(R.id.cb_after);
+                cb_morning = dialog.findViewById(R.id.cb_morning);
+                cb_lunch = dialog.findViewById(R.id.cb_lunch);
+                cb_dinner = dialog.findViewById(R.id.cb_dinner);
+                cb_empty = dialog.findViewById(R.id.cb_empty);
+                cb_before = dialog.findViewById(R.id.cb_before);
+                cb_after = dialog.findViewById(R.id.cb_after);
 
                 final EditText et_medicine_name = dialog.findViewById(R.id.et_medicine_name);
                 final Button btn_medicine_save = dialog.findViewById(R.id.btn_medicine_save);
@@ -150,44 +154,35 @@ public class MedicineFragment extends Fragment {
                         String medicine_time;
                         String medicine_state;
                         String medicine_name = et_medicine_name.getText().toString();
-                        if (cb_morning.isChecked()){
-                            morning = "아침 ";
-                        }if (cb_lunch.isChecked()){
-                            lunch = "점심 ";
-                        }if (cb_dinner.isChecked()){
-                            dinner = "저녁";
-                        }if (cb_empty.isChecked()){
-                            empty = "공복 ";
-                        }if (cb_before.isChecked()){
-                            before = "식전 ";
-                        }if (cb_after.isChecked()){
-                            after = "식후 ";
-                        }
+                        if (cb_morning.isChecked()){morning = "아침 ";}
+                        if (cb_lunch.isChecked()){lunch = "점심 ";}
+                        if (cb_dinner.isChecked()){dinner = "저녁";}
+                        if (cb_empty.isChecked()){empty = "공복 ";}
+                        if (cb_before.isChecked()){before = "식전 ";}
+                        if (cb_after.isChecked()){after = "식후 ";}
+
                         medicine_time = morning + lunch + dinner;
                         medicine_state = empty + before + after;
 
-                        Medicine_text dict = new Medicine_text(medicine_time, medicine_state, medicine_name, userid
-                                ,puserid);
+                        Medicine_text dict = new Medicine_text(medicine_time, medicine_state, medicine_name, userid,puserid);
                         medicineArrayList.add(0, dict); //첫번째 줄에 삽입됨
 
                         // 어댑터에서 RecyclerView에 반영하도록 합니다.
                         medicineAdapter.notifyItemInserted(0);
                         medicineAdapter.notifyDataSetChanged();
 
-                        medicineApi.postDatamedicine(dict).enqueue(new Callback<List<Medicine_text>>() {
+                        medicineApi.postDatamedicine(dict).enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(@NonNull Call<List<Medicine_text>> call, @NonNull Response<List<Medicine_text>> response) {
+                            public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                                 if (response.isSuccessful()) {
-                                    List<Medicine_text> body = response.body();
-                                    if (body != null) {
-                                    }
+
                                 } else {
                                     //실패
                                     Log.e("YMC", "stringToJson msg: 실패" + response.code());
                                 }
                             }
                             @Override
-                            public void onFailure(@NonNull Call<List<Medicine_text>> call, @NonNull Throwable t) {}
+                            public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
                         });
 
                         dialog.dismiss();
@@ -225,20 +220,18 @@ public class MedicineFragment extends Fragment {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
 
-                final TextView medicine_detail_date = dialog.findViewById(R.id.tv_medicine_detail_date);
                 final TextView medicine_detail_timne = dialog.findViewById(R.id.tv_medicine_detail_timne);
                 final TextView medicine_detail_state = dialog.findViewById(R.id.tv_medicine_detail_state);
                 final TextView medicine_detail_name = dialog.findViewById(R.id.tv_medicine_detail_name);
 
-                Date today_date = Calendar.getInstance().getTime();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 dd일", Locale.getDefault());
-                medicine_detail_date.setText(format.format(today_date));
                 medicine_detail_timne.setText(detail_medicine_text.gettime());
                 medicine_detail_state.setText(detail_medicine_text.getmealStatus());
                 medicine_detail_name.setText(detail_medicine_text.getmedicine());
 
                 final Button btn_medicinedetail = dialog.findViewById(R.id.btn_medicine_detail);
                 final Button btn_delete_medicine = dialog.findViewById(R.id.btn_medicine__delete_detail);
+                final Button btn_off = dialog.findViewById(R.id.btn_off);
+
                 btn_delete_medicine.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -272,10 +265,129 @@ public class MedicineFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
-                btn_medicinedetail.setOnClickListener(new View.OnClickListener() {
+                btn_off.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
+                    }
+                });
+
+                btn_medicinedetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        View cview = LayoutInflater.from(getContext())
+                                .inflate(R.layout.medicine_form_change, null, false);
+                        builder.setView(cview);
+                        final AlertDialog cdialog = builder.create();
+                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        cdialog.show();
+
+                        cb_morning = cdialog.findViewById(R.id.cb_morning);
+                        cb_lunch = cdialog.findViewById(R.id.cb_lunch);
+                        cb_dinner = cdialog.findViewById(R.id.cb_dinner);
+                        cb_empty = cdialog.findViewById(R.id.cb_empty);
+                        cb_before = cdialog.findViewById(R.id.cb_before);
+                        cb_after = cdialog.findViewById(R.id.cb_after);
+
+                        final EditText et_medicine_name = cdialog.findViewById(R.id.et_medicine_name);
+                        final Button btn_change = cdialog.findViewById(R.id.btn_medicine_change);
+                        final Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+
+                        et_medicine_name.setText(detail_medicine_text.getmedicine());
+                        String time = detail_medicine_text.gettime();
+                        String status = detail_medicine_text.getmealStatus();
+
+                        if (time.contains("아침")) {
+                            cb_morning.setChecked(true);
+                        } else {
+                            cb_morning.setChecked(false);
+                        }
+
+                        if (time.contains("점심")) {
+                            cb_lunch.setChecked(true);
+                        } else {
+                            cb_lunch.setChecked(false);
+                        }
+
+                        if (time.contains("저녁")) {
+                            cb_dinner.setChecked(true);
+                        } else {
+                            cb_dinner.setChecked(false);
+                        }
+
+                        if (status.contains("식전"))  cb_before.setChecked(true);
+                        else cb_before.setChecked(false);
+
+                        if (status.contains("식후")) cb_after.setChecked(true);
+                        else cb_after.setChecked(false);
+
+                        if (status.contains("공복")) cb_empty.setChecked(true);
+                        else cb_empty.setChecked(false);
+
+                        btn_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cdialog.dismiss();
+                            }
+                        });
+
+                        btn_change.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                String morning = "";
+                                String lunch = "";
+                                String dinner = "";
+                                String empty = "";
+                                String before = "";
+                                String after = "";
+                                String medicine_time;
+                                String medicine_state;
+
+                                if (cb_morning.isChecked()) {
+                                    morning = "아침 ";
+                                }
+                                if (cb_lunch.isChecked()) {
+                                    lunch = "점심 ";
+                                }
+                                if (cb_dinner.isChecked()) {
+                                    dinner = "저녁";
+                                }
+                                if (cb_empty.isChecked()) {
+                                    empty = "공복 ";
+                                }
+                                if (cb_before.isChecked()) {
+                                    before = "식전 ";
+                                }
+                                if (cb_after.isChecked()) {
+                                    after = "식후 ";
+                                }
+
+                                medicine_time = morning + lunch + dinner;
+                                medicine_state = empty + before + after;
+                                String medicine_name = et_medicine_name.getText().toString();
+
+                                Medicine_text_change update = new Medicine_text_change(ids, medicine_time, medicine_state, medicine_name);
+                                medicineApi.putDatamedicine(update).enqueue(new Callback<Long>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.e("약 수정", "약 수정 -------------------" + response.code());
+                                            cdialog.dismiss();
+                                        } else {
+                                            //실패
+                                            Log.e("약 수정", "약 수정 실패" + response.code());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {
+                                    }
+                                });
+
+                                dialog.dismiss();
+                            }
+                        });
                     }
                 });
 
