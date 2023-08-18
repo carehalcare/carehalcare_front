@@ -85,10 +85,6 @@ public class WashFragment extends Fragment {
         washAdapter = new Wash_adapter( washArrayList);
         mRecyclerView.setAdapter(washAdapter);
 
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLinearLayoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
@@ -107,12 +103,14 @@ public class WashFragment extends Fragment {
                                 String bodyscrub = "-"; //세신
                                 String shave = "-"; //면도
 
-                                if ((response.body().get(i).getCleanliness()).contains("세안")){washface = "세안 완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("구강")){washmouth = "구강청결 완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("손발톱")){nailcare = "손발톱관리 완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("세발간호")){haircare = "세발간호 완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("세신")){bodyscrub = "세신 완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("면도")){shave = "면도 완료";}
+                                String[] values = datas.get(i).getCleanliness().split(" ");
+
+                                if (values[0].equals("Y")){washface = "Y";}
+                                if (values[1].equals("Y")){washmouth = "Y";}
+                                if (values[2].equals("Y")){nailcare = "Y";}
+                                if (values[3].equals("Y")){haircare = "Y";}
+                                if (values[4].equals("Y")){bodyscrub = "Y";}
+                                if (values[5].equals("Y")){shave = "Y";}
                                 Wash_text dict_0 = new Wash_text(washface,washmouth,nailcare,haircare,
                                         bodyscrub, response.body().get(i).getPart(), shave, response.body().get(i).getContent());
                                 washArrayList.add(dict_0);
@@ -153,38 +151,38 @@ public class WashFragment extends Fragment {
                 final Button btn_wash_active = dialog.findViewById(R.id.btn_wash_save);
                 btn_wash_active.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        String washface = "";
-                        String washmouth = "";
-                        String nailcare = "";
-                        String haircare = "";
-                        String bodyscrub = "";
-                        String shave = "";
+                        String washface = "-";
+                        String washmouth = "-";
+                        String nailcare = "-";
+                        String haircare = "-";
+                        String bodyscrub = "-";
+                        String shave = "-";
 
                         String bodyscrub_point = et_bodyscrub.getText().toString();
                         String washForm = et_washForm.getText().toString();
 
-                        if (cb_washface.isChecked()){washface = "세안 완료 ";}
+                        if (cb_washface.isChecked()){washface = "Y";}
                         else if (cb_washface.isChecked() == false){washface = "-";}
 
-                        if (cb_washmouth.isChecked()){washmouth = "구강청결 완료 ";}
+                        if (cb_washmouth.isChecked()){washmouth = "Y";}
                         else if (cb_washmouth.isChecked() == false){washmouth = "-";}
 
-                        if (cb_nailcare.isChecked()){nailcare = "손발톱관리 완료 ";}
+                        if (cb_nailcare.isChecked()){nailcare = "Y";}
                         else  if (cb_nailcare.isChecked() == false){nailcare = "-";}
 
-                        if (cb_haircare.isChecked()){haircare = "세발간호 완료 ";}
+                        if (cb_haircare.isChecked()){haircare = "Y";}
                         else  if (cb_haircare.isChecked() == false){haircare = "-";}
 
-                        if (cb_bodyscrub.isChecked()){bodyscrub = "세신 완료 ";}
+                        if (cb_bodyscrub.isChecked()){bodyscrub = "Y";}
                         else  if (cb_bodyscrub.isChecked() == false){bodyscrub = "-";}
 
-                        if (cb_shave.isChecked()){shave = "면도 완료 ";}
+                        if (cb_shave.isChecked()){shave = "Y";}
                         else  if (cb_shave.isChecked() == false){shave = "-";}
 
                         if (bodyscrub_point.length()==0){bodyscrub_point = "-";};
                         if (washForm.length()==0){washForm = "-";};
 
-                        String cleaness = washface+washmouth+nailcare+haircare+bodyscrub+shave;
+                        String cleaness = washface+ " " + washmouth+" "+nailcare+" "+haircare+" "+bodyscrub+" "+shave;
                         Wash_text dict = new Wash_text(washface,washmouth,nailcare,haircare,bodyscrub,
                                 shave,bodyscrub_point,washForm);
                         washArrayList.add(0, dict); //첫번째 줄에 삽입됨
@@ -259,12 +257,13 @@ public class WashFragment extends Fragment {
                 final TextView washdetail_scrub_point  = dialog.findViewById(R.id.tv_washdetail_scrub_point);
                 final TextView washdetail_et  = dialog.findViewById(R.id.tv_washdetail_et);
 
-                washdetail_face.setText(detail_wash_text.getWashface());
-                washdetail_mouth.setText(detail_wash_text.getWashmouth());
-                washdetail_nail.setText(detail_wash_text.getNailcare());
-                washdetail_hair.setText(detail_wash_text.getHaircare());
-                washdetail_scrub.setText(detail_wash_text.getBodyscrub());
-                washdetail_shave.setText(detail_wash_text.getShave());
+                if(detail_wash_text.getWashface().equals("Y")) washdetail_face.setText("완료");
+                if (detail_wash_text.getWashmouth().equals("Y")) washdetail_mouth.setText("완료");
+                if (detail_wash_text.getNailcare().equals("Y")) washdetail_nail.setText("완료");
+                if (detail_wash_text.getHaircare().equals("Y")) washdetail_hair.setText("완료");
+                if (detail_wash_text.getBodyscrub().equals("Y")) washdetail_scrub.setText("완료");
+                if (detail_wash_text.getShave().equals("Y"))  washdetail_shave.setText("완료");
+
                 washdetail_scrub_point.setText(detail_wash_text.getEt_bodyscrub());
                 washdetail_et.setText(detail_wash_text.getEt_washForm());
 
@@ -335,8 +334,11 @@ public class WashFragment extends Fragment {
 
                         String form = detail_wash_text.getEt_washForm();
                         String pointform = detail_wash_text.getEt_bodyscrub();
-                        et_washForm.setText(form);
-                        et_bodyscrub.setText(pointform);
+                        if(form.equals("-"))    et_washForm.setText("");
+                        else et_washForm.setText(form);
+
+                        if (et_bodyscrub.equals("-"))    et_bodyscrub.setText("");
+                        else et_bodyscrub.setText(pointform);
 
                         String face = detail_wash_text.getWashface();
                         String mouth = detail_wash_text.getWashmouth();
@@ -345,12 +347,12 @@ public class WashFragment extends Fragment {
                         String body = detail_wash_text.getBodyscrub();
                         String shave = detail_wash_text.getShave();
 
-                        if(face.contains("완료")) cb_washface.setChecked(true);
-                        if(mouth.contains("완료")) cb_washmouth.setChecked(true);
-                        if(nail.contains("완료")) cb_nailcare.setChecked(true);
-                        if(hair.contains("완료")) cb_haircare.setChecked(true);
-                        if(body.contains("완료")) cb_bodyscrub.setChecked(true);
-                        if(shave.contains("완료")) cb_shave.setChecked(true);
+                        if(face.contains("Y")) cb_washface.setChecked(true);
+                        if(mouth.contains("Y")) cb_washmouth.setChecked(true);
+                        if(nail.contains("Y")) cb_nailcare.setChecked(true);
+                        if(hair.contains("Y")) cb_haircare.setChecked(true);
+                        if(body.contains("Y")) cb_bodyscrub.setChecked(true);
+                        if(shave.contains("Y")) cb_shave.setChecked(true);
 
                         btn_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -370,28 +372,28 @@ public class WashFragment extends Fragment {
                                 String bodyscrub_point = et_bodyscrub.getText().toString();
                                 String washForm = et_washForm.getText().toString();
 
-                                if (cb_washface.isChecked()){washface = "세안 완료 ";}
+                                if (cb_washface.isChecked()){washface = "Y";}
                                 else if (cb_washface.isChecked() == false){washface = "-";}
 
-                                if (cb_washmouth.isChecked()){washmouth = "구강청결 완료 ";}
+                                if (cb_washmouth.isChecked()){washmouth = "Y";}
                                 else if (cb_washmouth.isChecked() == false){washmouth = "-";}
 
-                                if (cb_nailcare.isChecked()){nailcare = "손발톱관리 완료 ";}
+                                if (cb_nailcare.isChecked()){nailcare = "Y";}
                                 else  if (cb_nailcare.isChecked() == false){nailcare = "-";}
 
-                                if (cb_haircare.isChecked()){haircare = "세발간호 완료 ";}
+                                if (cb_haircare.isChecked()){haircare = "Y";}
                                 else  if (cb_haircare.isChecked() == false){haircare = "-";}
 
-                                if (cb_bodyscrub.isChecked()){bodyscrub = "세신 완료 ";}
+                                if (cb_bodyscrub.isChecked()){bodyscrub = "Y";}
                                 else  if (cb_bodyscrub.isChecked() == false){bodyscrub = "-";}
 
-                                if (cb_shave.isChecked()){shave = "면도 완료 ";}
+                                if (cb_shave.isChecked()){shave = "Y";}
                                 else  if (cb_shave.isChecked() == false){shave = "-";}
 
                                 if (bodyscrub_point.length()==0){bodyscrub_point = "-";};
                                 if (washForm.length()==0){washForm = "-";};
 
-                                String cleaness = washface+washmouth+nailcare+haircare+bodyscrub+shave;
+                                String cleaness = washface +" "+washmouth+ " "+nailcare+" "+haircare+" "+bodyscrub+" "+shave;
 
                                 Wash_text_change update = new Wash_text_change(ids,cleaness,bodyscrub_point,washForm);
                                 washApi.putDataWash(update).enqueue(new Callback<Long>() {

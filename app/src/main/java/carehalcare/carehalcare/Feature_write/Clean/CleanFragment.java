@@ -80,9 +80,7 @@ public class CleanFragment extends Fragment {
         cleanAdapter = new Clean_adapter( cleanArrayList);
         mRecyclerView.setAdapter(cleanAdapter);
 
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLinearLayoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecorator(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         cleanApi.getDataClean(userid,puserid).enqueue(new Callback<List<Clean_ResponseDTO>>() {
@@ -98,9 +96,16 @@ public class CleanFragment extends Fragment {
                                 String changecloths = "-";
                                 String ventilation = "-";
 
-                                if ((response.body().get(i).getCleanliness()).contains("시트변경완료")){changesheet = "시트변경완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("환의교체완료")){changecloths = "환의교체완료";}
-                                if ((response.body().get(i).getCleanliness()).contains("환기완료")){ventilation = "환기완료";}
+                                String cleandata = datas.get(i).getCleanliness();
+                                String[] values = cleandata.split(" ");
+                                String sheet = values[0];
+                                String cloth = values[1];
+                                String ven = values[2];
+
+                                if (sheet.equals("Y")){changesheet = "Y";}
+                                if (cloth.equals("Y")){changecloths = "Y";}
+                                if (ven.equals("Y")){ventilation = "Y";}
+
                                 Clean_text dict_0 = new Clean_text(changesheet,changecloths,ventilation,
                                         response.body().get(i).getContent(),response.body().get(i).getCreatedDateTime());
                                 cleanArrayList.add(dict_0);
@@ -144,11 +149,11 @@ public class CleanFragment extends Fragment {
                         String ventilation = "-";
                         String cleanForm = et_cleanForm.getText().toString();
 
-                        if (cb_changeSheet.isChecked()){changeSheet = "시트변경완료 ";}
+                        if (cb_changeSheet.isChecked()){changeSheet = "Y";}
 
-                        if (cb_changeCloth.isChecked()){changeCloth = "환의교체완료 ";}
+                        if (cb_changeCloth.isChecked()){changeCloth = "Y";}
 
-                        if (cb_ventilation.isChecked()){ventilation = "환기완료 ";}
+                        if (cb_ventilation.isChecked()){ventilation = "Y";}
 
                         String cleaness = changeSheet+" "+changeCloth+" "+ventilation;
 
@@ -218,9 +223,14 @@ public class CleanFragment extends Fragment {
                 detail_ventilation = dialog.findViewById(R.id.tv_cleandatail_ventilation);
                 et_detail_clean  = dialog.findViewById(R.id.tv_cleandetail_et);
 
-                detail_sheet.setText(detail_clean_text.getChangeSheet());
-                detail_cloth.setText(detail_clean_text.getChangeCloth());
-                detail_ventilation.setText(detail_clean_text.getVentilation());
+                String sheet = detail_clean_text.getChangeSheet();
+                String cloth = detail_clean_text.getChangeCloth();
+                String ven = detail_clean_text.getVentilation();
+
+                if (sheet.contains("Y")) detail_sheet.setText("완료");
+                if (cloth.contains("Y")) detail_cloth.setText("완료");
+                if (ven.contains("Y")) detail_ventilation.setText("완료");
+
                 et_detail_clean.setText(detail_clean_text.getEt_cleanForm());
 
                 final Button btn_cleandetail = dialog.findViewById(R.id.btn_detail_change);
@@ -287,11 +297,14 @@ public class CleanFragment extends Fragment {
                         String sheet = detail_clean_text.getChangeSheet();
                         String cloth = detail_clean_text.getChangeCloth();
                         String ventil = detail_clean_text.getVentilation();
-                        et_cleanForm.setText(detail_clean_text.getEt_cleanForm());
 
-                        if (sheet.contains("시트변경완료")) cb_changeSheet.setChecked(true);
-                        if (cloth.contains("환의교체완료")) cb_changeCloth.setChecked(true);
-                        if (ventil.contains("환기완료")) cb_ventilation.setChecked(true);
+                        if (detail_clean_text.getEt_cleanForm().equals("-"))
+                            et_cleanForm.setText("");
+                        else et_cleanForm.setText(detail_clean_text.getEt_cleanForm());
+
+                        if (sheet.contains("Y")) cb_changeSheet.setChecked(true);
+                        if (cloth.contains("Y")) cb_changeCloth.setChecked(true);
+                        if (ventil.contains("Y")) cb_ventilation.setChecked(true);
 
                         btn_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -307,11 +320,11 @@ public class CleanFragment extends Fragment {
                                 String ventilation = "-";
                                 String cleanForm = et_cleanForm.getText().toString();
 
-                                if (cb_changeSheet.isChecked()){changeSheet = "시트변경완료 ";}
+                                if (cb_changeSheet.isChecked()){changeSheet = "Y";}
 
-                                if (cb_changeCloth.isChecked()){changeCloth = "환의교체완료 ";}
+                                if (cb_changeCloth.isChecked()){changeCloth = "Y";}
 
-                                if (cb_ventilation.isChecked()){ventilation = "환기완료 ";}
+                                if (cb_ventilation.isChecked()){ventilation = "Y";}
 
                                 String cleaness = changeSheet+" "+changeCloth+" "+ventilation;
 

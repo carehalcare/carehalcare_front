@@ -14,7 +14,7 @@ public class Wash_text {
 
     Long id;
     public Wash_text(String washface, String washmouth, String nailcare, String haircare, String bodyscrub,
-                     String shave, String et_bodyscrub, String et_washForm) {
+                     String et_bodyscrub, String shave, String et_washForm) {
         this.washface = washface;
         this.washmouth = washmouth;
         this.nailcare = nailcare;
