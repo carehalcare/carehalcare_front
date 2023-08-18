@@ -207,16 +207,16 @@ public class ActiveFragment extends Fragment {
                 String getchange = detail_active_text.getPosition();
 
                 if(getjahal.equals("Y"))
-                    activedetail_jahal.setText("재활치료 완료");
-                else activedetail_jahal.setText("X");
+                    activedetail_jahal.setText("완료");
+                else activedetail_jahal.setText("-");
 
                 if(getbohang.equals("Y"))
-                    activedetail_bohang.setText("보행도움 완료");
-                else activedetail_bohang.setText("X");
+                    activedetail_bohang.setText("완료");
+                else activedetail_bohang.setText("-");
 
                 if (getchange.equals("Y"))
-                    activedetail_change.setText("체위변경 완료");
-                else activedetail_change.setText("X");
+                    activedetail_change.setText("완료");
+                else activedetail_change.setText("-");
 
                 final Button btn_active_detail = dialog.findViewById(R.id.btn_active_detail);
                 final Button btn_active_delete = dialog.findViewById(R.id.btn_active_detail_delete);
