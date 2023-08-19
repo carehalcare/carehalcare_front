@@ -131,23 +131,26 @@ public class BowelFragment extends Fragment {
                 btn_bowel_save.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
-                        Long bowelcount = Long.valueOf(et_bowelCount.getText().toString());
+                        Long bowelcount;
+                        String inputValue = et_bowelCount.getText().toString();
+
+                        if (inputValue.isEmpty()) {
+                            bowelcount = 0L;
+                        } else {
+                            bowelcount = Long.valueOf(inputValue);
+                        }
 
                         String bowelForm = et_bowelForm.getText().toString();
 
                         if (bowelForm.length()==0){bowelForm = "-";};
 
                         Bowel_text dict = new Bowel_text(userid,puserid,bowelcount, bowelForm);
-                        bowelArrayList.add(0, dict); //첫번째 줄에 삽입됨
-                        //mArrayList.add(dict); //마지막 줄에 삽입됨
-
-                        // 어댑터에서 RecyclerView에 반영하도록 합니다.
+                        bowelArrayList.add(0, dict);
                         bowelAdapter.notifyItemInserted(0);
                         bowelAdapter.notifyDataSetChanged();
                         bowelApi.postDataBowel(dict).enqueue(new Callback<Long>() {
                             @Override
                             public void onResponse(Call<Long> call, Response<Long> response) {
-                                Log.e("######################################################","뭬야");
                                 Log.e("보낼때bodyek ============",response.body()+"");
 
                                 if (response.isSuccessful()) {
@@ -255,7 +258,9 @@ public class BowelFragment extends Fragment {
                         Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
 
                         et_count.setText(String.valueOf(detail_bowel_text.getCount()));
-                        et_form.setText(detail_bowel_text.getContent());
+
+                        if (detail_bowel_text.getContent().length() == 0) et_form.setText("");
+                        else et_form.setText(detail_bowel_text.getContent());
 
                         btn_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -266,7 +271,14 @@ public class BowelFragment extends Fragment {
 
                         btn_change.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
-                                Long count = Long.valueOf(et_count.getText().toString());
+                                Long count;
+                                String inputValue = et_count.getText().toString();
+
+                                if (inputValue.isEmpty()) {
+                                    count = 0L;
+                                } else {
+                                    count = Long.valueOf(inputValue);
+                                }
                                 String content = et_form.getText().toString();
                                 if (content.length()==0){content = "-";};
 
