@@ -81,7 +81,7 @@ public class Walk_form  extends AppCompatActivity {
         userid = getIntent().getStringExtra("userid");
         puserid = getIntent().getStringExtra("puserid");
 
-        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Long mNow = System.currentTimeMillis();
         Date mDate = new Date(mNow);

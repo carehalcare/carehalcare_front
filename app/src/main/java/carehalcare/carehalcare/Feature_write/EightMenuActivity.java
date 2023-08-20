@@ -19,40 +19,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.content.Intent;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
 
 import carehalcare.carehalcare.Feature_mainpage.MainActivity;
 import carehalcare.carehalcare.Feature_write.Active.ActiveFragment;
 import carehalcare.carehalcare.Feature_write.Allmenu.AllmenuFragment;
 import carehalcare.carehalcare.Feature_write.Bowel.BowelFragment;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_adapter;
-import carehalcare.carehalcare.Feature_write.Bowel.Bowel_text;
 import carehalcare.carehalcare.Feature_write.Clean.CleanFragment;
-import carehalcare.carehalcare.Feature_write.Clean.Clean_adapter;
-import carehalcare.carehalcare.Feature_write.Clean.Clean_text;
 import carehalcare.carehalcare.Feature_write.Meal.MealFragment;
 import carehalcare.carehalcare.Feature_write.Meal.Meal_API;
-import carehalcare.carehalcare.Feature_write.Meal.Meal_adapter;
-import carehalcare.carehalcare.Feature_write.Meal.Meal_text;
 import carehalcare.carehalcare.Feature_write.Medicine.MedicineFragment;
-import carehalcare.carehalcare.Feature_write.Medicine.Medicine_adapter;
-import carehalcare.carehalcare.Feature_write.Medicine.Medicine_text;
-import carehalcare.carehalcare.Feature_write.Active.Active_adapter;
-import carehalcare.carehalcare.Feature_write.Active.Active_text;
 import carehalcare.carehalcare.Feature_write.Sleep.SleepFragment;
-import carehalcare.carehalcare.Feature_write.Sleep.Sleep_adapter;
-import carehalcare.carehalcare.Feature_write.Sleep.Sleep_text;
 import carehalcare.carehalcare.Feature_write.Walk.WalkFragment;
-import carehalcare.carehalcare.Feature_write.Walk.Walk_adapter;
-import carehalcare.carehalcare.Feature_write.Walk.Walk_text;
 import carehalcare.carehalcare.Feature_write.Wash.WashFragment;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_adapter;
-import carehalcare.carehalcare.Feature_write.Wash.Wash_text;
 import carehalcare.carehalcare.R;
 import carehalcare.carehalcare.TokenUtils;
 import retrofit2.Retrofit;
@@ -65,33 +49,14 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
     private static final int REQUEST_CODE = 1099;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int MY_PERMISSION_CAMERA2 = 1112;
-    String mCurrentPhotoPath;
-    Uri imageUri;
-    private ArrayList<Active_text> activeArrayList;
-    private ArrayList<Clean_text> cleanArrayList;
-    private ArrayList<Wash_text> washArrayList;
-    private ArrayList<Sleep_text> sleepArrayList;
-    private ArrayList<Bowel_text> bowelArrayList;
-    private ArrayList<Medicine_text> medicineArrayList;
-    private Medicine_adapter medicineAdapter;
-    private Active_adapter activeAdapter;
-    private Clean_adapter cleanAdapter;
-    private Bowel_adapter bowelAdapter;
-    private Wash_adapter washAdapter;
-    private Sleep_adapter sleepAdapter;
-    private ArrayList<Meal_text> mealArrayList;
-    private Meal_adapter mealAdapter;
-    private Walk_adapter walkAdapter;
-    private ArrayList<Walk_text> walkArrayList;
+
+    private ImageButton btn_all, btn_meal, btn_walk, btn_clean, btn_wash, btn_bowel, btn_active, btn_medicine, btn_sleep;
 
     Button btn_home;
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Meal_API.URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,9 +69,6 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         }
 
 
-        Intent intent = getIntent();
-//        userid = intent.getStringExtra("userid");
-//        puserid = intent.getStringExtra("puserid");
         userid = TokenUtils.getUser_Id("User_Id");
         puserid = TokenUtils.getPUser_Id("PUser_Id");
 
@@ -144,6 +106,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         transaction.replace(R.id.container_menu, allmenuFragment);
         transaction.commit();
 
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(true);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
+
     }
     public void onMeal(View view) {
         deleteview();
@@ -156,6 +145,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         mealFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, mealFragment);
         transaction.commit();
+
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(true);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
 
     }
 
@@ -171,6 +187,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         transaction.replace(R.id.container_menu, walkFragment);
         transaction.commit();
 
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(true);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
+
     }
 
     public void onMedicine(View view) {
@@ -184,6 +227,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         medicineFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, medicineFragment);
         transaction.commit();
+
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(true);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
     }
 
 
@@ -198,6 +268,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         activeFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, activeFragment);
         transaction.commit();
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(true);
+
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
     }
 
     public void onSleep(View view) {
@@ -212,6 +309,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         transaction.replace(R.id.container_menu, sleepFragment);
         transaction.commit();
 
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(true);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
+
     }
     public void onToilet(View view) {
         deleteview();
@@ -224,6 +348,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         bowelFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, bowelFragment);
         transaction.commit();
+
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(true);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
 
     }
     public void onWash(View view) {
@@ -238,6 +389,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         transaction.replace(R.id.container_menu, washFragment);
         transaction.commit();
 
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(false);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(true);
+
     }
     public void onClean(View view) {
         deleteview();
@@ -250,6 +428,33 @@ public class EightMenuActivity extends AppCompatActivity implements Button.OnCli
         cleanFragment.setArguments(bundle);
         transaction.replace(R.id.container_menu, cleanFragment);
         transaction.commit();
+
+        btn_all = findViewById(R.id.btn_all);
+        btn_all.setSelected(false);
+
+        btn_walk = findViewById(R.id.btn_walk);
+        btn_walk.setSelected(false);
+
+        btn_meal = findViewById(R.id.btn_meal);
+        btn_meal.setSelected(false);
+
+        btn_active = findViewById(R.id.btn_active);
+        btn_active.setSelected(false);
+
+        btn_bowel = findViewById(R.id.btn_toilet);
+        btn_bowel.setSelected(false);
+
+        btn_sleep = findViewById(R.id.btn_sleep);
+        btn_sleep.setSelected(false);
+
+        btn_medicine = findViewById(R.id.btn_medicine);
+        btn_medicine.setSelected(false);
+
+        btn_clean = findViewById(R.id.btn_clean);
+        btn_clean.setSelected(true);
+
+        btn_wash = findViewById(R.id.btn_wash);
+        btn_wash.setSelected(false);
     }
 
     public void deleteview(){
