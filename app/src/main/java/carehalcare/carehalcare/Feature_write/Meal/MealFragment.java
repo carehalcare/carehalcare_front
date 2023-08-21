@@ -170,7 +170,21 @@ public class MealFragment extends Fragment {
                                         iv_meal_detail.setImageBitmap(detail_meal_text.getPhotobitmap());
                                     }
 
-                                    tv_meal_detail.setText(detail_meal_text.getContent());
+                                    mealapi.getdatameal2(ids).enqueue(new Callback<Meal_ResponseDTO>() {
+                                        @Override
+                                        public void onResponse(Call<Meal_ResponseDTO> call, Response<Meal_ResponseDTO> response) {
+                                            if (response.isSuccessful()){
+                                                if (response.body()!=null){
+                                                    tv_meal_detail.setText(response.body().getContent());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Meal_ResponseDTO> call, Throwable t) {
+
+                                        }
+                                    });
 
                                     final Button btn_meal_detail = dialog.findViewById(R.id.btn_meal_detail);
                                     final Button btn_off = dialog.findViewById(R.id.btn_off);
@@ -282,13 +296,13 @@ public class MealFragment extends Fragment {
                         }}
                     else{
                             Log.e("등록중?","+");
-                            Toast.makeText(getContext(), "아직 등록 중 입니다, 기다려주세요", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "아직 등록 중 입니다, 기다려주세요", Toast.LENGTH_SHORT).show();
                     }
                     }
                     @Override
                     public void onFailure(Call<List<Meal_ResponseDTO>> call, Throwable t) {
                         Log.e("통신에러","+"+t.toString());
-                        Toast.makeText(getContext(), "통신에러", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "통신에러", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -308,6 +322,9 @@ public class MealFragment extends Fragment {
                     Bitmap mealbitmap;
                     String filepath_;
                     String times;
+                    if (datas.size()==0){
+                        Toast.makeText(getActivity(), "식사 기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
                     for (int i = 0; i < datas.size(); i++) {
 
 //                        encodedString = response.body().get(i).getImages().get(0).getEncodedString();
@@ -330,7 +347,7 @@ public class MealFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Meal_ResponseDTO>> call, Throwable t) {
                 Log.e("통신에러","+"+t.toString());
-                Toast.makeText(getContext(), "통신에러", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "통신에러", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -377,7 +394,7 @@ public class MealFragment extends Fragment {
                 }
             }
         } else {
-            Toast.makeText(getContext(), "저장공간이 접근 불가능한 기기입니다", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "저장공간이 접근 불가능한 기기입니다", Toast.LENGTH_SHORT).show();
             return;
         }
     }
@@ -416,7 +433,7 @@ public class MealFragment extends Fragment {
                         String mealTodayResult;
                         mealTodayResult = tsa;
                         Date today_date = Calendar.getInstance().getTime();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss", Locale.getDefault());
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.getDefault());
                         String seeText = format.format(today_date);
 
                         Meal_text dict = new Meal_text(uris, mealTodayResult, Long.valueOf(1), "uri",seeText,"uriru");

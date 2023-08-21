@@ -209,7 +209,7 @@ public class WalkFragment extends Fragment {
                     @Override
                     public void onFailure(Call<List<Walk_ResponseDTO>> call, Throwable t) {
                         Log.e("통신에러","+"+t.toString());
-                        Toast.makeText(getContext(), "통신에러", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "통신에러", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -232,6 +232,9 @@ public class WalkFragment extends Fragment {
 //                    Bitmap mealbitmap;
                     String filepath_;
                     String times;
+                    if (datas.size()==0){
+                        Toast.makeText(getActivity(), "산책 기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
 
                     for (int i = 0; i < datas.size(); i++) {
                         times = response.body().get(i).getCreatedDateTime();
@@ -250,7 +253,7 @@ public class WalkFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Walk_ResponseDTO>> call, Throwable t) {
                 Log.e("통신에러","+"+t.toString());
-                Toast.makeText(getContext(), "통신에러", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "통신에러", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -283,7 +286,7 @@ public class WalkFragment extends Fragment {
                     activityResultPicture.launch(takePictureIntent);                }
             }
         } else {
-            Toast.makeText(getContext(), "저장공간이 접근 불가능한 기기입니다", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "저장공간이 접근 불가능한 기기입니다", Toast.LENGTH_SHORT).show();
             return;
         }
     }
@@ -334,7 +337,7 @@ public class WalkFragment extends Fragment {
                         Uri uris = result.getData().getParcelableExtra("uris");
 
                         Date today_date = Calendar.getInstance().getTime();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss", Locale.getDefault());
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.getDefault());
                         String seeText = format.format(today_date);
 
                         Walk_text dict = new Walk_text(uris, Long.valueOf(1), "uri",seeText,"uriuri");

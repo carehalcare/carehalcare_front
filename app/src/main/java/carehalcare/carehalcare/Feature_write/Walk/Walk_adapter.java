@@ -158,9 +158,9 @@ public class Walk_adapter extends RecyclerView.Adapter<Walk_adapter.CustomViewHo
         viewholder.tv_walkcontent.setText(formatDatestring(mList.get(position).getcreatedDateTime()));
 
         //      viewholder.iv_mealpic.setImageURI(seePhoto);
-//        if(mList.get(position).getUriuri()=="uriuri"){
-//            viewholder.tv_walkcontent.setText(mList.get(position).getcreatedDateTime());
-//        }
+        if(mList.get(position).getUriuri()=="uriuri"){
+            viewholder.tv_walkcontent.setText(mList.get(position).getcreatedDateTime());
+        }
 
     }
 

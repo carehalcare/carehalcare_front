@@ -134,7 +134,11 @@ public class AllmenuFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.e("제네릭타입","success");
                     Log.e("제네릭타입",response.body().size()+"");
+
                     if (response.body() != null) {
+                        if (response.body().size()==0){
+                            Toast.makeText(getActivity(), "기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
                         for (int i = 0; i < response.body().size(); i++) {
                             BoardResponseDto boardResponseDto = new BoardResponseDto(response.body().get(i).getId(),
                                     response.body().get(i).getUserId(),response.body().get(i).getPuserId(),
