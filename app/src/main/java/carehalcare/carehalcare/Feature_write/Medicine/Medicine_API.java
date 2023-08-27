@@ -31,7 +31,7 @@ public interface Medicine_API {
             @Path("puid") String puserId
     );
 
-    @DELETE("/administrations/{id}")
+    @DELETE("administrations/{id}")
     Call<Void> deleteDataMedicine(@Path("id") Long id);
 
     @PUT("administrations")

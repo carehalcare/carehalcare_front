@@ -260,7 +260,7 @@ public class CommuteActivity extends AppCompatActivity {
                 }
             }
         });
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);    // 객체 얻기
         readfromIntent(getIntent());
         pendingIntent = PendingIntent.getActivity(this,0,
                 new Intent(this,getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),

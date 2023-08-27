@@ -82,6 +82,9 @@ public class ActiveFragment extends Fragment {
                     if (response.body() != null) {
                         List<Active_text> datas = response.body();
                         if (datas != null) {
+                            if (datas.size()==0){
+                                Toast.makeText(getActivity(), "활동 기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
                             activeArrayList.clear();
                             for (int i = 0; i < datas.size(); i++) {
                                 Active_text dict_0 = new Active_text(response.body().get(i).getId(),response.body().get(i).getUserId(),
@@ -93,6 +96,7 @@ public class ActiveFragment extends Fragment {
                             }
                             Log.e("getActive success", "======================================");
                         }
+
                     }
                 }
             }
@@ -152,7 +156,7 @@ public class ActiveFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     Log.e("등록 성공 ============",response.body()+"");
                                     Log.e("재활보행체위 값------------", jahal+bohang+change);
-                                    Toast.makeText(getContext(), "활동 기록이 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "활동 기록이 등록되었습니다.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     //실패
                                     Log.e("활동", "stringToJson msg: 실패" + response.code());
@@ -181,6 +185,192 @@ public class ActiveFragment extends Fragment {
                                     ids = response.body().get(position).getId();
                                     Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
 
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    View view = LayoutInflater.from(getContext())
+                                            .inflate(R.layout.active_detail, null, false);
+                                    builder.setView(view);
+                                    final AlertDialog dialog = builder.create();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.show();
+
+                                    activedetail_jahal = dialog.findViewById(R.id.tv_activedetail_jahal);
+                                    activedetail_bohang = dialog.findViewById(R.id.tv_activedetail_bohang);
+                                    activedetail_change = dialog.findViewById(R.id.tv_activedetail_change);
+
+                                    activeApi.getDataActive_2(ids).enqueue(new Callback<Active_text>() {
+                                        @Override
+                                        public void onResponse(Call<Active_text> call, Response<Active_text> response) {
+                                            if (response.isSuccessful()){
+                                                if(response.body()!=null){
+                                                    String getjahal = response.body().getRehabilitation();
+                                                    String getbohang = response.body().getWalkingAssistance();
+                                                    String getchange = response.body().getPosition();
+
+                                                    if(getjahal.equals("Y"))
+                                                        activedetail_jahal.setText("완료");
+                                                    else activedetail_jahal.setText("-");
+
+                                                    if(getbohang.equals("Y"))
+                                                        activedetail_bohang.setText("완료");
+                                                    else activedetail_bohang.setText("-");
+
+                                                    if (getchange.equals("Y"))
+                                                        activedetail_change.setText("완료");
+                                                    else activedetail_change.setText("-");
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Active_text> call, Throwable t) {
+
+                                        }
+                                    });
+
+
+
+                                    final Button btn_active_detail = dialog.findViewById(R.id.btn_active_detail);
+                                    final Button btn_active_delete = dialog.findViewById(R.id.btn_active_detail_delete);
+                                    final Button btn_active_off = dialog.findViewById(R.id.btn_off);
+
+                                    btn_active_delete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                            builder.setTitle("삭제하기")
+                                                    .setMessage("삭제하시겠습니까?")
+                                                    .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            activeApi.deleteDataActive(ids).enqueue(new Callback<Void>() {
+                                                                @Override
+                                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                    if (!response.isSuccessful()) {
+                                                                        return;
+                                                                    }}
+                                                                @Override
+                                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                                }
+                                                            });
+                                                            activeArrayList.remove(position);
+                                                            activeAdapter.notifyItemRemoved(position);
+                                                            activeAdapter.notifyDataSetChanged();
+                                                        }
+                                                    })
+                                                    .setNeutralButton("취소", null)
+                                                    .show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    btn_active_detail.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                            View cview = LayoutInflater.from(getContext())
+                                                    .inflate(R.layout.active_form_change, null, false);
+                                            builder.setView(cview);
+                                            final AlertDialog changedialog = builder.create();
+                                            changedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            changedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            changedialog.show();
+
+                                            rb_jahalyes = changedialog.findViewById(R.id.rb_jahalyes);
+                                            rb_jahalno = changedialog.findViewById(R.id.rb_jahalno);
+                                            rb_bohangyes = changedialog.findViewById(R.id.rb_bohangyes);
+                                            rb_bohangno = changedialog.findViewById(R.id.rb_bohangno);
+                                            rb_changeyes = changedialog.findViewById(R.id.rb_changeyes);
+                                            rb_changeno = changedialog.findViewById(R.id.rb_changeno);
+                                            btn_change = changedialog.findViewById(R.id.btn_active_change);
+                                            btn_cancel = changedialog.findViewById(R.id.btn_cancel);
+
+                                            String cjahal = detail_active_text.getRehabilitation();
+                                            String cbohang = detail_active_text.getWalkingAssistance();
+                                            String cchange = detail_active_text.getPosition();
+
+                                            // 활동 상태 값에 따라 라디오 버튼 선택
+                                            if (cjahal.equals("Y")) {
+                                                rb_jahalyes.setChecked(true);
+                                                rb_jahalno.setChecked(false);
+                                            } else if (cjahal.equals("N")) {
+                                                rb_jahalyes.setChecked(false);
+                                                rb_jahalno.setChecked(true);
+                                            }
+                                            if (cbohang.equals("Y")) {
+                                                rb_bohangyes.setChecked(true);
+                                                rb_bohangno.setChecked(false);
+                                            } else if (cbohang.equals("N")) {
+                                                rb_bohangyes.setChecked(false);
+                                                rb_bohangno.setChecked(true);
+                                            }
+                                            if (cchange.equals("Y")) {
+                                                rb_changeyes.setChecked(true);
+                                                rb_changeno.setChecked(false);
+                                            } else if (cchange.equals("N")) {
+                                                rb_changeyes.setChecked(false);
+                                                rb_changeno.setChecked(true);
+                                            }
+                                            else {
+                                                rb_jahalno.setChecked(true);
+                                                rb_bohangno.setChecked(true);
+                                                rb_changeno.setChecked(true);
+                                            }
+
+                                            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    changedialog.dismiss();
+                                                }
+                                            });
+
+
+                                            btn_change.setOnClickListener(new View.OnClickListener() {
+                                                public void onClick(View v) {
+
+                                                    String cjahal = rb_jahalyes.isChecked() ? "Y" : "N";
+                                                    String cbohang = rb_bohangyes.isChecked() ? "Y" : "N";
+                                                    String cchange = rb_changeyes.isChecked() ? "Y" : "N";
+                                                    Log.e("수정된 재활보행체위 값------------", cjahal+cbohang+cchange);
+
+                                                    Active_text_change updatedActive = new Active_text_change(ids, cjahal, cbohang, cchange);
+
+                                                    activeApi.putDataActive(updatedActive).enqueue(new Callback<Long>() {
+                                                        @Override
+                                                        public void onResponse(Call<Long> call, Response<Long> response) {
+
+                                                            if (response.isSuccessful()) {
+                                                                Log.e("수정성공 ============",response.body()+"");
+                                                                Toast.makeText(getActivity(), "활동 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                                                activeAdapter.notifyItemChanged(position);
+                                                                dialog.dismiss();
+                                                            } else {
+                                                                //실패
+                                                                Log.e("활동", "stringToJson msg: 실패" + response.code() + response.body());
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onFailure(Call<Long> call, Throwable t) {
+                                                            Log.e("활동", "onFailure: 수정 실패", t);
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    changedialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    btn_active_off.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
                                 }
                             }}
                     }
@@ -189,175 +379,7 @@ public class ActiveFragment extends Fragment {
                     }
                 });
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View view = LayoutInflater.from(getContext())
-                        .inflate(R.layout.active_detail, null, false);
-                builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
 
-                activedetail_jahal = dialog.findViewById(R.id.tv_activedetail_jahal);
-                activedetail_bohang = dialog.findViewById(R.id.tv_activedetail_bohang);
-                activedetail_change = dialog.findViewById(R.id.tv_activedetail_change);
-
-                String getjahal = detail_active_text.getRehabilitation();
-                String getbohang = detail_active_text.getWalkingAssistance();
-                String getchange = detail_active_text.getPosition();
-
-                if(getjahal.equals("Y"))
-                    activedetail_jahal.setText("완료");
-                else activedetail_jahal.setText("-");
-
-                if(getbohang.equals("Y"))
-                    activedetail_bohang.setText("완료");
-                else activedetail_bohang.setText("-");
-
-                if (getchange.equals("Y"))
-                    activedetail_change.setText("완료");
-                else activedetail_change.setText("-");
-
-                final Button btn_active_detail = dialog.findViewById(R.id.btn_active_detail);
-                final Button btn_active_delete = dialog.findViewById(R.id.btn_active_detail_delete);
-                final Button btn_active_off = dialog.findViewById(R.id.btn_off);
-
-                btn_active_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setTitle("삭제하기")
-                                .setMessage("삭제하시겠습니까?")
-                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        activeApi.deleteDataActive(ids).enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                if (!response.isSuccessful()) {
-                                                    return;
-                                                }}
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                            }
-                                        });
-                                        activeArrayList.remove(position);
-                                        activeAdapter.notifyItemRemoved(position);
-                                        activeAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNeutralButton("취소", null)
-                                .show();
-                        dialog.dismiss();
-                    }
-                });
-
-                btn_active_detail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-                        View cview = LayoutInflater.from(getContext())
-                                .inflate(R.layout.active_form_change, null, false);
-                        builder.setView(cview);
-                        final AlertDialog changedialog = builder.create();
-                        changedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        changedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        changedialog.show();
-
-                        rb_jahalyes = changedialog.findViewById(R.id.rb_jahalyes);
-                        rb_jahalno = changedialog.findViewById(R.id.rb_jahalno);
-                        rb_bohangyes = changedialog.findViewById(R.id.rb_bohangyes);
-                        rb_bohangno = changedialog.findViewById(R.id.rb_bohangno);
-                        rb_changeyes = changedialog.findViewById(R.id.rb_changeyes);
-                        rb_changeno = changedialog.findViewById(R.id.rb_changeno);
-                        btn_change = changedialog.findViewById(R.id.btn_active_change);
-                        btn_cancel = changedialog.findViewById(R.id.btn_cancel);
-
-                        String cjahal = detail_active_text.getRehabilitation();
-                        String cbohang = detail_active_text.getWalkingAssistance();
-                        String cchange = detail_active_text.getPosition();
-
-                        // 활동 상태 값에 따라 라디오 버튼 선택
-                        if (cjahal.equals("Y")) {
-                            rb_jahalyes.setChecked(true);
-                            rb_jahalno.setChecked(false);
-                        } else if (cjahal.equals("N")) {
-                            rb_jahalyes.setChecked(false);
-                            rb_jahalno.setChecked(true);
-                        }
-                        if (cbohang.equals("Y")) {
-                            rb_bohangyes.setChecked(true);
-                            rb_bohangno.setChecked(false);
-                        } else if (cbohang.equals("N")) {
-                            rb_bohangyes.setChecked(false);
-                            rb_bohangno.setChecked(true);
-                        }
-                        if (cchange.equals("Y")) {
-                            rb_changeyes.setChecked(true);
-                            rb_changeno.setChecked(false);
-                        } else if (cchange.equals("N")) {
-                            rb_changeyes.setChecked(false);
-                            rb_changeno.setChecked(true);
-                        }
-                        else {
-                            rb_jahalno.setChecked(true);
-                            rb_bohangno.setChecked(true);
-                            rb_changeno.setChecked(true);
-                        }
-
-                        btn_cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                changedialog.dismiss();
-                            }
-                        });
-
-
-                        btn_change.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-
-                                String cjahal = rb_jahalyes.isChecked() ? "Y" : "N";
-                                String cbohang = rb_bohangyes.isChecked() ? "Y" : "N";
-                                String cchange = rb_changeyes.isChecked() ? "Y" : "N";
-                                Log.e("수정된 재활보행체위 값------------", cjahal+cbohang+cchange);
-
-                                Active_text_change updatedActive = new Active_text_change(ids, cjahal, cbohang, cchange);
-
-                                activeApi.putDataActive(updatedActive).enqueue(new Callback<Long>() {
-                                    @Override
-                                    public void onResponse(Call<Long> call, Response<Long> response) {
-
-                                        if (response.isSuccessful()) {
-                                            Log.e("수정성공 ============",response.body()+"");
-                                            Toast.makeText(getContext(), "활동 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                                            activeAdapter.notifyItemChanged(position);
-                                            dialog.dismiss();
-                                        } else {
-                                            //실패
-                                            Log.e("활동", "stringToJson msg: 실패" + response.code() + response.body());
-                                        }
-                                    }
-                                    @Override
-                                    public void onFailure(Call<Long> call, Throwable t) {
-                                        Log.e("활동", "onFailure: 수정 실패", t);
-                                        dialog.dismiss();
-                                    }
-                                });
-                                changedialog.dismiss();
-                            }
-                        });
-                    }
-                });
-
-                btn_active_off.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
             }
         });
         return view;

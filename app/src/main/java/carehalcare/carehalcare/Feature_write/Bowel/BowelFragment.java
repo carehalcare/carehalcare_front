@@ -92,6 +92,9 @@ public class BowelFragment extends Fragment {
                         List<Bowel_text> datas = response.body();
                         if (datas != null) {
                             bowelArrayList.clear();
+                            if (datas.size()==0){
+                                Toast.makeText(getActivity(), "배변 기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
                             for (int i = 0; i < datas.size(); i++) {
                                 Bowel_text dict_0 = new Bowel_text(response.body().get(i).getUserId(),
                                         response.body().get(i).getPuserId(),
@@ -184,6 +187,161 @@ public class BowelFragment extends Fragment {
                                 if (datas != null) {
                                     ids = response.body().get(position).getId();
                                     Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                    View view = LayoutInflater.from(getContext())
+                                            .inflate(R.layout.bowel_detail, null, false);
+                                    builder.setView(view);
+                                    final AlertDialog dialog = builder.create();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.show();
+
+                                    final TextView boweldetail_count = dialog.findViewById(R.id.tv_boweldetail_count);
+                                    final TextView boweldetail_et = dialog.findViewById(R.id.tv_boweldetail_et);
+
+                                    bowelApi.getDataBowel_2(ids).enqueue(new Callback<Bowel_text>() {
+                                        @Override
+                                        public void onResponse(Call<Bowel_text> call, Response<Bowel_text> response) {
+                                            if (response.isSuccessful()){
+                                                if (response.body()!=null){
+                                                    boweldetail_count.setText(String.valueOf(response.body().getCount()));
+                                                    boweldetail_et.setText(response.body().getContent());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Bowel_text> call, Throwable t) {
+
+                                        }
+                                    });
+
+
+
+                                    final Button btn_boweldetail = dialog.findViewById(R.id.btn_boweldetail);
+                                    final Button btn_boweldelete = dialog.findViewById(R.id.btn_boweldetail_delete);
+                                    final Button btn_off = dialog.findViewById(R.id.btn_off);
+                                    btn_boweldelete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                            builder.setTitle("삭제하기")
+                                                    .setMessage("삭제하시겠습니까?")
+                                                    .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            bowelApi.deleteDataBowel(ids).enqueue(new Callback<Void>() {
+                                                                @Override
+                                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                    if (!response.isSuccessful()) {
+                                                                        return;
+                                                                    }}
+                                                                @Override
+                                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                                }
+                                                            });
+                                                            bowelArrayList.remove(position);
+                                                            bowelAdapter.notifyItemRemoved(position);
+                                                            bowelAdapter.notifyDataSetChanged();
+                                                        }
+                                                    })
+                                                    .setNeutralButton("취소", null)
+                                                    .show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    btn_boweldetail.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                            View cview = LayoutInflater.from(getContext())
+                                                    .inflate(R.layout.bowel_form_change, null, false);
+                                            builder.setView(cview);
+                                            final AlertDialog cdialog = builder.create();
+                                            cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            cdialog.show();
+
+                                            EditText et_count = cdialog.findViewById(R.id.et_bowelCount);
+                                            EditText et_form = cdialog.findViewById(R.id.et_bowelForm);
+                                            Button btn_change = cdialog.findViewById(R.id.btn_bowel_change);
+                                            Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+
+                                            bowelApi.getDataBowel_2(ids).enqueue(new Callback<Bowel_text>() {
+                                                @Override
+                                                public void onResponse(Call<Bowel_text> call, Response<Bowel_text> response) {
+                                                    if (response.isSuccessful()){
+                                                        if (response.body()!=null){
+                                                            et_count.setText(String.valueOf(response.body().getCount()));
+
+                                                            if (response.body().getContent().length() == 0) et_form.setText("");
+                                                            else et_form.setText(response.body().getContent());
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<Bowel_text> call, Throwable t) {
+
+                                                }
+                                            });
+
+
+
+                                            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    cdialog.dismiss();
+                                                }
+                                            });
+
+                                            btn_change.setOnClickListener(new View.OnClickListener() {
+                                                public void onClick(View v) {
+                                                    Long count;
+                                                    String inputValue = et_count.getText().toString();
+
+                                                    if (inputValue.isEmpty()) {
+                                                        count = 0L;
+                                                    } else {
+                                                        count = Long.valueOf(inputValue);
+                                                    }
+                                                    String content = et_form.getText().toString();
+                                                    if (content.length()==0){content = "-";};
+
+                                                    Bowel_text_change update = new Bowel_text_change(ids, count, content);
+                                                    bowelApi.putDataBowel(update).enqueue(new Callback<Long>() {
+                                                        @Override
+                                                        public void onResponse(Call<Long> call, Response<Long> response) {
+
+                                                            if (response.isSuccessful()) {
+                                                                Log.e("수정성공 ============",response.body()+"");
+                                                                Toast.makeText(getContext(), "배변 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                                                                cdialog.dismiss();
+
+                                                            } else {
+                                                                //실패
+                                                                Log.e("BoWel", "stringToJson msg: 실패" + response.code());
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onFailure(Call<Long> call, Throwable t) {}
+                                                    });
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    btn_off.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
                                 }
                             }}
                     }
@@ -191,127 +349,7 @@ public class BowelFragment extends Fragment {
                     public void onFailure(Call<List<Bowel_text>> call, Throwable t) {
                     }
                 });
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                View view = LayoutInflater.from(getContext())
-                        .inflate(R.layout.bowel_detail, null, false);
-                builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-
-                final TextView boweldetail_count = dialog.findViewById(R.id.tv_boweldetail_count);
-                final TextView boweldetail_et = dialog.findViewById(R.id.tv_boweldetail_et);
-
-                boweldetail_count.setText(String.valueOf(detail_bowel_text.getCount()));
-                boweldetail_et.setText(detail_bowel_text.getContent());
-
-                final Button btn_boweldetail = dialog.findViewById(R.id.btn_boweldetail);
-                final Button btn_boweldelete = dialog.findViewById(R.id.btn_boweldetail_delete);
-                final Button btn_off = dialog.findViewById(R.id.btn_off);
-                btn_boweldelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setTitle("삭제하기")
-                                .setMessage("삭제하시겠습니까?")
-                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        bowelApi.deleteDataBowel(ids).enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                if (!response.isSuccessful()) {
-                                                    return;
-                                                }}
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                            }
-                                        });
-                                        bowelArrayList.remove(position);
-                                        bowelAdapter.notifyItemRemoved(position);
-                                        bowelAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNeutralButton("취소", null)
-                                .show();
-                        dialog.dismiss();
-                    }
-                });
-                btn_boweldetail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-                        View cview = LayoutInflater.from(getContext())
-                                .inflate(R.layout.bowel_form_change, null, false);
-                        builder.setView(cview);
-                        final AlertDialog cdialog = builder.create();
-                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        cdialog.show();
-
-                        EditText et_count = cdialog.findViewById(R.id.et_bowelCount);
-                        EditText et_form = cdialog.findViewById(R.id.et_bowelForm);
-                        Button btn_change = cdialog.findViewById(R.id.btn_bowel_change);
-                        Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
-
-                        et_count.setText(String.valueOf(detail_bowel_text.getCount()));
-
-                        if (detail_bowel_text.getContent().length() == 0) et_form.setText("");
-                        else et_form.setText(detail_bowel_text.getContent());
-
-                        btn_cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                cdialog.dismiss();
-                            }
-                        });
-
-                        btn_change.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Long count;
-                                String inputValue = et_count.getText().toString();
-
-                                if (inputValue.isEmpty()) {
-                                    count = 0L;
-                                } else {
-                                    count = Long.valueOf(inputValue);
-                                }
-                                String content = et_form.getText().toString();
-                                if (content.length()==0){content = "-";};
-
-                                Bowel_text_change update = new Bowel_text_change(ids, count, content);
-                                bowelApi.putDataBowel(update).enqueue(new Callback<Long>() {
-                                    @Override
-                                    public void onResponse(Call<Long> call, Response<Long> response) {
-
-                                        if (response.isSuccessful()) {
-                                            Log.e("수정성공 ============",response.body()+"");
-                                            Toast.makeText(getContext(), "배변 기록이 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                                            cdialog.dismiss();
-
-                                        } else {
-                                            //실패
-                                            Log.e("BoWel", "stringToJson msg: 실패" + response.code());
-                                        }
-                                    }
-                                    @Override
-                                    public void onFailure(Call<Long> call, Throwable t) {}
-                                });
-                                dialog.dismiss();
-                            }
-                        });
-                    }
-                });
-
-                btn_off.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
             }
         });
         return view;

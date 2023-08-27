@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -91,6 +92,10 @@ public class CleanFragment extends Fragment {
                         List<Clean_ResponseDTO> datas = response.body();
                         if (datas != null) {
                             cleanArrayList.clear();
+                            if (datas.size()==0){
+                                Toast.makeText(getActivity(), "주변청결 기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
+
                             for (int i = 0; i < datas.size(); i++) {
                                 String changesheet = "-";
                                 String changecloths = "-";
@@ -98,9 +103,9 @@ public class CleanFragment extends Fragment {
 
                                 String cleandata = datas.get(i).getCleanliness();
                                 String[] values = cleandata.split(" ");
-                                String sheet = values[0];
-                                String cloth = values[1];
-                                String ven = values[2];
+                                String sheet = cleandata.substring(0,1);
+                                String cloth = cleandata.substring(1,2);
+                                String ven = cleandata.substring(2);
 
                                 if (sheet.equals("Y")){changesheet = "Y";}
                                 if (cloth.equals("Y")){changecloths = "Y";}
@@ -155,7 +160,7 @@ public class CleanFragment extends Fragment {
 
                         if (cb_ventilation.isChecked()){ventilation = "Y";}
 
-                        String cleaness = changeSheet+" "+changeCloth+" "+ventilation;
+                        String cleaness = changeSheet+changeCloth+ventilation;
 
                         if (cleanForm.length()==0){cleanForm = "-";};
 
@@ -200,6 +205,181 @@ public class CleanFragment extends Fragment {
                                 if (datas != null) {
                                     ids = response.body().get(position).getId();
                                     Log.e("지금 position : ",position+"이고 DB ID는 : " + ids);
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                    View view = LayoutInflater.from(getContext())
+                                            .inflate(R.layout.clean_detail, null, false);
+                                    builder.setView(view);
+                                    final AlertDialog dialog = builder.create();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.show();
+
+                                    detail_sheet = dialog.findViewById(R.id.tv_cleandatail_sheet);
+                                    detail_cloth = dialog.findViewById(R.id.tv_cleandatail_cloth);
+                                    detail_ventilation = dialog.findViewById(R.id.tv_cleandatail_ventilation);
+                                    et_detail_clean  = dialog.findViewById(R.id.tv_cleandetail_et);
+
+                                    String sheet = detail_clean_text.getChangeSheet();
+                                    String cloth = detail_clean_text.getChangeCloth();
+                                    String ven = detail_clean_text.getVentilation();
+
+                                    cleanApi.getDataClean_2(ids).enqueue(new Callback<Clean_ResponseDTO>() {
+                                        @Override
+                                        public void onResponse(Call<Clean_ResponseDTO> call, Response<Clean_ResponseDTO> response) {
+                                            if (response.isSuccessful()){
+                                                if (response.body()!=null){
+                                                    Log.e("청소청소",response.body().getCleanliness().substring(0,1)+
+                                                            response.body().getCleanliness().substring(1,2)+
+                                                            response.body().getCleanliness().substring(2));
+                                                    if(response.body().getCleanliness().substring(0,1).contains("Y")){
+                                                        detail_sheet.setText("완료");
+                                                    }
+                                                    if(response.body().getCleanliness().substring(1,2).contains("Y")){
+                                                        detail_cloth.setText("완료");
+                                                    }
+                                                    if(response.body().getCleanliness().substring(2).contains("Y")){
+                                                        detail_ventilation.setText("완료");
+                                                    }
+//                                                    if (sheet.contains("Y")) detail_sheet.setText("완료");
+//                                                    if (cloth.contains("Y")) detail_cloth.setText("완료");
+//                                                    if (ven.contains("Y")) detail_ventilation.setText("완료");
+
+                                                    et_detail_clean.setText(response.body().getContent());
+
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Clean_ResponseDTO> call, Throwable t) {
+
+                                        }
+                                    });
+
+
+                                    final Button btn_cleandetail = dialog.findViewById(R.id.btn_detail_change);
+                                    final Button btn_clean_delete = dialog.findViewById(R.id.btn_clean_delete_detail);
+                                    final Button btn_off = dialog.findViewById(R.id.btn_off);
+
+                                    btn_clean_delete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                            builder.setTitle("삭제하기")
+                                                    .setMessage("삭제하시겠습니까?")
+                                                    .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            cleanApi.deleteDataClean(ids).enqueue(new Callback<Void>() {
+                                                                @Override
+                                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                    if (!response.isSuccessful()) {
+                                                                        return;
+                                                                    }
+                                                                }
+                                                                @Override
+                                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                                }
+                                                            });
+                                                            cleanArrayList.remove(position);
+                                                            cleanAdapter.notifyItemRemoved(position);
+                                                            cleanAdapter.notifyDataSetChanged();
+                                                        }
+                                                    })
+                                                    .setNeutralButton("취소", null)
+                                                    .show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    btn_off.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    btn_cleandetail.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            View cview = LayoutInflater.from(getContext())
+                                                    .inflate(R.layout.clean_form_change, null, false);
+                                            builder.setView(cview);
+                                            final AlertDialog cdialog = builder.create();
+                                            cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            cdialog.show();
+
+                                            cb_changeSheet = cdialog.findViewById(R.id.cb_changeSheet);
+                                            cb_changeCloth = cdialog.findViewById(R.id.cb_changeCloth);
+                                            cb_ventilation = cdialog.findViewById(R.id.cb_ventilation);
+                                            et_cleanForm = cdialog.findViewById(R.id.et_cleanForm);
+                                            btn_clean_active = cdialog.findViewById(R.id.btn_clean_change);
+                                            Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
+
+                                            String sheet = detail_clean_text.getChangeSheet();
+                                            String cloth = detail_clean_text.getChangeCloth();
+                                            String ventil = detail_clean_text.getVentilation();
+
+                                            if (detail_clean_text.getEt_cleanForm().equals("-"))
+                                                et_cleanForm.setText("");
+                                            else et_cleanForm.setText(detail_clean_text.getEt_cleanForm());
+
+                                            if (sheet.contains("Y")) cb_changeSheet.setChecked(true);
+                                            if (cloth.contains("Y")) cb_changeCloth.setChecked(true);
+                                            if (ventil.contains("Y")) cb_ventilation.setChecked(true);
+
+                                            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    cdialog.dismiss();
+                                                }
+                                            });
+
+                                            btn_clean_active.setOnClickListener(new View.OnClickListener() {
+                                                public void onClick(View v) {
+                                                    String changeSheet = "-";
+                                                    String changeCloth = "-";
+                                                    String ventilation = "-";
+                                                    String cleanForm = et_cleanForm.getText().toString();
+
+                                                    if (cb_changeSheet.isChecked()){changeSheet = "Y";}
+
+                                                    if (cb_changeCloth.isChecked()){changeCloth = "Y";}
+
+                                                    if (cb_ventilation.isChecked()){ventilation = "Y";}
+
+                                                    String cleaness = changeSheet+changeCloth+ventilation;
+
+                                                    if (cleanForm.length()==0){cleanForm = "-";};
+
+                                                    Clean_text_change update = new Clean_text_change(ids,cleaness,cleanForm);
+                                                    cleanApi.putDataClean(update).enqueue(new Callback<Long>() {
+                                                        @Override
+                                                        public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
+                                                            if (response.isSuccessful()) {
+                                                                Long body = response.body();
+                                                                if (body != null) {
+                                                                    cleanAdapter.notifyDataSetChanged();
+                                                                    cdialog.dismiss();
+                                                                }
+                                                            } else {
+                                                                //실패
+                                                                Log.e("clean수정 PUT", "수정 msg: 실패" + response.code());
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
+                                                    });
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
+                                        }
+                                    });
                                 }
                             }}
                     }
@@ -208,152 +388,7 @@ public class CleanFragment extends Fragment {
                         Log.e("getSleep fail", "======================================");
                     }
                 });
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                View view = LayoutInflater.from(getContext())
-                        .inflate(R.layout.clean_detail, null, false);
-                builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-
-                detail_sheet = dialog.findViewById(R.id.tv_cleandatail_sheet);
-                detail_cloth = dialog.findViewById(R.id.tv_cleandatail_cloth);
-                detail_ventilation = dialog.findViewById(R.id.tv_cleandatail_ventilation);
-                et_detail_clean  = dialog.findViewById(R.id.tv_cleandetail_et);
-
-                String sheet = detail_clean_text.getChangeSheet();
-                String cloth = detail_clean_text.getChangeCloth();
-                String ven = detail_clean_text.getVentilation();
-
-                if (sheet.contains("Y")) detail_sheet.setText("완료");
-                if (cloth.contains("Y")) detail_cloth.setText("완료");
-                if (ven.contains("Y")) detail_ventilation.setText("완료");
-
-                et_detail_clean.setText(detail_clean_text.getEt_cleanForm());
-
-                final Button btn_cleandetail = dialog.findViewById(R.id.btn_detail_change);
-                final Button btn_clean_delete = dialog.findViewById(R.id.btn_clean_delete_detail);
-                final Button btn_off = dialog.findViewById(R.id.btn_off);
-
-                btn_clean_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setTitle("삭제하기")
-                                .setMessage("삭제하시겠습니까?")
-                                .setPositiveButton("삭제하기", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        cleanApi.deleteDataClean(ids).enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                                if (!response.isSuccessful()) {
-                                                    return;
-                                                }
-                                            }
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                            }
-                                        });
-                                        cleanArrayList.remove(position);
-                                        cleanAdapter.notifyItemRemoved(position);
-                                        cleanAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNeutralButton("취소", null)
-                                .show();
-                        dialog.dismiss();
-                    }
-                });
-
-                btn_off.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
-
-                btn_cleandetail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        View cview = LayoutInflater.from(getContext())
-                                .inflate(R.layout.clean_form_change, null, false);
-                        builder.setView(cview);
-                        final AlertDialog cdialog = builder.create();
-                        cdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        cdialog.show();
-
-                        cb_changeSheet = cdialog.findViewById(R.id.cb_changeSheet);
-                        cb_changeCloth = cdialog.findViewById(R.id.cb_changeCloth);
-                        cb_ventilation = cdialog.findViewById(R.id.cb_ventilation);
-                        et_cleanForm = cdialog.findViewById(R.id.et_cleanForm);
-                        btn_clean_active = cdialog.findViewById(R.id.btn_clean_change);
-                        Button btn_cancel = cdialog.findViewById(R.id.btn_cancel);
-
-                        String sheet = detail_clean_text.getChangeSheet();
-                        String cloth = detail_clean_text.getChangeCloth();
-                        String ventil = detail_clean_text.getVentilation();
-
-                        if (detail_clean_text.getEt_cleanForm().equals("-"))
-                            et_cleanForm.setText("");
-                        else et_cleanForm.setText(detail_clean_text.getEt_cleanForm());
-
-                        if (sheet.contains("Y")) cb_changeSheet.setChecked(true);
-                        if (cloth.contains("Y")) cb_changeCloth.setChecked(true);
-                        if (ventil.contains("Y")) cb_ventilation.setChecked(true);
-
-                        btn_cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                cdialog.dismiss();
-                            }
-                        });
-
-                        btn_clean_active.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                String changeSheet = "-";
-                                String changeCloth = "-";
-                                String ventilation = "-";
-                                String cleanForm = et_cleanForm.getText().toString();
-
-                                if (cb_changeSheet.isChecked()){changeSheet = "Y";}
-
-                                if (cb_changeCloth.isChecked()){changeCloth = "Y";}
-
-                                if (cb_ventilation.isChecked()){ventilation = "Y";}
-
-                                String cleaness = changeSheet+" "+changeCloth+" "+ventilation;
-
-                                if (cleanForm.length()==0){cleanForm = "-";};
-
-                                Clean_text_change update = new Clean_text_change(ids,cleaness,cleanForm);
-                                cleanApi.putDataClean(update).enqueue(new Callback<Long>() {
-                                    @Override
-                                    public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
-                                        if (response.isSuccessful()) {
-                                            Long body = response.body();
-                                            if (body != null) {
-                                                cleanAdapter.notifyDataSetChanged();
-                                                cdialog.dismiss();
-                                            }
-                                        } else {
-                                            //실패
-                                            Log.e("clean수정 PUT", "수정 msg: 실패" + response.code());
-                                        }
-                                    }
-                                    @Override
-                                    public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {}
-                                });
-                                dialog.dismiss();
-                            }
-                        });
-
-                    }
-                });
             }
         });
         return view;

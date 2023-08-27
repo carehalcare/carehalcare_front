@@ -134,7 +134,11 @@ public class AllmenuFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.e("제네릭타입","success");
                     Log.e("제네릭타입",response.body().size()+"");
+
                     if (response.body() != null) {
+                        if (response.body().size()==0){
+                            Toast.makeText(getActivity(), "기록이 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
                         for (int i = 0; i < response.body().size(); i++) {
                             BoardResponseDto boardResponseDto = new BoardResponseDto(response.body().get(i).getId(),
                                     response.body().get(i).getUserId(),response.body().get(i).getPuserId(),
@@ -771,6 +775,7 @@ public class AllmenuFragment extends Fragment {
     public void showwalk(int position){
         Walk_API walkApi = Retrofit_client.createService(Walk_API.class,TokenUtils.getAccessToken("Access_Token"));
         BoardResponseDto boardResponseDto = boardResponseDtoArrayList.get(position);
+        Log.e("전체메뉴 산책기록", "함수진입"+boardResponseDto.getId());
 
         walkApi.getdatawalk2(boardResponseDto.getId()).enqueue(new Callback<Walk_ResponseDTO>() {
             @Override
@@ -779,12 +784,14 @@ public class AllmenuFragment extends Fragment {
                     if (response.body() != null) {
                         Walk_ResponseDTO datas = response.body();
                         if (datas != null) {
+                            Log.e("전체메뉴 산책기록", "통신성공");
+
                             String getFilepath = datas.getImages().get(0).getFilePath();
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                             View view = LayoutInflater.from(getContext())
-                                    .inflate(R.layout.walk_detail, null, false);
+                                    .inflate(R.layout.allmenu_walk_detail, null, false);
                             builder.setView(view);
                             final AlertDialog dialog = builder.create();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -792,10 +799,10 @@ public class AllmenuFragment extends Fragment {
                             dialog.show();
 
                             final ImageView iv_walk_detail = dialog.findViewById(R.id.iv_walk_detail);
-                            Glide.with(getContext()).load(getFilepath).into(iv_walk_detail);
+                            Glide.with(getActivity()).load(getFilepath).into(iv_walk_detail);
 
                             final Button btn_walk_detail = dialog.findViewById(R.id.btn_walk_detail);
-                            final Button btn_walk_detail_delete = dialog.findViewById(R.id.btn_walk_detail_delete);
+                            final Button btn_walk_detail_delete = dialog.findViewById(R.id.btn_walk_delete);
 
                             btn_walk_detail_delete.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -834,10 +841,15 @@ public class AllmenuFragment extends Fragment {
                                 }
                             });
                         }
-                    }}
+                    }}else{
+                    Log.e("전체메뉴 산책기록", "통신실패" + "데이터없음??");
+
+                }
             }
             @Override
             public void onFailure(Call<Walk_ResponseDTO> call, Throwable t) {
+                Log.e("전체메뉴 산책기록", "통신실패" + t.toString());
+
             }
         });
     }
