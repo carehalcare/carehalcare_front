@@ -2,4 +2,5 @@
     <string name="app_name">케어할케어 (간병인용)</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_notification_channel_id"> carehalcare </string>
 </resources>
