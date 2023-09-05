@@ -1,7 +1,9 @@
 package carehalcare.carehalcare.Feature_login;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -119,6 +121,12 @@ public class LoginActivity extends AppCompatActivity {
                                                         finish();
                                                         return;
                                                     }
+                                                    SharedPreferences auto = getSharedPreferences("autoLogin", Activity.MODE_PRIVATE);
+                                                    SharedPreferences.Editor autoLoginEdit = auto.edit();
+                                                    autoLoginEdit.putString("userId", userEmail);
+                                                    autoLoginEdit.putString("passwordNo", userPwd);
+                                                    autoLoginEdit.commit();
+
                                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                     startActivity(intent);
                                                     finish();
