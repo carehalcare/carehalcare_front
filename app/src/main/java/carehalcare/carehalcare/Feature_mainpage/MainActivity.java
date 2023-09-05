@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -89,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-                        // Get new FCM registration token
                         String token = task.getResult();
-
                         Log.d(" fcm token is : ", token);
 //                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                         pushmsgAPI.postMSG(userid, token).enqueue(new Callback<Object>() {

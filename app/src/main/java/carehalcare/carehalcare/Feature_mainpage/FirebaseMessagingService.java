@@ -22,10 +22,14 @@ import javax.xml.transform.Result;
 import carehalcare.carehalcare.R;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
+    public FirebaseMessagingService(){
+    }
     private static final String TAG = "MyFirebaseMsgService";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
+        Log.e("메세지 받음", "From: " + remoteMessage.getFrom());
 
         // TODO(developer): Handle FCM messages here.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
@@ -33,17 +37,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-//                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
-
         }
-
-        // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
@@ -52,11 +46,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     @Override
     public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
         Log.d(TAG, "Refreshed token: " + token);
-
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // FCM registration token to your app server.
         sendRegistrationToServer(token);
     }
     // [END on_new_token]
@@ -70,13 +61,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     private void sendNotification(String messageBody) {
+        String channelId = "carehalcare";
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "알림테스트",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("알림테스트");
+            notificationManager.createNotificationChannel(channel);
+        }
+
         Log.e("firebaseal",messageBody);
         Intent intent = new Intent(this, PatientInfo.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
                 PendingIntent.FLAG_IMMUTABLE);
 
-        String channelId = "carehalcare";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
@@ -87,16 +89,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
 
         // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
