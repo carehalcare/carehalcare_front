@@ -116,7 +116,8 @@ public class WashFragment extends Fragment {
                                 if (values[4].equals("Y")){bodyscrub = "Y";}
                                 if (values[5].equals("Y")){shave = "Y";}
                                 Wash_text dict_0 = new Wash_text(washface,washmouth,nailcare,haircare,
-                                        bodyscrub, response.body().get(i).getPart(), shave, response.body().get(i).getContent());
+                                        bodyscrub, response.body().get(i).getPart(), shave, response.body().get(i).getContent(),
+                                        response.body().get(i).getCreatedDateTime());
                                 washArrayList.add(dict_0);
                                 washAdapter.notifyItemInserted(0);
                                 Log.e("현재id : " + i, response.body().get(i).getCreatedDateTime() + ""+"어댑터카운터"+washAdapter.getItemCount());
@@ -188,7 +189,7 @@ public class WashFragment extends Fragment {
 
                         String cleaness = washface+ washmouth+nailcare+haircare+bodyscrub+shave;
                         Wash_text dict = new Wash_text(washface,washmouth,nailcare,haircare,bodyscrub,
-                                shave,bodyscrub_point,washForm);
+                                shave,bodyscrub_point,washForm, null);
                         washArrayList.add(0, dict); //첫번째 줄에 삽입됨
                         //mArrayList.add(dict); //마지막 줄에 삽입됨
 
